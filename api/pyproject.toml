@@ -1,8 +1,7 @@
 [project]
 name = "api"
 version = "0.1.0"
-description = "Add your description here"
-readme = "README.md"
+description = "Home Grown API - Crop recommendations based on NASA climate data"
 requires-python = ">=3.13"
 dependencies = [
     "fastapi==0.115.5",
