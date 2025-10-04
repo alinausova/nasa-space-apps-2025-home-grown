@@ -10,15 +10,20 @@ CROP_DATABASE = {
         "frost_tolerance": "tender",
         "water_needs": "moderate",
         "season": "warm",
-        "seasonal_water_mm": 500,  # 400-600mm for 90-120 day cycle
-        "drought_resistance": "sensitive",  # Extremely drought sensitive
+        "seasonal_water_mm": 500,
+        "drought_resistance": "sensitive",
         "germination_temp_min": 10,
         "germination_temp_optimal": 25,
         "germination_temp_max": 35,
+        # Yield data in kg per square meter
+        "yield_kg_m2_lower": 3.0,
+        "yield_kg_m2_average": 5.0,
+        "yield_kg_m2_upper": 8.0,
         "sources": {
-            "water": "FAO Land & Water - Tomato crop information (https://www.fao.org/land-water/databases-and-software/crop-information/tomato/en/)",
+            "water": "FAO Land & Water - Tomato crop information",
             "germination": "UC Davis, J.F. Harrington - Vegetable Seed Germination",
-            "drought": "Agronomy 2019, 9(8):447 - Physiological Responses of Vegetable Crops to Water Stress"
+            "drought": "Agronomy 2019, 9(8):447 - Physiological Responses of Vegetable Crops to Water Stress",
+            "yield": "FAO Land & Water (45-65 tons/ha commercial); MSU Extension; La Ferme de Sainte Marthe"
         }
     },
     "lettuce": {
@@ -32,15 +37,19 @@ CROP_DATABASE = {
         "frost_tolerance": "hardy",
         "water_needs": "moderate",
         "season": "cool",
-        "seasonal_water_mm": 250,  # ~250-300mm typical
+        "seasonal_water_mm": 250,
         "drought_resistance": "moderate",
         "germination_temp_min": 2,
         "germination_temp_optimal": 20,
         "germination_temp_max": 27,
+        "yield_kg_m2_lower": 1.5,
+        "yield_kg_m2_average": 2.5,
+        "yield_kg_m2_upper": 4.0,
         "sources": {
             "water": "FAO Irrigation and Drainage Paper 56",
             "germination": "UC Davis, J.F. Harrington - Vegetable Seed Germination",
-            "drought": "Estimated from crop coefficients"
+            "drought": "Estimated from crop coefficients",
+            "yield": "MSU Extension Table 4 (40 lb/100 sq ft); La Ferme de Sainte Marthe (3-6 kg/m²)"
         }
     },
     "spinach": {
@@ -54,15 +63,19 @@ CROP_DATABASE = {
         "frost_tolerance": "very_hardy",
         "water_needs": "moderate",
         "season": "cool",
-        "seasonal_water_mm": 200,  # ~200-250mm
+        "seasonal_water_mm": 200,
         "drought_resistance": "moderate",
         "germination_temp_min": 2,
         "germination_temp_optimal": 18,
         "germination_temp_max": 30,
+        "yield_kg_m2_lower": 1.0,
+        "yield_kg_m2_average": 2.0,
+        "yield_kg_m2_upper": 3.0,
         "sources": {
             "water": "FAO Irrigation and Drainage Paper 56",
             "germination": "UC Davis - Vegetable Seed Germination",
-            "drought": "Estimated from crop type"
+            "drought": "Estimated from crop type",
+            "yield": "MSU Extension Table 4 (40 lb/100 sq ft)"
         }
     },
     "peppers": {
@@ -76,15 +89,19 @@ CROP_DATABASE = {
         "frost_tolerance": "tender",
         "water_needs": "moderate",
         "season": "warm",
-        "seasonal_water_mm": 600,  # 600-900mm depending on variety
+        "seasonal_water_mm": 600,
         "drought_resistance": "moderate",
         "germination_temp_min": 16,
         "germination_temp_optimal": 27,
         "germination_temp_max": 35,
+        "yield_kg_m2_lower": 2.0,
+        "yield_kg_m2_average": 3.0,
+        "yield_kg_m2_upper": 5.0,
         "sources": {
             "water": "FAO Irrigation and Drainage Paper 56",
             "germination": "UC Davis, J.F. Harrington",
-            "drought": "Estimated from solanaceae family characteristics"
+            "drought": "Estimated from solanaceae family characteristics",
+            "yield": "MSU Extension Table 4 (48 lb/100 sq ft); University Extension data"
         }
     },
     "carrots": {
@@ -98,15 +115,19 @@ CROP_DATABASE = {
         "frost_tolerance": "hardy",
         "water_needs": "moderate",
         "season": "cool",
-        "seasonal_water_mm": 350,  # 350-500mm
+        "seasonal_water_mm": 350,
         "drought_resistance": "moderate",
         "germination_temp_min": 4,
         "germination_temp_optimal": 27,
         "germination_temp_max": 35,
+        "yield_kg_m2_lower": 3.0,
+        "yield_kg_m2_average": 5.0,
+        "yield_kg_m2_upper": 8.0,
         "sources": {
             "water": "FAO Irrigation and Drainage Paper 56",
             "germination": "UC Davis - Vegetable Seed Germination",
-            "drought": "Estimated from root crop characteristics"
+            "drought": "Estimated from root crop characteristics",
+            "yield": "MSU Extension Table 4 (69 lb/100 sq ft); La Ferme de Sainte Marthe (5-10 kg/m²)"
         }
     },
     "beans": {
@@ -120,15 +141,19 @@ CROP_DATABASE = {
         "frost_tolerance": "tender",
         "water_needs": "moderate",
         "season": "warm",
-        "seasonal_water_mm": 300,  # 300-500mm
-        "drought_resistance": "moderate_sensitive",  # Moderately water stress sensitive
+        "seasonal_water_mm": 300,
+        "drought_resistance": "moderate_sensitive",
         "germination_temp_min": 16,
         "germination_temp_optimal": 27,
         "germination_temp_max": 35,
+        "yield_kg_m2_lower": 1.5,
+        "yield_kg_m2_average": 2.5,
+        "yield_kg_m2_upper": 4.0,
         "sources": {
             "water": "FAO Irrigation and Drainage Paper 24",
             "germination": "UC Davis, J.F. Harrington",
-            "drought": "Agronomy 2019, 9(8):447 - beans moderately sensitive to water stress"
+            "drought": "Agronomy 2019, 9(8):447 - beans moderately sensitive to water stress",
+            "yield": "MSU Extension Table 4 (34 lb/100 sq ft); La Ferme de Sainte Marthe (2-4 kg/m²)"
         }
     },
     "kale": {
@@ -142,15 +167,19 @@ CROP_DATABASE = {
         "frost_tolerance": "very_hardy",
         "water_needs": "moderate",
         "season": "cool",
-        "seasonal_water_mm": 380,  # Similar to cabbage 350-500mm
+        "seasonal_water_mm": 380,
         "drought_resistance": "moderate",
         "germination_temp_min": 4,
         "germination_temp_optimal": 27,
         "germination_temp_max": 35,
+        "yield_kg_m2_lower": 2.0,
+        "yield_kg_m2_average": 3.0,
+        "yield_kg_m2_upper": 4.5,
         "sources": {
             "water": "FAO Paper 56 - Brassica group",
             "germination": "UC Davis - similar to cabbage",
-            "drought": "Estimated from brassica family"
+            "drought": "Estimated from brassica family",
+            "yield": "MSU Extension Table 4 (57 lb/100 sq ft)"
         }
     },
     "cucumbers": {
@@ -164,15 +193,19 @@ CROP_DATABASE = {
         "frost_tolerance": "tender",
         "water_needs": "high",
         "season": "warm",
-        "seasonal_water_mm": 500,  # 400-600mm
+        "seasonal_water_mm": 500,
         "drought_resistance": "sensitive",
         "germination_temp_min": 16,
         "germination_temp_optimal": 30,
         "germination_temp_max": 40,
+        "yield_kg_m2_lower": 2.0,
+        "yield_kg_m2_average": 3.5,
+        "yield_kg_m2_upper": 6.0,
         "sources": {
             "water": "FAO Irrigation and Drainage Paper 56",
             "germination": "UC Davis, J.F. Harrington",
-            "drought": "Cucurbits generally drought sensitive"
+            "drought": "Cucurbits generally drought sensitive",
+            "yield": "MSU Extension Table 4 (50 lb/100 sq ft)"
         }
     },
     "radishes": {
@@ -186,15 +219,19 @@ CROP_DATABASE = {
         "frost_tolerance": "hardy",
         "water_needs": "moderate",
         "season": "cool",
-        "seasonal_water_mm": 200,  # Short season ~200-300mm
+        "seasonal_water_mm": 200,
         "drought_resistance": "moderate",
         "germination_temp_min": 4,
         "germination_temp_optimal": 27,
         "germination_temp_max": 32,
+        "yield_kg_m2_lower": 0.3,
+        "yield_kg_m2_average": 0.5,
+        "yield_kg_m2_upper": 1.0,
         "sources": {
             "water": "FAO Paper 33 - short season vegetables",
             "germination": "UC Davis - Vegetable Seed Germination",
-            "drought": "Root crops generally moderate tolerance"
+            "drought": "Root crops generally moderate tolerance",
+            "yield": "MSU Extension Table 4 (11 lb/100 sq ft)"
         }
     },
     "arugula": {
@@ -208,19 +245,21 @@ CROP_DATABASE = {
         "frost_tolerance": "hardy",
         "water_needs": "moderate",
         "season": "cool",
-        "seasonal_water_mm": 250,  # Similar to lettuce
+        "seasonal_water_mm": 250,
         "drought_resistance": "moderate",
         "germination_temp_min": 4,
         "germination_temp_optimal": 20,
         "germination_temp_max": 30,
+        "yield_kg_m2_lower": 1.0,
+        "yield_kg_m2_average": 1.5,
+        "yield_kg_m2_upper": 2.5,
         "sources": {
             "water": "Estimated from leafy greens group",
             "germination": "Similar to other brassicas",
-            "drought": "Leafy greens moderate tolerance"
+            "drought": "Leafy greens moderate tolerance",
+            "yield": "Estimated from similar leafy greens (lettuce, spinach)"
         }
     },
-
-    # Additional crops from the paper
     "eggplant": {
         "name": "Eggplant",
         "base_temp": 10.5,
@@ -232,15 +271,19 @@ CROP_DATABASE = {
         "frost_tolerance": "tender",
         "water_needs": "moderate",
         "season": "warm",
-        "seasonal_water_mm": 550,  # Similar to tomato, 500-600mm
+        "seasonal_water_mm": 550,
         "drought_resistance": "moderate",
         "germination_temp_min": 16,
         "germination_temp_optimal": 27,
         "germination_temp_max": 35,
+        "yield_kg_m2_lower": 3.0,
+        "yield_kg_m2_average": 5.0,
+        "yield_kg_m2_upper": 8.0,
         "sources": {
             "water": "FAO Paper 56 - Solanaceae",
             "germination": "UC Davis, J.F. Harrington",
-            "drought": "Similar to tomato family"
+            "drought": "Similar to tomato family",
+            "yield": "MSU Extension Table 4 (46 lb/100 sq ft); La Ferme de Sainte Marthe (4-8 kg/m²); UVM Extension (16-24k lb/acre)"
         }
     },
     "broccoli": {
@@ -254,15 +297,19 @@ CROP_DATABASE = {
         "frost_tolerance": "hardy",
         "water_needs": "moderate",
         "season": "cool",
-        "seasonal_water_mm": 450,  # 350-500mm
+        "seasonal_water_mm": 450,
         "drought_resistance": "moderate",
         "germination_temp_min": 4,
         "germination_temp_optimal": 27,
         "germination_temp_max": 35,
+        "yield_kg_m2_lower": 0.5,
+        "yield_kg_m2_average": 1.0,
+        "yield_kg_m2_upper": 1.5,
         "sources": {
             "water": "FAO Paper 56 - Cole crops",
             "germination": "UC Davis - Vegetable Seed Germination",
-            "drought": "Brassicas moderate tolerance"
+            "drought": "Brassicas moderate tolerance",
+            "yield": "MSU Extension Table 4 (16 lb/100 sq ft); Oklahoma State Extension (5 tons/acre)"
         }
     },
     "cabbage": {
@@ -276,15 +323,19 @@ CROP_DATABASE = {
         "frost_tolerance": "hardy",
         "water_needs": "moderate",
         "season": "cool",
-        "seasonal_water_mm": 450,  # 350-500mm
+        "seasonal_water_mm": 450,
         "drought_resistance": "moderate",
         "germination_temp_min": 4,
         "germination_temp_optimal": 27,
         "germination_temp_max": 35,
+        "yield_kg_m2_lower": 2.0,
+        "yield_kg_m2_average": 3.5,
+        "yield_kg_m2_upper": 6.0,
         "sources": {
             "water": "FAO Paper 56 Table 12",
             "germination": "UC Davis, J.F. Harrington",
-            "drought": "Sustainability 2020, 12(10):3945"
+            "drought": "Sustainability 2020, 12(10):3945",
+            "yield": "MSU Extension Table 4 (48 lb/100 sq ft); Oklahoma State Extension (15 tons/acre)"
         }
     },
     "cauliflower": {
@@ -303,10 +354,14 @@ CROP_DATABASE = {
         "germination_temp_min": 4,
         "germination_temp_optimal": 27,
         "germination_temp_max": 35,
+        "yield_kg_m2_lower": 1.0,
+        "yield_kg_m2_average": 1.8,
+        "yield_kg_m2_upper": 3.0,
         "sources": {
             "water": "FAO Paper 56",
             "germination": "UC Davis",
-            "drought": "Similar to cabbage"
+            "drought": "Similar to cabbage",
+            "yield": "MSU Extension Table 4 (33 lb/100 sq ft); Oklahoma State Extension (6.5 tons/acre)"
         }
     },
     "onions": {
@@ -320,15 +375,19 @@ CROP_DATABASE = {
         "frost_tolerance": "hardy",
         "water_needs": "moderate",
         "season": "cool",
-        "seasonal_water_mm": 500,  # 350-550mm
+        "seasonal_water_mm": 500,
         "drought_resistance": "moderate",
         "germination_temp_min": 2,
         "germination_temp_optimal": 24,
         "germination_temp_max": 35,
+        "yield_kg_m2_lower": 3.0,
+        "yield_kg_m2_average": 4.5,
+        "yield_kg_m2_upper": 7.0,
         "sources": {
             "water": "FAO Paper 56 - bulb vegetables",
             "germination": "UC Davis",
-            "drought": "Shallow roots, moderate tolerance"
+            "drought": "Shallow roots, moderate tolerance",
+            "yield": "MSU Extension Table 4 (92 lb/100 sq ft)"
         }
     },
     "garlic": {
@@ -347,10 +406,14 @@ CROP_DATABASE = {
         "germination_temp_min": 2,
         "germination_temp_optimal": 20,
         "germination_temp_max": 30,
+        "yield_kg_m2_lower": 0.8,
+        "yield_kg_m2_average": 1.2,
+        "yield_kg_m2_upper": 2.0,
         "sources": {
             "water": "FAO Paper 56",
             "germination": "Similar to onions",
-            "drought": "Similar to onions"
+            "drought": "Similar to onions",
+            "yield": "MSU Extension Table 4 (20 lb/100 sq ft); Grey Duck Garlic (4-10x multiplication factors)"
         }
     },
     "potato": {
@@ -364,15 +427,19 @@ CROP_DATABASE = {
         "frost_tolerance": "half_hardy",
         "water_needs": "moderate",
         "season": "cool",
-        "seasonal_water_mm": 500,  # 500-700mm
+        "seasonal_water_mm": 500,
         "drought_resistance": "moderate",
         "germination_temp_min": 7,
         "germination_temp_optimal": 24,
         "germination_temp_max": 35,
+        "yield_kg_m2_lower": 2.0,
+        "yield_kg_m2_average": 3.5,
+        "yield_kg_m2_upper": 5.0,
         "sources": {
             "water": "FAO Paper 56 Table 12",
             "germination": "UC Davis, J.F. Harrington",
-            "drought": "Moderate sensitivity, critical during tuber initiation"
+            "drought": "Moderate sensitivity, critical during tuber initiation",
+            "yield": "MSU Extension Table 4 (60 lb/100 sq ft); Hermie.com (4 kg/m²); Calculator Doc (2-4 kg/m²)"
         }
     },
     "sweet_potato": {
@@ -386,15 +453,19 @@ CROP_DATABASE = {
         "frost_tolerance": "tender",
         "water_needs": "moderate",
         "season": "warm",
-        "seasonal_water_mm": 600,  # 500-700mm
-        "drought_resistance": "tolerant",  # More drought tolerant than potato
+        "seasonal_water_mm": 600,
+        "drought_resistance": "tolerant",
         "germination_temp_min": 16,
         "germination_temp_optimal": 27,
         "germination_temp_max": 35,
+        "yield_kg_m2_lower": 1.5,
+        "yield_kg_m2_average": 2.5,
+        "yield_kg_m2_upper": 4.0,
         "sources": {
             "water": "FAO Paper 56",
             "germination": "UC Davis",
-            "drought": "International Journal of AgriScience 2021 - orange fleshed sweet potato drought tolerance"
+            "drought": "International Journal of AgriScience 2021 - orange fleshed sweet potato drought tolerance",
+            "yield": "MSU Extension Table 4 (13 lb/100 sq ft - adjusted for intensive cultivation); Harvest to Table estimates"
         }
     },
     "squash": {
@@ -408,15 +479,19 @@ CROP_DATABASE = {
         "frost_tolerance": "tender",
         "water_needs": "moderate",
         "season": "warm",
-        "seasonal_water_mm": 450,  # 400-600mm
+        "seasonal_water_mm": 450,
         "drought_resistance": "moderate",
         "germination_temp_min": 16,
         "germination_temp_optimal": 30,
         "germination_temp_max": 40,
+        "yield_kg_m2_lower": 3.0,
+        "yield_kg_m2_average": 5.0,
+        "yield_kg_m2_upper": 8.0,
         "sources": {
             "water": "FAO Paper 56 - cucurbits",
             "germination": "UC Davis",
-            "drought": "Cucurbits moderate sensitivity"
+            "drought": "Cucurbits moderate sensitivity",
+            "yield": "MSU Extension Table 4 (69 lb/100 sq ft summer squash); La Ferme de Sainte Marthe (4-7 kg/m² zucchini)"
         }
     },
     "pumpkin": {
@@ -430,21 +505,25 @@ CROP_DATABASE = {
         "frost_tolerance": "tender",
         "water_needs": "moderate",
         "season": "warm",
-        "seasonal_water_mm": 500,  # 400-650mm
+        "seasonal_water_mm": 500,
         "drought_resistance": "moderate",
         "germination_temp_min": 16,
         "germination_temp_optimal": 30,
         "germination_temp_max": 40,
+        "yield_kg_m2_lower": 2.0,
+        "yield_kg_m2_average": 3.5,
+        "yield_kg_m2_upper": 6.0,
         "sources": {
             "water": "FAO Paper 56",
             "germination": "UC Davis",
-            "drought": "Similar to squash"
+            "drought": "Similar to squash",
+            "yield": "MSU Extension Table 4 (60 lb/100 sq ft)"
         }
     },
     "melon": {
         "name": "Melon",
         "base_temp": 10,
-        "upper_temp": 38,  # Adjusted from 41.5 which seems too high
+        "upper_temp": 38,
         "gdd_required": 1200,
         "min_sun_hours": 6,
         "optimal_temp_min": 21,
@@ -452,15 +531,19 @@ CROP_DATABASE = {
         "frost_tolerance": "tender",
         "water_needs": "moderate",
         "season": "warm",
-        "seasonal_water_mm": 400,  # 400-600mm
+        "seasonal_water_mm": 400,
         "drought_resistance": "moderate",
         "germination_temp_min": 16,
         "germination_temp_optimal": 30,
         "germination_temp_max": 40,
+        "yield_kg_m2_lower": 1.0,
+        "yield_kg_m2_average": 2.0,
+        "yield_kg_m2_upper": 3.5,
         "sources": {
             "water": "FAO Paper 56 - melon, cantaloupe",
             "germination": "UC Davis",
-            "drought": "Cucurbits moderate"
+            "drought": "Cucurbits moderate",
+            "yield": "MSU Extension Table 4 (28 lb/100 sq ft muskmelon)"
         }
     },
     "watermelon": {
@@ -474,15 +557,19 @@ CROP_DATABASE = {
         "frost_tolerance": "tender",
         "water_needs": "moderate",
         "season": "warm",
-        "seasonal_water_mm": 500,  # 400-600mm
+        "seasonal_water_mm": 500,
         "drought_resistance": "moderate",
         "germination_temp_min": 16,
         "germination_temp_optimal": 32,
         "germination_temp_max": 40,
+        "yield_kg_m2_lower": 1.5,
+        "yield_kg_m2_average": 3.0,
+        "yield_kg_m2_upper": 5.0,
         "sources": {
             "water": "FAO Paper 56",
             "germination": "UC Davis, J.F. Harrington",
-            "drought": "Deep roots, moderate tolerance"
+            "drought": "Deep roots, moderate tolerance",
+            "yield": "MSU Extension Table 4 (17 lb/100 sq ft - adjusted for large fruit size per area)"
         }
     },
     "strawberries": {
@@ -496,15 +583,19 @@ CROP_DATABASE = {
         "frost_tolerance": "hardy",
         "water_needs": "moderate",
         "season": "cool",
-        "seasonal_water_mm": 450,  # 400-500mm
-        "drought_resistance": "sensitive",  # Shallow roots
+        "seasonal_water_mm": 450,
+        "drought_resistance": "sensitive",
         "germination_temp_min": 10,
         "germination_temp_optimal": 21,
         "germination_temp_max": 30,
+        "yield_kg_m2_lower": 1.5,
+        "yield_kg_m2_average": 3.0,
+        "yield_kg_m2_upper": 5.0,
         "sources": {
             "water": "FAO Paper 56 - berries",
             "germination": "UC Davis",
-            "drought": "Shallow-rooted, sensitive"
+            "drought": "Shallow-rooted, sensitive",
+            "yield": "Hydroponic Systems EU case study (typical 4-6 kg/m², advanced systems up to 12.5 kg/m²); adjusted for conventional growing"
         }
     },
     "peas": {
@@ -518,15 +609,19 @@ CROP_DATABASE = {
         "frost_tolerance": "hardy",
         "water_needs": "moderate",
         "season": "cool",
-        "seasonal_water_mm": 350,  # 350-500mm
-        "drought_resistance": "moderate_sensitive",  # Moderately sensitive
+        "seasonal_water_mm": 350,
+        "drought_resistance": "moderate_sensitive",
         "germination_temp_min": 4,
         "germination_temp_optimal": 24,
         "germination_temp_max": 30,
+        "yield_kg_m2_lower": 0.8,
+        "yield_kg_m2_average": 1.2,
+        "yield_kg_m2_upper": 2.0,
         "sources": {
             "water": "FAO Paper 56 - legumes",
             "germination": "UC Davis",
-            "drought": "Agronomy 2019 - peas moderately sensitive"
+            "drought": "Agronomy 2019 - peas moderately sensitive",
+            "yield": "MSU Extension Table 4 (24 lb/100 sq ft shelled peas)"
         }
     },
     "corn": {
@@ -540,15 +635,19 @@ CROP_DATABASE = {
         "frost_tolerance": "tender",
         "water_needs": "moderate",
         "season": "warm",
-        "seasonal_water_mm": 550,  # 500-800mm depending on variety
+        "seasonal_water_mm": 550,
         "drought_resistance": "moderate_sensitive",
         "germination_temp_min": 10,
         "germination_temp_optimal": 30,
         "germination_temp_max": 40,
+        "yield_kg_m2_lower": 0.4,
+        "yield_kg_m2_average": 0.7,
+        "yield_kg_m2_upper": 1.2,
         "sources": {
             "water": "FAO Paper 56 Table 12 - maize",
             "germination": "UC Davis, J.F. Harrington",
-            "drought": "Agronomy 2019 - moderately sensitive, critical at tasseling"
+            "drought": "Agronomy 2019 - moderately sensitive, critical at tasseling",
+            "yield": "USDA NASS (177 bu/acre avg = ~11 tons/ha); MSU Extension Table 4 (36 lb kernels/100 sq ft)"
         }
     },
     "basil": {
@@ -562,15 +661,19 @@ CROP_DATABASE = {
         "frost_tolerance": "tender",
         "water_needs": "moderate",
         "season": "warm",
-        "seasonal_water_mm": 300,  # Herbs ~250-400mm
+        "seasonal_water_mm": 300,
         "drought_resistance": "moderate",
         "germination_temp_min": 18,
         "germination_temp_optimal": 27,
         "germination_temp_max": 35,
+        "yield_kg_m2_lower": 0.5,
+        "yield_kg_m2_average": 1.0,
+        "yield_kg_m2_upper": 2.0,
         "sources": {
             "water": "Estimated from herb requirements",
             "germination": "UC Davis",
-            "drought": "Aromatic herbs moderate tolerance"
+            "drought": "Aromatic herbs moderate tolerance",
+            "yield": "ResearchGate study (0.71 kg per plant Sweet Genovese); Purdue Extension; estimated at 1-2 plants per sq ft"
         }
     },
     "parsley": {
@@ -589,10 +692,14 @@ CROP_DATABASE = {
         "germination_temp_min": 4,
         "germination_temp_optimal": 21,
         "germination_temp_max": 30,
+        "yield_kg_m2_lower": 0.5,
+        "yield_kg_m2_average": 1.0,
+        "yield_kg_m2_upper": 1.8,
         "sources": {
             "water": "Estimated from herb crops",
             "germination": "UC Davis",
-            "drought": "Moderate tolerance"
+            "drought": "Moderate tolerance",
+            "yield": "MSU Extension Table 4 (24 lb/100 sq ft); estimated for multiple cuttings"
         }
     },
     "wheat": {
@@ -606,15 +713,19 @@ CROP_DATABASE = {
         "frost_tolerance": "very_hardy",
         "water_needs": "moderate",
         "season": "cool",
-        "seasonal_water_mm": 550,  # 450-650mm depending on variety
+        "seasonal_water_mm": 550,
         "drought_resistance": "moderate_tolerant",
         "germination_temp_min": 4,
         "germination_temp_optimal": 24,
         "germination_temp_max": 35,
+        "yield_kg_m2_lower": 0.3,
+        "yield_kg_m2_average": 0.45,
+        "yield_kg_m2_upper": 0.7,
         "sources": {
             "water": "FAO Paper 56 Table 12 - wheat",
             "germination": "UC Davis",
-            "drought": "Frontiers Plant Science 2023 - some varieties drought tolerant"
+            "drought": "Frontiers Plant Science 2023 - some varieties drought tolerant",
+            "yield": "Purdue/farmdoc (4.48 tons/ha average international); Our World in Data; USDA"
         }
     },
     "rice": {
@@ -628,15 +739,19 @@ CROP_DATABASE = {
         "frost_tolerance": "tender",
         "water_needs": "high",
         "season": "warm",
-        "seasonal_water_mm": 1000,  # 900-2500mm including flooding
-        "drought_resistance": "sensitive",  # Unless aerobic/upland rice
+        "seasonal_water_mm": 1000,
+        "drought_resistance": "sensitive",
         "germination_temp_min": 10,
         "germination_temp_optimal": 30,
         "germination_temp_max": 40,
+        "yield_kg_m2_lower": 0.3,
+        "yield_kg_m2_average": 0.5,
+        "yield_kg_m2_upper": 0.8,
         "sources": {
             "water": "FAO Paper 56 Table 12 - paddy rice",
             "germination": "UC Davis",
-            "drought": "Plant Cell Physiol. 2016 - most rice sensitive, breeding efforts ongoing"
+            "drought": "Plant Cell Physiol. 2016 - most rice sensitive, breeding efforts ongoing",
+            "yield": "USDA NASS (7,649 lb/acre = ~8.6 tons/ha); Our World in Data; FAO data (variable by region 3-10 tons/ha)"
         }
     },
     "soybeans": {
@@ -650,15 +765,19 @@ CROP_DATABASE = {
         "frost_tolerance": "tender",
         "water_needs": "moderate",
         "season": "warm",
-        "seasonal_water_mm": 500,  # 450-700mm
+        "seasonal_water_mm": 500,
         "drought_resistance": "moderate_sensitive",
         "germination_temp_min": 10,
         "germination_temp_optimal": 30,
         "germination_temp_max": 40,
+        "yield_kg_m2_lower": 0.2,
+        "yield_kg_m2_average": 0.35,
+        "yield_kg_m2_upper": 0.5,
         "sources": {
             "water": "FAO Paper 56 - soybeans",
             "germination": "UC Davis",
-            "drought": "Moderately sensitive to water stress"
+            "drought": "Moderately sensitive to water stress",
+            "yield": "USDA NASS (50.6 bu/acre = ~3.4 tons/ha); Our World in Data; Iowa State Extension"
         }
     },
     "sunflower": {
@@ -672,15 +791,27 @@ CROP_DATABASE = {
         "frost_tolerance": "half_hardy",
         "water_needs": "moderate",
         "season": "warm",
-        "seasonal_water_mm": 500,  # 400-600mm
-        "drought_resistance": "tolerant",  # Deep tap root
+        "seasonal_water_mm": 500,
+        "drought_resistance": "tolerant",
         "germination_temp_min": 7,
         "germination_temp_optimal": 27,
         "germination_temp_max": 35,
+        "yield_kg_m2_lower": 0.15,
+        "yield_kg_m2_average": 0.25,
+        "yield_kg_m2_upper": 0.4,
         "sources": {
             "water": "FAO Paper 56 - sunflower",
             "germination": "UC Davis",
-            "drought": "Deep rooting system, relatively drought tolerant"
+            "drought": "Deep rooting system, relatively drought tolerant",
+            "yield": "USDA data (~1.5-3 tons/ha typical); Our World in Data; FAO Statistics"
         }
     }
 }
+
+# Note on yield variations:
+# - Lower bounds represent yields in less optimal conditions, beginning gardeners, or marginal soils
+# - Average yields represent good home garden or small-scale commercial production under normal conditions
+# - Upper bounds represent optimal conditions, experienced growers, greenhouse/protected cultivation, or intensive methods
+# - Commercial large-scale yields may differ from small-scale intensive garden yields
+# - Greenhouse and hydroponic systems can achieve significantly higher yields than field production
+# - Values are for fresh weight unless otherwise noted (grains are at standard moisture content)
