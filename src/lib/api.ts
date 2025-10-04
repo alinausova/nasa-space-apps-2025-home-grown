@@ -3,10 +3,8 @@
  * Handles all communication with the FastAPI backend
  */
 
-// Environment-aware API URL
-const API_URL = import.meta.env.PROD
-  ? 'https://home-grown-api.onrender.com'  // Update this when you deploy to Render
-  : 'http://localhost:8000';
+// Environment-aware API URL - configured via VITE_API_URL
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
 /**
  * Base fetch wrapper with error handling
