@@ -2,6 +2,8 @@
 
 **NASA Space Apps Challenge 2025** - Urban agriculture planning with climate-based crop recommendations
 
+🌐 **Live:** [https://alinausova.github.io/nasa-space-apps-2025-home-grown/](https://alinausova.github.io/nasa-space-apps-2025-home-grown/)
+
 ## Features
 
 - 🗺️ Interactive 3D globe with polygon drawing
