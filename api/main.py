@@ -272,106 +272,6 @@ def analyze_climate_data(nasa_data: Dict) -> Dict:
     return analysis
 
 
-def calculate_crop_suitability(crop_data: Dict, climate_analysis: Dict,
-                               nasa_raw_data: Dict) -> Dict:
-    """Calculate suitability score for a specific crop based on climate data."""
-
-    # Extract climate metrics
-    avg_temp_max = climate_analysis["temperature_max"]["mean"]
-    avg_temp_min = climate_analysis["temperature_min"]["mean"]
-    avg_sun_hours = climate_analysis["estimated_sun_hours_daily"]
-    annual_precip = climate_analysis["precipitation"]["total_annual"]
-
-    # Calculate total GDD for the year
-    parameters = nasa_raw_data.get("properties", {}).get("parameter", {})
-    temp_max_data = parameters.get("T2M_MAX", {})
-    temp_min_data = parameters.get("T2M_MIN", {})
-
-    total_gdd = 0
-    for date_key in temp_max_data.keys():
-        if date_key in temp_min_data:
-            gdd = calculate_gdd(
-                temp_max_data[date_key],
-                temp_min_data[date_key],
-                crop_data["base_temp"]
-            )
-            total_gdd += gdd
-
-    # Score components (0-100 each)
-    scores = {}
-
-    # GDD Score
-    gdd_ratio = total_gdd / crop_data["gdd_required"]
-    if gdd_ratio >= 1.0:
-        scores["gdd"] = 100
-    elif gdd_ratio >= 0.8:
-        scores["gdd"] = 80 + (gdd_ratio - 0.8) * 100
-    else:
-        scores["gdd"] = gdd_ratio * 100
-
-    # Sun Hours Score
-    sun_ratio = avg_sun_hours / crop_data["min_sun_hours"]
-    scores["sunlight"] = min(100, sun_ratio * 100)
-
-    # Temperature Range Score
-    avg_temp = (avg_temp_max + avg_temp_min) / 2
-    optimal_mid = (crop_data["optimal_temp_min"] + crop_data["optimal_temp_max"]) / 2
-    temp_diff = abs(avg_temp - optimal_mid)
-
-    if temp_diff <= 3:
-        scores["temperature"] = 100
-    elif temp_diff <= 6:
-        scores["temperature"] = 80
-    elif temp_diff <= 10:
-        scores["temperature"] = 60
-    else:
-        scores["temperature"] = max(0, 60 - (temp_diff - 10) * 5)
-
-    # Water availability score (simple precipitation check)
-    # Assume moderate needs = 500-800mm, adjust for crop
-    # todo: use the actual crop precipitation needs from the database rather than these categorial values
-    water_multiplier = {"low": 0.7, "moderate": 1.0, "high": 1.3}
-    ideal_precip = 650 * water_multiplier.get(crop_data["water_needs"], 1.0)
-    precip_diff = abs(annual_precip - ideal_precip)
-
-    if precip_diff <= 100:
-        scores["water"] = 100
-    elif precip_diff <= 300:
-        scores["water"] = 80
-    else:
-        scores["water"] = max(40, 80 - (precip_diff - 300) / 10)
-
-    # Overall suitability (weighted average)
-    overall_score = (
-            scores["gdd"] * 0.35 +
-            scores["sunlight"] * 0.25 +
-            scores["temperature"] * 0.25 +
-            scores["water"] * 0.15
-    )
-
-    # Determine suitability category
-    if overall_score >= 80:
-        category = "Excellent"
-    elif overall_score >= 65:
-        category = "Good"
-    elif overall_score >= 50:
-        category = "Moderate"
-    else:
-        category = "Poor"
-
-    return {
-        "overall_score": round(overall_score, 1),
-        "category": category,
-        "scores": {k: round(v, 1) for k, v in scores.items()},
-        "metrics": {
-            "total_gdd": round(total_gdd, 1),
-            "required_gdd": crop_data["gdd_required"],
-            "avg_sun_hours": round(avg_sun_hours, 1),
-            "required_sun_hours": crop_data["min_sun_hours"]
-        }
-    }
-
-
 @app.get("/crops")
 async def list_crops():
     """List all available crops in the database."""
@@ -471,8 +371,60 @@ def calculate_polygon_area_m2(coordinates: List[Tuple[float, float]]) -> float:
     return area
 
 # this is the updated version with the actual precipitation values per veggie
+def calculate_yield_estimate(crop_data: Dict, suitability_score: float, area_m2: float) -> Dict:
+    """Calculate expected yield based on suitability score and area."""
+
+    # Get yield boundaries from crop data
+    lower_yield = crop_data.get("yield_kg_m2_lower", 0)
+    avg_yield = crop_data.get("yield_kg_m2_average", 0)
+    upper_yield = crop_data.get("yield_kg_m2_upper", 0)
+
+    # Determine yield per m2 based on suitability score
+    if suitability_score >= 90:
+        # Excellent conditions - use upper bound
+        yield_per_m2 = upper_yield
+        yield_category = "Upper (Optimal conditions)"
+    elif suitability_score >= 80:
+        # Good conditions - interpolate between average and upper
+        # Linear interpolation: at 80% use average, at 90% use upper
+        ratio = (suitability_score - 80) / 10
+        yield_per_m2 = avg_yield + (upper_yield - avg_yield) * ratio
+        yield_category = "Average to Upper"
+    elif suitability_score >= 70:
+        # Moderate-good conditions - interpolate between lower and average
+        # Linear interpolation: at 70% use lower, at 80% use average
+        ratio = (suitability_score - 70) / 10
+        yield_per_m2 = lower_yield + (avg_yield - lower_yield) * ratio
+        yield_category = "Lower to Average"
+    elif suitability_score >= 50:
+        # Marginal conditions - use lower bound with reduction
+        # Linear decrease: at 70% use lower, at 50% use 50% of lower
+        ratio = (suitability_score - 50) / 20
+        yield_per_m2 = lower_yield * (0.5 + 0.5 * ratio)
+        yield_category = "Below Lower (Challenging conditions)"
+    else:
+        # Poor conditions - minimal yield
+        yield_per_m2 = lower_yield * 0.5 * (suitability_score / 50)
+        yield_category = "Minimal (Poor conditions)"
+
+    # Calculate total yield for the area
+    total_yield_kg = yield_per_m2 * area_m2
+
+    return {
+        "yield_per_m2_kg": round(yield_per_m2, 2),
+        "total_yield_kg": round(total_yield_kg, 2),
+        "total_yield_tons": round(total_yield_kg / 1000, 3),
+        "yield_category": yield_category,
+        "yield_range": {
+            "lower_kg_m2": lower_yield,
+            "average_kg_m2": avg_yield,
+            "upper_kg_m2": upper_yield
+        }
+    }
+
+
 def calculate_crop_suitability_with_water(crop_data: Dict, climate_analysis: Dict,
-                                          nasa_raw_data: Dict) -> Dict:
+                                          nasa_raw_data: Dict, area_m2: float = None) -> Dict:
     """Calculate suitability score for a specific crop based on climate data with actual water requirements."""
 
     # Extract climate metrics
@@ -528,7 +480,7 @@ def calculate_crop_suitability_with_water(crop_data: Dict, climate_analysis: Dic
         scores["temperature"] = max(0, 60 - (temp_diff - 10) * 5)
 
     # Water availability score using actual crop requirements
-    required_water = crop_data.get("seasonal_water_mm", 500)  # Fallback to 500mm if not specified
+    required_water = crop_data.get("seasonal_water_mm", 500)
     water_diff = abs(annual_precip - required_water)
 
     # Calculate irrigation needs
@@ -538,19 +490,17 @@ def calculate_crop_suitability_with_water(crop_data: Dict, climate_analysis: Dic
     if water_diff <= 50:
         scores["water"] = 100
     elif water_diff <= 150:
-        scores["water"] = 90 - ((water_diff - 50) / 100) * 20  # Linear decrease from 90 to 70
+        scores["water"] = 90 - ((water_diff - 50) / 100) * 20
     elif water_diff <= 300:
-        scores["water"] = 70 - ((water_diff - 150) / 150) * 30  # Linear decrease from 70 to 40
+        scores["water"] = 70 - ((water_diff - 150) / 150) * 30
     else:
-        scores["water"] = max(20, 40 - ((water_diff - 300) / 100) * 5)  # Slow decrease, minimum 20
+        scores["water"] = max(20, 40 - ((water_diff - 300) / 100) * 5)
 
     # Drought resistance adjustment
     drought_resistance = crop_data.get("drought_resistance", "moderate")
     if drought_resistance in ["tolerant", "moderate_tolerant"] and irrigation_needed > 0:
-        # Drought tolerant crops get bonus points when irrigation is needed
         scores["water"] = min(100, scores["water"] * 1.1)
     elif drought_resistance in ["sensitive"] and irrigation_needed > 100:
-        # Sensitive crops lose points with high irrigation needs
         scores["water"] = scores["water"] * 0.9
 
     # Overall suitability (weighted average)
@@ -571,7 +521,7 @@ def calculate_crop_suitability_with_water(crop_data: Dict, climate_analysis: Dic
     else:
         category = "Poor"
 
-    return {
+    result = {
         "overall_score": round(overall_score, 1),
         "category": category,
         "scores": {k: round(v, 1) for k, v in scores.items()},
@@ -585,6 +535,14 @@ def calculate_crop_suitability_with_water(crop_data: Dict, climate_analysis: Dic
             "irrigation_needed_mm": round(irrigation_needed, 1)
         }
     }
+
+    # Add yield estimate if area is provided
+    if area_m2 is not None:
+        result["yield_estimate"] = calculate_yield_estimate(crop_data, overall_score, area_m2)
+
+    return result
+
+
 
 
 @app.post("/recommendations/polygon")
@@ -616,7 +574,7 @@ async def get_polygon_crop_recommendations(
     # Calculate suitability for each crop
     recommendations = []
     for crop_id, crop_data in CROP_DATABASE.items():
-        suitability = calculate_crop_suitability_with_water(crop_data, climate_analysis, nasa_data)
+        suitability = calculate_crop_suitability_with_water(crop_data, climate_analysis, nasa_data, area_m2)
 
         if suitability["overall_score"] >= min_score:
             recommendations.append({
