@@ -3,6 +3,7 @@
     import mapboxgl from "mapbox-gl";
     import MapboxDraw from "@mapbox/mapbox-gl-draw";
     import PolygonDrawer from "./PolygonDrawer.svelte";
+    import { getCropRecommendations, type CropRecommendation } from "./api";
 
     const accessToken = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN;
 
@@ -94,6 +95,15 @@
         polygonCoordinates = null;
     }
 
+    async function analyzePolygon() {
+        if (!polygonCoordinates) {
+            throw new Error('No polygon coordinates available');
+        }
+
+        const response = await getCropRecommendations(polygonCoordinates);
+        return response;
+    }
+
     let interval: ReturnType<typeof setInterval>
 
     onMount(() => {
@@ -121,11 +131,70 @@
         map.on('load', () => {
             interval = setInterval(spinGlobe, 875);
 
-            // Initialize Mapbox Draw
+            // Initialize Mapbox Draw with custom styles
             draw = new MapboxDraw({
                 displayControlsDefault: false,
                 controls: {},
-                defaultMode: 'simple_select'
+                defaultMode: 'simple_select',
+                styles: [
+                    // Polygon fill
+                    {
+                        'id': 'gl-draw-polygon-fill',
+                        'type': 'fill',
+                        'filter': ['all', ['==', '$type', 'Polygon'], ['!=', 'mode', 'static']],
+                        'paint': {
+                            'fill-color': '#3b82f6',
+                            'fill-opacity': 0.3
+                        }
+                    },
+                    // Polygon outline
+                    {
+                        'id': 'gl-draw-polygon-stroke-active',
+                        'type': 'line',
+                        'filter': ['all', ['==', '$type', 'Polygon'], ['!=', 'mode', 'static']],
+                        'paint': {
+                            'line-color': '#3b82f6',
+                            'line-width': 3
+                        }
+                    },
+                    // Vertex points (regular)
+                    {
+                        'id': 'gl-draw-polygon-and-line-vertex-inactive',
+                        'type': 'circle',
+                        'filter': ['all', ['==', 'meta', 'vertex'], ['!=', 'meta', 'midpoint']],
+                        'paint': {
+                            'circle-radius': 5,
+                            'circle-color': '#3b82f6'
+                        }
+                    },
+                    // First vertex (larger)
+                    {
+                        'id': 'gl-draw-polygon-first-vertex',
+                        'type': 'circle',
+                        'filter': ['all', ['==', 'meta', 'vertex'], ['==', '$type', 'Point'], ['==', 'active', 'true']],
+                        'paint': {
+                            'circle-radius': [
+                                'case',
+                                ['==', ['get', 'coord_path'], '0'],
+                                24,
+                                5
+                            ],
+                            'circle-color': '#3b82f6',
+                            'circle-stroke-width': 2,
+                            'circle-stroke-color': '#ffffff'
+                        }
+                    },
+                    // Line being drawn
+                    {
+                        'id': 'gl-draw-line',
+                        'type': 'line',
+                        'filter': ['all', ['==', '$type', 'LineString'], ['!=', 'mode', 'static']],
+                        'paint': {
+                            'line-color': '#3b82f6',
+                            'line-width': 2
+                        }
+                    }
+                ]
             });
 
             map?.addControl(draw as any);
@@ -188,35 +257,6 @@
         margin: 24px;
     }
 
-    .draw-controls {
-        position: fixed;
-        top: 20px;
-        left: 20px;
-        z-index: 1000;
-    }
-
-    .draw-button {
-        background: #4ade80;
-        color: #1a1a1a;
-        border: none;
-        padding: 12px 24px;
-        border-radius: 8px;
-        font-size: 1rem;
-        font-weight: 600;
-        cursor: pointer;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-        transition: all 0.2s;
-    }
-
-    .draw-button:hover {
-        background: #22c55e;
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    }
-
-    .draw-button:active {
-        transform: translateY(0);
-    }
 </style>
 
 {#if showBackdrop}
@@ -231,14 +271,13 @@
 <!-- Map Container -->
 <div id="map"></div>
 
-<!-- Draw Controls -->
-{#if !showBackdrop}
-    <div class="draw-controls">
-        <button class="draw-button" onclick={toggleDrawMode}>
-            {isDrawing ? 'Cancel Drawing' : 'Draw Polygon'}
-        </button>
-    </div>
-{/if}
-
 <!-- Polygon Coordinates Display -->
-<PolygonDrawer coordinates={polygonCoordinates} onClear={clearPolygon} />
+{#if !showBackdrop}
+    <PolygonDrawer
+        coordinates={polygonCoordinates}
+        onClear={clearPolygon}
+        onAnalyze={analyzePolygon}
+        onToggleDraw={toggleDrawMode}
+        isDrawing={isDrawing}
+    />
+{/if}

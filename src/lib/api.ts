@@ -60,4 +60,80 @@ export async function getCachedData(): Promise<any> {
   return apiFetch('/api/cached-data');
 }
 
-// Add more API functions as needed for your NASA data endpoints
+/**
+ * Types for crop recommendations API
+ */
+export interface CropRecommendation {
+  crop_id: string;
+  crop_name: string;
+  season: string;
+  frost_tolerance: string;
+  drought_resistance: string;
+  suitability: {
+    overall_score: number;
+    category: string;
+    scores: {
+      gdd: number;
+      sunlight: number;
+      temperature: number;
+      water: number;
+    };
+    metrics: {
+      total_gdd: number;
+      required_gdd: number;
+      avg_sun_hours: number;
+      required_sun_hours: number;
+      annual_precipitation_mm: number;
+      required_water_mm: number;
+      irrigation_needed_mm: number;
+    };
+    yield_estimate: {
+      yield_per_m2_kg: number;
+      total_yield_kg: number;
+      total_yield_tons: number;
+      yield_category: string;
+      yield_range: {
+        lower_kg_m2: number;
+        average_kg_m2: number;
+        upper_kg_m2: number;
+      };
+    };
+  };
+}
+
+export interface RecommendationsResponse {
+  location: {
+    center_latitude: number;
+    center_longitude: number;
+    area_m2: number;
+    area_hectares: number;
+  };
+  year: number;
+  climate_summary: {
+    avg_temp_max: number;
+    avg_temp_min: number;
+    annual_precipitation_mm: number;
+    avg_sun_hours_daily: number;
+  };
+  recommendations: CropRecommendation[];
+  total_suitable_crops: number;
+  data_source: string;
+}
+
+/**
+ * Get crop recommendations for a polygon
+ * Coordinates should be in [lon, lat] format (GeoJSON standard)
+ */
+export async function getCropRecommendations(
+  coordinates: number[][][]
+): Promise<RecommendationsResponse> {
+  // Convert from [lon, lat] to [lat, lon] for API
+  const apiCoordinates = coordinates[0].map(([lon, lat]) => [lat, lon]);
+
+  return apiFetch('/recommendations/polygon', {
+    method: 'POST',
+    body: JSON.stringify({
+      coordinates: apiCoordinates,
+    }),
+  });
+}
