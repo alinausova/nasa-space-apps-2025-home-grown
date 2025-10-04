@@ -30,6 +30,7 @@ dist-ssr
 
 # Python
 api/venv/
+api/.venv/
 api/__pycache__/
 api/*.pyc
 api/*.pyo

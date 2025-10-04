@@ -1,11 +1,16 @@
 <script lang="ts">
     import {onDestroy, onMount} from "svelte";
     import mapboxgl from "mapbox-gl";
+    import MapboxDraw from "@mapbox/mapbox-gl-draw";
+    import PolygonDrawer from "./PolygonDrawer.svelte";
 
     const accessToken = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN;
 
-    let showBackdrop = true;
+    let showBackdrop = $state(true);
     let map: mapboxgl.Map | null = null;
+    let draw: MapboxDraw | null = null;
+    let polygonCoordinates: number[][][] | null = $state(null);
+    let isDrawing = $state(false);
 
     // Globe spinning animation settings
     const secondsPerRevolution = 120;
@@ -40,12 +45,53 @@
         showBackdrop = false;
         spinEnabled = false;
         map?.setConfigProperty('basemap', 'lightPreset', 'dawn');
-        // Set to a default location - you can customize this later
+        // Fly to Munich
         map?.flyTo({
-            center: [0, 20],
-            zoom: 2,
+            center: [11.5820, 48.1351],
+            zoom: 12,
             essential: true
         });
+    }
+
+    function toggleDrawMode() {
+        if (!draw || !map) return;
+
+        isDrawing = !isDrawing;
+
+        if (isDrawing) {
+            // Enter polygon drawing mode
+            draw.changeMode('draw_polygon');
+        } else {
+            // Exit drawing mode
+            draw.changeMode('simple_select');
+        }
+    }
+
+    function clearPolygon() {
+        if (draw) {
+            draw.deleteAll();
+            polygonCoordinates = null;
+            isDrawing = false;
+        }
+    }
+
+    function handleDrawCreate(e: any) {
+        const data = e.features[0];
+        if (data.geometry.type === 'Polygon') {
+            polygonCoordinates = data.geometry.coordinates;
+            isDrawing = false;
+        }
+    }
+
+    function handleDrawUpdate(e: any) {
+        const data = e.features[0];
+        if (data && data.geometry.type === 'Polygon') {
+            polygonCoordinates = data.geometry.coordinates;
+        }
+    }
+
+    function handleDrawDelete() {
+        polygonCoordinates = null;
     }
 
     let interval: ReturnType<typeof setInterval>
@@ -74,6 +120,20 @@
 
         map.on('load', () => {
             interval = setInterval(spinGlobe, 875);
+
+            // Initialize Mapbox Draw
+            draw = new MapboxDraw({
+                displayControlsDefault: false,
+                controls: {},
+                defaultMode: 'simple_select'
+            });
+
+            map?.addControl(draw as any);
+
+            // Listen to draw events
+            map?.on('draw.create', handleDrawCreate);
+            map?.on('draw.update', handleDrawUpdate);
+            map?.on('draw.delete', handleDrawDelete);
         });
 
         // Pause spinning when user interacts
@@ -127,6 +187,36 @@
         line-height: 13rem;
         margin: 24px;
     }
+
+    .draw-controls {
+        position: fixed;
+        top: 20px;
+        left: 20px;
+        z-index: 1000;
+    }
+
+    .draw-button {
+        background: #4ade80;
+        color: #1a1a1a;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 8px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        transition: all 0.2s;
+    }
+
+    .draw-button:hover {
+        background: #22c55e;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .draw-button:active {
+        transform: translateY(0);
+    }
 </style>
 
 {#if showBackdrop}
@@ -134,9 +224,21 @@
         <h1 class="overlay-title">
             Home Grown
         </h1>
-        <button on:click={startExploring}>Start Exploring</button>
+        <button onclick={startExploring}>Start Exploring</button>
     </div>
 {/if}
 
 <!-- Map Container -->
 <div id="map"></div>
+
+<!-- Draw Controls -->
+{#if !showBackdrop}
+    <div class="draw-controls">
+        <button class="draw-button" onclick={toggleDrawMode}>
+            {isDrawing ? 'Cancel Drawing' : 'Draw Polygon'}
+        </button>
+    </div>
+{/if}
+
+<!-- Polygon Coordinates Display -->
+<PolygonDrawer coordinates={polygonCoordinates} onClear={clearPolygon} />
