@@ -1255,28 +1255,31 @@ async def get_polygon_crop_recommendations(
     print(f"DEBUG: Landsat items found: {len(stac_items_landsat)}")
 
     # ========== PROCESS LANDSAT DATA ==========
-    if len(stac_items_landsat) > 0:
-        print(f"DEBUG: First item's available assets: {list(stac_items_landsat[0].assets.keys())}")
-        st_landsat_daily_min_max_temp = calculate_surface_temperature_landsat(
-            stac_items_landsat,
-            "lwir",
-            polygon
-        )
-        print(f"DEBUG: Landsat DataFrame shape: {st_landsat_daily_min_max_temp.shape}")
-        print(f"DEBUG: Landsat date range: {st_landsat_daily_min_max_temp.index.min()} to {st_landsat_daily_min_max_temp.index.max()}")
-        print(f"DEBUG: Landsat sample data:\n{st_landsat_daily_min_max_temp.head()}")
+    st_landsat_daily_min_max_temp = None
+    try:
+        if len(stac_items_landsat) > 0:
+            st_landsat_daily_min_max_temp = calculate_surface_temperature_landsat(
+                stac_items_landsat,
+                "lwir",
+                polygon
+            )
+            print(f"DEBUG: Landsat DataFrame shape: {st_landsat_daily_min_max_temp.shape}")
+            print(f"DEBUG: Landsat date range: {st_landsat_daily_min_max_temp.index.min()} to {st_landsat_daily_min_max_temp.index.max()}")
+            print(f"DEBUG: Landsat sample data:\n{st_landsat_daily_min_max_temp.head()}")
 
-        # ========== MERGE DATA SOURCES ==========
-        climate_data["primary_year_data"] = merge_climate_data(
-            climate_data["primary_year_data"],
-            st_landsat_daily_min_max_temp,
-            year
-        )
+            # ========== MERGE DATA SOURCES ==========
+            climate_data["primary_year_data"] = merge_climate_data(
+                climate_data["primary_year_data"],
+                st_landsat_daily_min_max_temp,
+                year
+            )
 
-        # Re-analyze climate data after merge
-        climate_data["climate_analysis"] = analyze_climate_data(climate_data["primary_year_data"])
-    else:
-        print(f"WARNING: No Landsat data found for the specified area and time range")
+            # Re-analyze climate data after merge
+            climate_data["climate_analysis"] = analyze_climate_data(climate_data["primary_year_data"])
+        else:
+            print(f"WARNING: No Landsat data found for the specified area and time range")
+    except Exception as e:
+        print(f"WARNING: Landsat processing failed, falling back to NASA POWER only. Error: {e}")
         st_landsat_daily_min_max_temp = None
 
     # ========== CROP PROCESSING ==========
