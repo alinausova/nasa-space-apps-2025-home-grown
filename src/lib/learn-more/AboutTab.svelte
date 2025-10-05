@@ -32,7 +32,7 @@
 
     <!-- Team Section -->
     <div class="mt-12 mb-8">
-        <h3 class="text-2xl font-bold text-black mb-6 text-center">Our Team</h3>
+        <h3 class="text-2xl font-bold text-black mb-6 ">Our Team</h3>
 
         <!-- Team Members Grid -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
