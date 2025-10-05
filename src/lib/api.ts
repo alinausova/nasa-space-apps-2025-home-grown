@@ -130,7 +130,7 @@ export async function getCropRecommendations(
   // Convert from [lon, lat] to [lat, lon] for API
   const apiCoordinates = coordinates[0].map(([lon, lat]) => [lat, lon]);
 
-  return apiFetch('/recommendations/polygon', {
+  return apiFetch('/recommendations/polygon?limit=25', {
     method: 'POST',
     body: JSON.stringify({
       coordinates: apiCoordinates,

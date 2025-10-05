@@ -2,7 +2,7 @@
     import {onDestroy, onMount} from "svelte";
     import mapboxgl from "mapbox-gl";
     import MapboxDraw from "@mapbox/mapbox-gl-draw";
-    import PolygonDrawer from "./PolygonDrawer.svelte";
+    import AreaAnalysisPanel from "./AreaAnalysisPanel.svelte";
     import { getCropRecommendations, type CropRecommendation } from "./api";
 
     const accessToken = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN;
@@ -216,6 +216,11 @@
 
     // Cleanup function to remove the map when the component is destroyed
     onDestroy(() => {
+        if (map && draw) {
+            // Remove draw control first to prevent duplicate layer errors
+            map.removeControl(draw);
+            draw = null;
+        }
         if (map) {
             map.remove();
             map = null;
@@ -224,87 +229,39 @@
     });
 </script>
 
-<style>
-    #map {
-        width: 100vw;
-        height: 100vh;
-    }
-
-    .github-link {
-        position: fixed;
-        top: 20px;
-        left: 20px;
-        z-index: 1000;
-        width: 32px;
-        height: 32px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: opacity 0.2s;
-        text-decoration: none;
-    }
-
-    .github-link:hover {
-        opacity: 0.7;
-    }
-
-    .github-link svg {
-        width: 32px;
-        height: 32px;
-        fill: #1a1a1a;
-    }
-
-    .overlay-backdrop {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background-color: rgba(0, 0, 0, 0.5);
-        z-index: 9999;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .column {
-        display: flex;
-        flex-direction: column;
-    }
-
-    .overlay-title {
-        font-size: 12rem;
-        font-weight: bold;
-        color: #4ade80;
-        text-transform: uppercase;
-        line-height: 13rem;
-        margin: 24px;
-    }
-
-</style>
-
-<!-- GitHub Link -->
-<a href="https://github.com/alinausova/nasa-space-apps-2025-home-grown" target="_blank" rel="noopener noreferrer" class="github-link" title="View on GitHub">
-    <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
-        <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
-    </svg>
-</a>
+<!-- GitHub Link and Title -->
+{#if !showBackdrop}
+<div class="fixed top-5 left-5 z-[1000] flex items-center gap-3">
+    <a
+        href="https://github.com/alinausova/nasa-space-apps-2025-home-grown"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="w-8 h-8 flex items-center justify-center transition-opacity duration-200 hover:opacity-70 no-underline"
+        title="View on GitHub"
+    >
+        <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 fill-[#1a1a1a]">
+            <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+        </svg>
+    </a>
+    <h1 class="text-2xl font-bold text-neutral-900 uppercase">Home Grown</h1>
+</div>
+{/if}
 
 {#if showBackdrop}
-    <div class="overlay-backdrop column">
-        <h1 class="overlay-title">
+    <div class="absolute inset-0 bg-black/50 z-[9999] flex flex-col justify-center items-center">
+        <h1 class="text-[12rem] font-bold text-green-400 uppercase leading-[13rem] my-6">
             Home Grown
         </h1>
-        <button onclick={startExploring}>Start Exploring</button>
+        <button class="btn btn-primary btn-lg" onclick={startExploring}>Start Exploring</button>
     </div>
 {/if}
 
 <!-- Map Container -->
-<div id="map"></div>
+<div id="map" class="w-screen h-screen"></div>
 
-<!-- Polygon Coordinates Display -->
+<!-- Area Analysis Panel -->
 {#if !showBackdrop}
-    <PolygonDrawer
+    <AreaAnalysisPanel
         coordinates={polygonCoordinates}
         onClear={clearPolygon}
         onAnalyze={analyzePolygon}
