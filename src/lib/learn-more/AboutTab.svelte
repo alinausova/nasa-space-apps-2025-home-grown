@@ -7,7 +7,7 @@
     </div>
 
     <p class="mb-4">
-        HomeGrown is an innovative and interactive tool that is designed to empower urban planners to design climate resilient cities of tomorrow!
+        Home Grown is an innovative and interactive tool that is designed to empower urban planners to design climate resilient cities of tomorrow!
     </p>
     <p class="mb-4">
         Having identified 'food security' as the problem we want to focus on within the urban context, we developed a platform that allows users to reimagine their neighborhoods as centres of local food production! The tool allows its users to draw a polygon over any location within their neighbourhood (or around the world!), for example your backyard, an abandoned parking lot, your roof, or even your unutilised balcony to find out the food growing potential of the selected area. Once the area is selected, our platform will provide key environmental and climatic data conditions of the place and provide a reimagination of your selected area.
