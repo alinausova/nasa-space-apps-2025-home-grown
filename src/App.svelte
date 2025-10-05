@@ -6,6 +6,15 @@
     let currentPath = $state(window.location.pathname);
 
     onMount(() => {
+        // Handle GitHub Pages 404 redirect
+        const query = window.location.search;
+        if (query.startsWith('?/')) {
+            const path = query.slice(2).replace(/~and~/g, '&');
+            const fullPath = '/nasa-space-apps-2025-home-grown/' + path;
+            window.history.replaceState({}, '', fullPath);
+            currentPath = fullPath;
+        }
+
         const handleNavigation = () => {
             currentPath = window.location.pathname;
         };
