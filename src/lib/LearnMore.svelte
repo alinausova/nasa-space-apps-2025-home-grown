@@ -16,18 +16,21 @@
     });
 </script>
 
-<div class="min-h-screen bg-gradient-to-b from-green-50 to-green-100 p-5">
+<div class="min-h-screen bg-[#EDE8DC] p-5">
     <div class="max-w-full mx-auto px-5">
         <!-- Header with GitHub, Title, Tabs, and Button -->
         <div class="flex justify-between items-center mb-8">
             <!-- Left side: GitHub and Title -->
             <div class="flex items-center gap-3">
-                <h1 class="text-3xl font-bold text-black uppercase">Home Grown</h1>
+                <div class="flex flex-col">
+                    <h1 class="text-3xl font-bold text-black uppercase">Home Grown</h1>
+                    <p class="text-sm text-gray-600">Map your city's potential to feed its future</p>
+                </div>
                 <a
                     href="https://github.com/alinausova/nasa-space-apps-2025-home-grown"
                     target="_blank"
                     rel="noopener noreferrer"
-                    class="w-8 h-8 flex items-center justify-center transition-opacity duration-200 hover:opacity-70 no-underline"
+                    class="w-8 h-8 flex items-center justify-center transition-opacity duration-200 hover:opacity-70 no-underline self-start mt-1"
                     title="View on GitHub"
                 >
                     <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 fill-black">
@@ -40,9 +43,10 @@
             <!-- Right side: Tabs and Button -->
             <div class="flex items-center gap-4">
                 <div class="tabs tabs-border max-w-6xl mx-auto">
-                    <input type="radio" name="learn_tabs" class="tab" aria-label="Data Infrastructure" checked="checked" />
+                    <input type="radio" name="learn_tabs" class="tab" aria-label="Impact" checked="checked" />
                     <input type="radio" name="learn_tabs" class="tab" aria-label="NASA Data" />
-                    <input type="radio" name="learn_tabs" class="tab" aria-label="Impact" />
+                    <input type="radio" name="learn_tabs" class="tab" aria-label="Data Infrastructure" />
+                    <input type="radio" name="learn_tabs" class="tab" aria-label="Media" />
                 </div>
 
                 <a href="/nasa-space-apps-2025-home-grown/" class="btn bg-black text-white font-semibold whitespace-nowrap">
@@ -53,16 +57,20 @@
 
         <!-- Tab Content -->
         <div class="tabs tabs-border max-w-6xl mx-auto">
-            <input type="radio" name="content_tabs" class="tab " aria-label="Data Infrastructure" checked="checked" hidden/>
+            <input type="radio" name="content_tabs" class="tab " aria-label="Impact" checked="checked" hidden/>
             <div class="tab-content bg-white/50 backdrop-blur-md rounded-lg p-8 border border-white/30">
-                <h2 class="text-3xl font-bold text-black mb-6">Data Infrastructure</h2>
-                <div class="mb-6">
-                    <p class="text-gray-700 mb-4">
-                        Our platform integrates multiple data sources to provide accurate crop recommendations including NASA's POWER API for climate data, temperature analysis, and precipitation patterns.
+                <h2 class="text-3xl font-bold text-black mb-6">Impact</h2>
+                <div class="prose prose-lg text-gray-700">
+                    <p class="mb-4">
+                        Urban agriculture and local food production can have transformative effects on cities:
                     </p>
-                    <p class="text-gray-700 mb-4">
-                        We analyze historical climate data to provide you with accurate growing season information and crop suitability recommendations tailored to your specific location.
-                    </p>
+                    <ul class="list-disc pl-6 mb-4">
+                        <li>Increased food security and resilience</li>
+                        <li>Reduced carbon footprint from food transportation</li>
+                        <li>Enhanced community engagement and education</li>
+                        <li>Improved urban biodiversity</li>
+                        <li>Economic opportunities for local communities</li>
+                    </ul>
                 </div>
             </div>
 
@@ -102,23 +110,68 @@
                 </div>
             </div>
 
-            <input type="radio" name="content_tabs" class="tab" aria-label="Impact" hidden/>
+            <input type="radio" name="content_tabs" class="tab" aria-label="Data Infrastructure" hidden/>
             <div class="tab-content bg-white/50 backdrop-blur-md rounded-lg p-8 border border-white/30">
-                <h2 class="text-3xl font-bold text-black mb-6">Impact</h2>
+                <h2 class="text-3xl font-bold text-black mb-6">Data Infrastructure</h2>
+                <div class="mb-6">
+                    <p class="text-gray-700 mb-6">
+                        Home Grown uses a modern tech stack combining client-side rendering with server-side data processing to deliver real-time crop recommendations based on NASA climate data and AI-powered insights.
+                    </p>
+
+                    <!-- Architecture Diagram -->
+                    <div class="flex justify-center mb-8">
+                        <img src="/nasa-space-apps-2025-home-grown/architecture-diagram.png" alt="System Architecture Diagram" class="max-w-full h-auto rounded-lg shadow-lg border border-gray-200"/>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="bg-[#E8DCC8] p-4 rounded-lg border border-gray-300">
+                            <h3 class="font-bold text-lg mb-2 text-gray-900">🎨 Client-Side Frontend</h3>
+                            <ul class="text-sm text-gray-700 space-y-1">
+                                <li>• Svelte 5 with TypeScript for reactive UI</li>
+                                <li>• Mapbox GL JS for 3D globe & polygon drawing</li>
+                                <li>• Tailwind CSS + DaisyUI for styling</li>
+                                <li>• Turf.js for geospatial calculations</li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-[#D4C5E8] p-4 rounded-lg border border-gray-300">
+                            <h3 class="font-bold text-lg mb-2 text-gray-900">⚙️ Server-Side Backend</h3>
+                            <ul class="text-sm text-gray-700 space-y-1">
+                                <li>• FastAPI (Python) with REST endpoints</li>
+                                <li>• Crop database with requirements</li>
+                                <li>• CORS middleware for cross-origin requests</li>
+                                <li>• Mistral AI for LLM-powered summaries</li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-[#F4F1D0] p-4 rounded-lg border border-gray-300">
+                            <h3 class="font-bold text-lg mb-2 text-gray-900">🛰️ External Data Sources</h3>
+                            <ul class="text-sm text-gray-700 space-y-1">
+                                <li>• NASA POWER API: Climate & solar data</li>
+                                <li>• Microsoft Planetary Computer: Landsat imagery</li>
+                                <li>• Mistral AI: Text summarization</li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-[#E8C8D8] p-4 rounded-lg border border-gray-300">
+                            <h3 class="font-bold text-lg mb-2 text-gray-900">🚀 Deployment</h3>
+                            <ul class="text-sm text-gray-700 space-y-1">
+                                <li>• Frontend: GitHub Pages (static hosting)</li>
+                                <li>• Backend: Render (cloud hosting)</li>
+                                <li>• SPA routing with 404 redirect technique</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <input type="radio" name="content_tabs" class="tab" aria-label="Media" hidden/>
+            <div class="tab-content bg-white/50 backdrop-blur-md rounded-lg p-8 border border-white/30">
+                <h2 class="text-3xl font-bold text-black mb-6">Media</h2>
                 <div class="prose prose-lg text-gray-700">
                     <p class="mb-4">
-                        [Impact text to be provided]
+                        [Media content to be provided]
                     </p>
-                    <p class="mb-4">
-                        Urban agriculture and local food production can have transformative effects on cities:
-                    </p>
-                    <ul class="list-disc pl-6 mb-4">
-                        <li>Increased food security and resilience</li>
-                        <li>Reduced carbon footprint from food transportation</li>
-                        <li>Enhanced community engagement and education</li>
-                        <li>Improved urban biodiversity</li>
-                        <li>Economic opportunities for local communities</li>
-                    </ul>
                 </div>
             </div>
         </div>
