@@ -144,21 +144,21 @@
                             </ul>
                         </div>
 
-                        <div class="bg-[#F4F1D0] p-4 rounded-lg border border-gray-300">
-                            <h3 class="font-bold text-lg mb-2 text-gray-900">🛰️ External Data Sources</h3>
-                            <ul class="text-sm text-gray-700 space-y-1">
-                                <li>• NASA POWER API: Climate & solar data</li>
-                                <li>• Microsoft Planetary Computer: Landsat imagery</li>
-                                <li>• Mistral AI: Text summarization</li>
-                            </ul>
-                        </div>
-
                         <div class="bg-[#E8C8D8] p-4 rounded-lg border border-gray-300">
                             <h3 class="font-bold text-lg mb-2 text-gray-900">🚀 Deployment</h3>
                             <ul class="text-sm text-gray-700 space-y-1">
                                 <li>• Frontend: GitHub Pages (static hosting)</li>
                                 <li>• Backend: Render (cloud hosting)</li>
                                 <li>• SPA routing with 404 redirect technique</li>
+                            </ul>
+                        </div>
+
+                        <div class="bg-[#F4F1D0] p-4 rounded-lg border border-gray-300">
+                            <h3 class="font-bold text-lg mb-2 text-gray-900">🛰️ External Data Sources</h3>
+                            <ul class="text-sm text-gray-700 space-y-1">
+                                <li>• NASA POWER API: Climate & solar data</li>
+                                <li>• Microsoft Planetary Computer: Landsat imagery</li>
+                                <li>• Mistral AI: Text summarization</li>
                             </ul>
                         </div>
                     </div>

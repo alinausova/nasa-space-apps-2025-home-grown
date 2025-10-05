@@ -143,7 +143,7 @@
 </style>
 
 <div class="glassmorphism-menu fixed top-5 right-5 w-[560px] z-[1000] p-5 flex flex-col max-h-[calc(100vh-40px)]">
-    <div class="flex justify-between items-center mb-4 pb-3 border-b-2 border-green-400 flex-shrink-0">
+    <div class="flex justify-between items-center mb-4 pb-3 border-b-2 border-[#A8C896] flex-shrink-0">
         <div class="text-base text-neutral-900 pr-9">
             {#if coordinates && coordinates.length > 0}
                 <span class="font-bold">Area Info</span>
@@ -152,9 +152,9 @@
             {/if}
         </div>
         {#if coordinates && coordinates.length > 0}
-            <button class="btn btn-error btn-sm" onclick={handleClear}>Clear</button>
+            <button class="btn btn-sm bg-[#E8C8D8] hover:bg-[#E8C8D8]/80 border-none text-black" onclick={handleClear}>Clear</button>
         {:else if onToggleDraw}
-            <button class="btn btn-success btn-sm" onclick={onToggleDraw}>
+            <button class="btn btn-sm bg-[#A8C896] hover:bg-[#A8C896]/80 border-none text-black" onclick={onToggleDraw}>
                 {isDrawing ? 'Cancel' : 'Select Area'}
             </button>
         {/if}
@@ -219,7 +219,7 @@
                 </div>
             {/if}
             <button
-                class="btn btn-primary btn-block mb-4"
+                class="btn btn-block mb-4 bg-[#D4C5E8] hover:bg-[#D4C5E8]/80 border-none text-black"
                 class:btn-disabled={isLoading || isAreaTooLarge}
                 onclick={handleAnalyze}
                 disabled={isLoading || isAreaTooLarge}
