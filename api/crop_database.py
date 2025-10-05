@@ -5,6 +5,7 @@ CROP_DATABASE = {
         "upper_temp": 30.5,
         "gdd_required": 1500,
         "min_sun_hours": 6,
+        "optimal_sun_hours": 8,
         "optimal_temp_min": 21,
         "optimal_temp_max": 27,
         "frost_tolerance": "tender",
@@ -23,7 +24,8 @@ CROP_DATABASE = {
             "water": "FAO Land & Water - Tomato crop information",
             "germination": "UC Davis, J.F. Harrington - Vegetable Seed Germination",
             "drought": "Agronomy 2019, 9(8):447 - Physiological Responses of Vegetable Crops to Water Stress",
-            "yield": "FAO Land & Water (45-65 tons/ha commercial); MSU Extension; La Ferme de Sainte Marthe"
+            "yield": "FAO Land & Water (45-65 tons/ha commercial); MSU Extension; La Ferme de Sainte Marthe",
+            "sunlight": "Penn State Extension; Rutgers Extension; Spider Farmer research; University agricultural studies"
         }
     },
     "lettuce": {
@@ -31,7 +33,8 @@ CROP_DATABASE = {
         "base_temp": 4,
         "upper_temp": 28,
         "gdd_required": 600,
-        "min_sun_hours": 4,
+        "min_sun_hours": 3,
+        "optimal_sun_hours": 6,
         "optimal_temp_min": 7,
         "optimal_temp_max": 24,
         "frost_tolerance": "hardy",
@@ -49,7 +52,8 @@ CROP_DATABASE = {
             "water": "FAO Irrigation and Drainage Paper 56",
             "germination": "UC Davis, J.F. Harrington - Vegetable Seed Germination",
             "drought": "Estimated from crop coefficients",
-            "yield": "MSU Extension Table 4 (40 lb/100 sq ft); La Ferme de Sainte Marthe (3-6 kg/m²)"
+            "yield": "MSU Extension Table 4 (40 lb/100 sq ft); La Ferme de Sainte Marthe (3-6 kg/m²)",
+            "sunlight": "Rutgers Extension; New Life On A Homestead; RASNetwork - shade-tolerant vegetables"
         }
     },
     "spinach": {
@@ -58,6 +62,7 @@ CROP_DATABASE = {
         "upper_temp": 24.5,
         "gdd_required": 500,
         "min_sun_hours": 3,
+        "optimal_sun_hours": 6,
         "optimal_temp_min": 10,
         "optimal_temp_max": 21,
         "frost_tolerance": "very_hardy",
@@ -75,7 +80,8 @@ CROP_DATABASE = {
             "water": "FAO Irrigation and Drainage Paper 56",
             "germination": "UC Davis - Vegetable Seed Germination",
             "drought": "Estimated from crop type",
-            "yield": "MSU Extension Table 4 (40 lb/100 sq ft)"
+            "yield": "MSU Extension Table 4 (40 lb/100 sq ft)",
+            "sunlight": "Rutgers Extension; New Life On A Homestead; RASNetwork - shade-tolerant leafy greens"
         }
     },
     "peppers": {
@@ -84,6 +90,7 @@ CROP_DATABASE = {
         "upper_temp": 34.5,
         "gdd_required": 1400,
         "min_sun_hours": 6,
+        "optimal_sun_hours": 8,
         "optimal_temp_min": 21,
         "optimal_temp_max": 29,
         "frost_tolerance": "tender",
@@ -101,7 +108,8 @@ CROP_DATABASE = {
             "water": "FAO Irrigation and Drainage Paper 56",
             "germination": "UC Davis, J.F. Harrington",
             "drought": "Estimated from solanaceae family characteristics",
-            "yield": "MSU Extension Table 4 (48 lb/100 sq ft); University Extension data"
+            "yield": "MSU Extension Table 4 (48 lb/100 sq ft); University Extension data",
+            "sunlight": "University of Maryland Extension - Growing Peppers in Home Garden"
         }
     },
     "carrots": {
@@ -109,7 +117,8 @@ CROP_DATABASE = {
         "base_temp": 5,
         "upper_temp": 29,
         "gdd_required": 800,
-        "min_sun_hours": 4,
+        "min_sun_hours": 6,
+        "optimal_sun_hours": 8,
         "optimal_temp_min": 16,
         "optimal_temp_max": 21,
         "frost_tolerance": "hardy",
@@ -127,7 +136,8 @@ CROP_DATABASE = {
             "water": "FAO Irrigation and Drainage Paper 56",
             "germination": "UC Davis - Vegetable Seed Germination",
             "drought": "Estimated from root crop characteristics",
-            "yield": "MSU Extension Table 4 (69 lb/100 sq ft); La Ferme de Sainte Marthe (5-10 kg/m²)"
+            "yield": "MSU Extension Table 4 (69 lb/100 sq ft); La Ferme de Sainte Marthe (5-10 kg/m²)",
+            "sunlight": "Rutgers Extension; Deep Green Permaculture - root vegetable sunlight requirements"
         }
     },
     "beans": {
@@ -136,6 +146,7 @@ CROP_DATABASE = {
         "upper_temp": 32.5,
         "gdd_required": 900,
         "min_sun_hours": 6,
+        "optimal_sun_hours": 8,
         "optimal_temp_min": 21,
         "optimal_temp_max": 27,
         "frost_tolerance": "tender",
@@ -153,7 +164,8 @@ CROP_DATABASE = {
             "water": "FAO Irrigation and Drainage Paper 24",
             "germination": "UC Davis, J.F. Harrington",
             "drought": "Agronomy 2019, 9(8):447 - beans moderately sensitive to water stress",
-            "yield": "MSU Extension Table 4 (34 lb/100 sq ft); La Ferme de Sainte Marthe (2-4 kg/m²)"
+            "yield": "MSU Extension Table 4 (34 lb/100 sq ft); La Ferme de Sainte Marthe (2-4 kg/m²)",
+            "sunlight": "MSU Extension; Rutgers Extension; PictureThis - bean sunlight requirements"
         }
     },
     "kale": {
@@ -162,6 +174,7 @@ CROP_DATABASE = {
         "upper_temp": 27,
         "gdd_required": 700,
         "min_sun_hours": 4,
+        "optimal_sun_hours": 6,
         "optimal_temp_min": 15,
         "optimal_temp_max": 23,
         "frost_tolerance": "very_hardy",
@@ -179,7 +192,8 @@ CROP_DATABASE = {
             "water": "FAO Paper 56 - Brassica group",
             "germination": "UC Davis - similar to cabbage",
             "drought": "Estimated from brassica family",
-            "yield": "MSU Extension Table 4 (57 lb/100 sq ft)"
+            "yield": "MSU Extension Table 4 (57 lb/100 sq ft)",
+            "sunlight": "Rutgers Extension; Northwest Edible Life; Gardener's Path - kale sun requirements"
         }
     },
     "cucumbers": {
@@ -188,6 +202,7 @@ CROP_DATABASE = {
         "upper_temp": 35,
         "gdd_required": 1100,
         "min_sun_hours": 6,
+        "optimal_sun_hours": 10,
         "optimal_temp_min": 21,
         "optimal_temp_max": 29,
         "frost_tolerance": "tender",
@@ -205,7 +220,8 @@ CROP_DATABASE = {
             "water": "FAO Irrigation and Drainage Paper 56",
             "germination": "UC Davis, J.F. Harrington",
             "drought": "Cucurbits generally drought sensitive",
-            "yield": "MSU Extension Table 4 (50 lb/100 sq ft)"
+            "yield": "MSU Extension Table 4 (50 lb/100 sq ft)",
+            "sunlight": "Epic Gardening - cucumber sunlight needs; highest light preference among vegetables"
         }
     },
     "radishes": {
@@ -213,7 +229,8 @@ CROP_DATABASE = {
         "base_temp": 4,
         "upper_temp": 32.5,
         "gdd_required": 350,
-        "min_sun_hours": 4,
+        "min_sun_hours": 6,
+        "optimal_sun_hours": 8,
         "optimal_temp_min": 10,
         "optimal_temp_max": 18,
         "frost_tolerance": "hardy",
@@ -231,7 +248,8 @@ CROP_DATABASE = {
             "water": "FAO Paper 33 - short season vegetables",
             "germination": "UC Davis - Vegetable Seed Germination",
             "drought": "Root crops generally moderate tolerance",
-            "yield": "MSU Extension Table 4 (11 lb/100 sq ft)"
+            "yield": "MSU Extension Table 4 (11 lb/100 sq ft)",
+            "sunlight": "University of Maryland Extension; RASNetwork; Rutgers Extension"
         }
     },
     "arugula": {
@@ -239,7 +257,8 @@ CROP_DATABASE = {
         "base_temp": 4,
         "upper_temp": 27,
         "gdd_required": 400,
-        "min_sun_hours": 3,
+        "min_sun_hours": 4,
+        "optimal_sun_hours": 6,
         "optimal_temp_min": 10,
         "optimal_temp_max": 21,
         "frost_tolerance": "hardy",
@@ -257,7 +276,8 @@ CROP_DATABASE = {
             "water": "Estimated from leafy greens group",
             "germination": "Similar to other brassicas",
             "drought": "Leafy greens moderate tolerance",
-            "yield": "Estimated from similar leafy greens (lettuce, spinach)"
+            "yield": "Estimated from similar leafy greens (lettuce, spinach)",
+            "sunlight": "UF/IFAS Extension; Gardenary; Wisconsin Horticulture - shade-tolerant greens"
         }
     },
     "eggplant": {
@@ -266,6 +286,7 @@ CROP_DATABASE = {
         "upper_temp": 35,
         "gdd_required": 1300,
         "min_sun_hours": 6,
+        "optimal_sun_hours": 8,
         "optimal_temp_min": 21,
         "optimal_temp_max": 29,
         "frost_tolerance": "tender",
@@ -283,7 +304,8 @@ CROP_DATABASE = {
             "water": "FAO Paper 56 - Solanaceae",
             "germination": "UC Davis, J.F. Harrington",
             "drought": "Similar to tomato family",
-            "yield": "MSU Extension Table 4 (46 lb/100 sq ft); La Ferme de Sainte Marthe (4-8 kg/m²); UVM Extension (16-24k lb/acre)"
+            "yield": "MSU Extension Table 4 (46 lb/100 sq ft); La Ferme de Sainte Marthe (4-8 kg/m²); UVM Extension (16-24k lb/acre)",
+            "sunlight": "Pepper's Home & Garden; Old Farmer's Almanac - eggplant requires full sun"
         }
     },
     "broccoli": {
@@ -291,7 +313,8 @@ CROP_DATABASE = {
         "base_temp": 4.7,
         "upper_temp": 27,
         "gdd_required": 800,
-        "min_sun_hours": 5,
+        "min_sun_hours": 6,
+        "optimal_sun_hours": 8,
         "optimal_temp_min": 15,
         "optimal_temp_max": 21,
         "frost_tolerance": "hardy",
@@ -309,7 +332,8 @@ CROP_DATABASE = {
             "water": "FAO Paper 56 - Cole crops",
             "germination": "UC Davis - Vegetable Seed Germination",
             "drought": "Brassicas moderate tolerance",
-            "yield": "MSU Extension Table 4 (16 lb/100 sq ft); Oklahoma State Extension (5 tons/acre)"
+            "yield": "MSU Extension Table 4 (16 lb/100 sq ft); Oklahoma State Extension (5 tons/acre)",
+            "sunlight": "Rutgers Extension; Old Farmer's Almanac - highest light requirement among brassicas"
         }
     },
     "cabbage": {
@@ -317,7 +341,8 @@ CROP_DATABASE = {
         "base_temp": 4.2,
         "upper_temp": 27,
         "gdd_required": 900,
-        "min_sun_hours": 5,
+        "min_sun_hours": 6,
+        "optimal_sun_hours": 6,
         "optimal_temp_min": 15,
         "optimal_temp_max": 21,
         "frost_tolerance": "hardy",
@@ -335,7 +360,8 @@ CROP_DATABASE = {
             "water": "FAO Paper 56 Table 12",
             "germination": "UC Davis, J.F. Harrington",
             "drought": "Sustainability 2020, 12(10):3945",
-            "yield": "MSU Extension Table 4 (48 lb/100 sq ft); Oklahoma State Extension (15 tons/acre)"
+            "yield": "MSU Extension Table 4 (48 lb/100 sq ft); Oklahoma State Extension (15 tons/acre)",
+            "sunlight": "Rutgers Extension; PictureThis - cabbage sunlight requirements"
         }
     },
     "cauliflower": {
@@ -343,7 +369,8 @@ CROP_DATABASE = {
         "base_temp": 4.2,
         "upper_temp": 30,
         "gdd_required": 850,
-        "min_sun_hours": 5,
+        "min_sun_hours": 4,
+        "optimal_sun_hours": 6,
         "optimal_temp_min": 15,
         "optimal_temp_max": 21,
         "frost_tolerance": "hardy",
@@ -361,7 +388,8 @@ CROP_DATABASE = {
             "water": "FAO Paper 56",
             "germination": "UC Davis",
             "drought": "Similar to cabbage",
-            "yield": "MSU Extension Table 4 (33 lb/100 sq ft); Oklahoma State Extension (6.5 tons/acre)"
+            "yield": "MSU Extension Table 4 (33 lb/100 sq ft); Oklahoma State Extension (6.5 tons/acre)",
+            "sunlight": "Old Farmer's Almanac; Weston Nurseries - benefits from afternoon shade in heat"
         }
     },
     "onions": {
@@ -369,7 +397,8 @@ CROP_DATABASE = {
         "base_temp": 3,
         "upper_temp": 35,
         "gdd_required": 1000,
-        "min_sun_hours": 5,
+        "min_sun_hours": 6,
+        "optimal_sun_hours": 8,
         "optimal_temp_min": 13,
         "optimal_temp_max": 24,
         "frost_tolerance": "hardy",
@@ -387,7 +416,8 @@ CROP_DATABASE = {
             "water": "FAO Paper 56 - bulb vegetables",
             "germination": "UC Davis",
             "drought": "Shallow roots, moderate tolerance",
-            "yield": "MSU Extension Table 4 (92 lb/100 sq ft)"
+            "yield": "MSU Extension Table 4 (92 lb/100 sq ft)",
+            "sunlight": "University of Maryland Extension; University of Minnesota Extension - full sun for bulbing"
         }
     },
     "garlic": {
@@ -395,7 +425,8 @@ CROP_DATABASE = {
         "base_temp": 3,
         "upper_temp": 29,
         "gdd_required": 1200,
-        "min_sun_hours": 5,
+        "min_sun_hours": 6,
+        "optimal_sun_hours": 6,
         "optimal_temp_min": 13,
         "optimal_temp_max": 24,
         "frost_tolerance": "hardy",
@@ -413,7 +444,8 @@ CROP_DATABASE = {
             "water": "FAO Paper 56",
             "germination": "Similar to onions",
             "drought": "Similar to onions",
-            "yield": "MSU Extension Table 4 (20 lb/100 sq ft); Grey Duck Garlic (4-10x multiplication factors)"
+            "yield": "MSU Extension Table 4 (20 lb/100 sq ft); Grey Duck Garlic (4-10x multiplication factors)",
+            "sunlight": "University Extension sources - full sun for bulb development"
         }
     },
     "potato": {
@@ -421,7 +453,8 @@ CROP_DATABASE = {
         "base_temp": 3.5,
         "upper_temp": 30,
         "gdd_required": 1100,
-        "min_sun_hours": 5,
+        "min_sun_hours": 6,
+        "optimal_sun_hours": 8,
         "optimal_temp_min": 15,
         "optimal_temp_max": 21,
         "frost_tolerance": "half_hardy",
@@ -439,7 +472,8 @@ CROP_DATABASE = {
             "water": "FAO Paper 56 Table 12",
             "germination": "UC Davis, J.F. Harrington",
             "drought": "Moderate sensitivity, critical during tuber initiation",
-            "yield": "MSU Extension Table 4 (60 lb/100 sq ft); Hermie.com (4 kg/m²); Calculator Doc (2-4 kg/m²)"
+            "yield": "MSU Extension Table 4 (60 lb/100 sq ft); Hermie.com (4 kg/m²); Calculator Doc (2-4 kg/m²)",
+            "sunlight": "GrowerExperts; RASNetwork - more shade-tolerant than sweet potatoes"
         }
     },
     "sweet_potato": {
@@ -448,6 +482,7 @@ CROP_DATABASE = {
         "upper_temp": 34,
         "gdd_required": 1400,
         "min_sun_hours": 6,
+        "optimal_sun_hours": 8,
         "optimal_temp_min": 21,
         "optimal_temp_max": 29,
         "frost_tolerance": "tender",
@@ -465,7 +500,8 @@ CROP_DATABASE = {
             "water": "FAO Paper 56",
             "germination": "UC Davis",
             "drought": "International Journal of AgriScience 2021 - orange fleshed sweet potato drought tolerance",
-            "yield": "MSU Extension Table 4 (13 lb/100 sq ft - adjusted for intensive cultivation); Harvest to Table estimates"
+            "yield": "MSU Extension Table 4 (13 lb/100 sq ft - adjusted for intensive cultivation); Harvest to Table estimates",
+            "sunlight": "University of Maryland Extension - heat-loving, requires full sun"
         }
     },
     "squash": {
@@ -474,6 +510,7 @@ CROP_DATABASE = {
         "upper_temp": 35,
         "gdd_required": 1000,
         "min_sun_hours": 6,
+        "optimal_sun_hours": 8,
         "optimal_temp_min": 18,
         "optimal_temp_max": 27,
         "frost_tolerance": "tender",
@@ -491,7 +528,8 @@ CROP_DATABASE = {
             "water": "FAO Paper 56 - cucurbits",
             "germination": "UC Davis",
             "drought": "Cucurbits moderate sensitivity",
-            "yield": "MSU Extension Table 4 (69 lb/100 sq ft summer squash); La Ferme de Sainte Marthe (4-7 kg/m² zucchini)"
+            "yield": "MSU Extension Table 4 (69 lb/100 sq ft summer squash); La Ferme de Sainte Marthe (4-7 kg/m² zucchini)",
+            "sunlight": "Portland Nursery; Homestead and Chill; K-State Extension - full sun necessary"
         }
     },
     "pumpkin": {
@@ -500,6 +538,7 @@ CROP_DATABASE = {
         "upper_temp": 35,
         "gdd_required": 1100,
         "min_sun_hours": 6,
+        "optimal_sun_hours": 8,
         "optimal_temp_min": 18,
         "optimal_temp_max": 27,
         "frost_tolerance": "tender",
@@ -517,7 +556,8 @@ CROP_DATABASE = {
             "water": "FAO Paper 56",
             "germination": "UC Davis",
             "drought": "Similar to squash",
-            "yield": "MSU Extension Table 4 (60 lb/100 sq ft)"
+            "yield": "MSU Extension Table 4 (60 lb/100 sq ft)",
+            "sunlight": "K-State Extension; Homestead and Chill - heavy feeders requiring abundant sun"
         }
     },
     "melon": {
@@ -526,6 +566,7 @@ CROP_DATABASE = {
         "upper_temp": 38,
         "gdd_required": 1200,
         "min_sun_hours": 6,
+        "optimal_sun_hours": 8,
         "optimal_temp_min": 21,
         "optimal_temp_max": 29,
         "frost_tolerance": "tender",
@@ -543,7 +584,8 @@ CROP_DATABASE = {
             "water": "FAO Paper 56 - melon, cantaloupe",
             "germination": "UC Davis",
             "drought": "Cucurbits moderate",
-            "yield": "MSU Extension Table 4 (28 lb/100 sq ft muskmelon)"
+            "yield": "MSU Extension Table 4 (28 lb/100 sq ft muskmelon)",
+            "sunlight": "Iowa State Extension - full sun essential for sugar development"
         }
     },
     "watermelon": {
@@ -552,6 +594,7 @@ CROP_DATABASE = {
         "upper_temp": 37,
         "gdd_required": 1300,
         "min_sun_hours": 6,
+        "optimal_sun_hours": 8,
         "optimal_temp_min": 21,
         "optimal_temp_max": 32,
         "frost_tolerance": "tender",
@@ -569,7 +612,8 @@ CROP_DATABASE = {
             "water": "FAO Paper 56",
             "germination": "UC Davis, J.F. Harrington",
             "drought": "Deep roots, moderate tolerance",
-            "yield": "MSU Extension Table 4 (17 lb/100 sq ft - adjusted for large fruit size per area)"
+            "yield": "MSU Extension Table 4 (17 lb/100 sq ft - adjusted for large fruit size per area)",
+            "sunlight": "Greg; Medium; The Gardening Cook; Gardenary - major sun-worshipper, 8-10+ hours ideal"
         }
     },
     "strawberries": {
@@ -578,6 +622,7 @@ CROP_DATABASE = {
         "upper_temp": 30,
         "gdd_required": 800,
         "min_sun_hours": 6,
+        "optimal_sun_hours": 8,
         "optimal_temp_min": 15,
         "optimal_temp_max": 26,
         "frost_tolerance": "hardy",
@@ -595,7 +640,8 @@ CROP_DATABASE = {
             "water": "FAO Paper 56 - berries",
             "germination": "UC Davis",
             "drought": "Shallow-rooted, sensitive",
-            "yield": "Hydroponic Systems EU case study (typical 4-6 kg/m², advanced systems up to 12.5 kg/m²); adjusted for conventional growing"
+            "yield": "Hydroponic Systems EU case study (typical 4-6 kg/m², advanced systems up to 12.5 kg/m²); adjusted for conventional growing",
+            "sunlight": "University of Minnesota Extension; Strawberry Plants - 10+ hours ideal, highly sun-demanding"
         }
     },
     "peas": {
@@ -603,7 +649,8 @@ CROP_DATABASE = {
         "base_temp": 4.75,
         "upper_temp": 27,
         "gdd_required": 700,
-        "min_sun_hours": 5,
+        "min_sun_hours": 4,
+        "optimal_sun_hours": 6,
         "optimal_temp_min": 10,
         "optimal_temp_max": 21,
         "frost_tolerance": "hardy",
@@ -621,7 +668,8 @@ CROP_DATABASE = {
             "water": "FAO Paper 56 - legumes",
             "germination": "UC Davis",
             "drought": "Agronomy 2019 - peas moderately sensitive",
-            "yield": "MSU Extension Table 4 (24 lb/100 sq ft shelled peas)"
+            "yield": "MSU Extension Table 4 (24 lb/100 sq ft shelled peas)",
+            "sunlight": "Portland Nursery; Swanson's Nursery; Food Gardening Network - more shade-tolerant than beans"
         }
     },
     "corn": {
@@ -630,6 +678,7 @@ CROP_DATABASE = {
         "upper_temp": 34.5,
         "gdd_required": 1400,
         "min_sun_hours": 6,
+        "optimal_sun_hours": 8,
         "optimal_temp_min": 21,
         "optimal_temp_max": 32,
         "frost_tolerance": "tender",
@@ -647,7 +696,8 @@ CROP_DATABASE = {
             "water": "FAO Paper 56 Table 12 - maize",
             "germination": "UC Davis, J.F. Harrington",
             "drought": "Agronomy 2019 - moderately sensitive, critical at tasseling",
-            "yield": "USDA NASS (177 bu/acre avg = ~11 tons/ha); MSU Extension Table 4 (36 lb kernels/100 sq ft)"
+            "yield": "USDA NASS (177 bu/acre avg = ~11 tons/ha); MSU Extension Table 4 (36 lb kernels/100 sq ft)",
+            "sunlight": "University of Maryland Extension; EOS; The Homesteading Hippy; New Life On A Homestead"
         }
     },
     "basil": {
@@ -655,7 +705,8 @@ CROP_DATABASE = {
         "base_temp": 10.95,
         "upper_temp": 35,
         "gdd_required": 600,
-        "min_sun_hours": 6,
+        "min_sun_hours": 3,
+        "optimal_sun_hours": 6,
         "optimal_temp_min": 18,
         "optimal_temp_max": 27,
         "frost_tolerance": "tender",
@@ -673,7 +724,8 @@ CROP_DATABASE = {
             "water": "Estimated from herb requirements",
             "germination": "UC Davis",
             "drought": "Aromatic herbs moderate tolerance",
-            "yield": "ResearchGate study (0.71 kg per plant Sweet Genovese); Purdue Extension; estimated at 1-2 plants per sq ft"
+            "yield": "ResearchGate study (0.71 kg per plant Sweet Genovese); Purdue Extension; estimated at 1-2 plants per sq ft",
+            "sunlight": "Epic Gardening; Urbanleafy; Fiskars - can grow in partial sun but 6-8 hours best"
         }
     },
     "parsley": {
@@ -682,6 +734,7 @@ CROP_DATABASE = {
         "upper_temp": 27,
         "gdd_required": 500,
         "min_sun_hours": 4,
+        "optimal_sun_hours": 6,
         "optimal_temp_min": 10,
         "optimal_temp_max": 21,
         "frost_tolerance": "hardy",
@@ -699,7 +752,8 @@ CROP_DATABASE = {
             "water": "Estimated from herb crops",
             "germination": "UC Davis",
             "drought": "Moderate tolerance",
-            "yield": "MSU Extension Table 4 (24 lb/100 sq ft); estimated for multiple cuttings"
+            "yield": "MSU Extension Table 4 (24 lb/100 sq ft); estimated for multiple cuttings",
+            "sunlight": "University of Minnesota Extension; Food Gardening Network; UF/IFAS - most shade-tolerant herb"
         }
     },
     "wheat": {
@@ -707,7 +761,8 @@ CROP_DATABASE = {
         "base_temp": 0,
         "upper_temp": 33,
         "gdd_required": 2000,
-        "min_sun_hours": 5,
+        "min_sun_hours": 6,
+        "optimal_sun_hours": 6,
         "optimal_temp_min": 15,
         "optimal_temp_max": 24,
         "frost_tolerance": "very_hardy",
@@ -725,7 +780,8 @@ CROP_DATABASE = {
             "water": "FAO Paper 56 Table 12 - wheat",
             "germination": "UC Davis",
             "drought": "Frontiers Plant Science 2023 - some varieties drought tolerant",
-            "yield": "Purdue/farmdoc (4.48 tons/ha average international); Our World in Data; USDA"
+            "yield": "Purdue/farmdoc (4.48 tons/ha average international); Our World in Data; USDA",
+            "sunlight": "Cropler - requires full sun; 900-1,000 hours seasonal sunshine for high yields"
         }
     },
     "rice": {
@@ -733,7 +789,8 @@ CROP_DATABASE = {
         "base_temp": 10,
         "upper_temp": 38.5,
         "gdd_required": 2200,
-        "min_sun_hours": 5,
+        "min_sun_hours": 6,
+        "optimal_sun_hours": 8,
         "optimal_temp_min": 21,
         "optimal_temp_max": 32,
         "frost_tolerance": "tender",
@@ -751,7 +808,8 @@ CROP_DATABASE = {
             "water": "FAO Paper 56 Table 12 - paddy rice",
             "germination": "UC Davis",
             "drought": "Plant Cell Physiol. 2016 - most rice sensitive, breeding efforts ongoing",
-            "yield": "USDA NASS (7,649 lb/acre = ~8.6 tons/ha); Our World in Data; FAO data (variable by region 3-10 tons/ha)"
+            "yield": "USDA NASS (7,649 lb/acre = ~8.6 tons/ha); Our World in Data; FAO data (variable by region 3-10 tons/ha)",
+            "sunlight": "ResearchGate - Punjab study; Greg; SlideShare - 12-14 hours during flowering optimal"
         }
     },
     "soybeans": {
@@ -759,7 +817,8 @@ CROP_DATABASE = {
         "base_temp": 8.5,
         "upper_temp": 30,
         "gdd_required": 1500,
-        "min_sun_hours": 5,
+        "min_sun_hours": 6,
+        "optimal_sun_hours": 6,
         "optimal_temp_min": 21,
         "optimal_temp_max": 29,
         "frost_tolerance": "tender",
@@ -777,7 +836,8 @@ CROP_DATABASE = {
             "water": "FAO Paper 56 - soybeans",
             "germination": "UC Davis",
             "drought": "Moderately sensitive to water stress",
-            "yield": "USDA NASS (50.6 bu/acre = ~3.4 tons/ha); Our World in Data; Iowa State Extension"
+            "yield": "USDA NASS (50.6 bu/acre = ~3.4 tons/ha); Our World in Data; Iowa State Extension",
+            "sunlight": "Epic Gardening; SF Gate; NDSU Agriculture; Morning Ag Clips - photoperiod-sensitive short-day plant"
         }
     },
     "sunflower": {
@@ -786,6 +846,7 @@ CROP_DATABASE = {
         "upper_temp": 37.5,
         "gdd_required": 1200,
         "min_sun_hours": 6,
+        "optimal_sun_hours": 6,
         "optimal_temp_min": 18,
         "optimal_temp_max": 27,
         "frost_tolerance": "half_hardy",
@@ -803,7 +864,8 @@ CROP_DATABASE = {
             "water": "FAO Paper 56 - sunflower",
             "germination": "UC Davis",
             "drought": "Deep rooting system, relatively drought tolerant",
-            "yield": "USDA data (~1.5-3 tons/ha typical); Our World in Data; FAO Statistics"
+            "yield": "USDA data (~1.5-3 tons/ha typical); Our World in Data; FAO Statistics",
+            "sunlight": "Old Farmer's Almanac; FTD; Florasense - cannot tolerate shade, requires full sun"
         }
     }
 }
@@ -815,3 +877,12 @@ CROP_DATABASE = {
 # - Commercial large-scale yields may differ from small-scale intensive garden yields
 # - Greenhouse and hydroponic systems can achieve significantly higher yields than field production
 # - Values are for fresh weight unless otherwise noted (grains are at standard moisture content)
+
+# Note on sunlight requirements:
+# - min_sun_hours: Absolute minimum direct sunlight for the crop to survive and produce some yield
+# - optimal_sun_hours: Average/optimal direct sunlight hours per day for good production and maximum yields
+# - "Full sun" is generally defined as 6-8+ hours of direct sunlight
+# - "Partial shade" is typically 3-6 hours
+# - Morning sunlight generally outperforms afternoon sun due to cooler temperatures and reduced disease pressure
+# - Sources include university agricultural extension services (Penn State, Rutgers, UMD, MSU, etc.),
+#   USDA research, and peer-reviewed agricultural studies
