@@ -1,5 +1,10 @@
 <script lang="ts">
     import { onMount } from "svelte";
+    import AboutTab from "./learn-more/AboutTab.svelte";
+    import ImpactTab from "./learn-more/ImpactTab.svelte";
+    import DataTab from "./learn-more/DataTab.svelte";
+    import MethodologyTab from "./learn-more/MethodologyTab.svelte";
+    import ArchitectureTab from "./learn-more/ArchitectureTab.svelte";
 
     onMount(() => {
         // Sync header tabs with content tabs
@@ -24,8 +29,7 @@
             <div class="flex items-center gap-3">
                 <div class="flex flex-col">
                     <h1 class="text-3xl font-bold text-black uppercase">Home Grown</h1>
-                    <p class="text-sm text-gray-600">Map your city's potential to feed its future</p>
-                </div>
+                  </div>
                 <a
                     href="https://github.com/alinausova/nasa-space-apps-2025-home-grown"
                     target="_blank"
@@ -43,9 +47,11 @@
             <!-- Right side: Tabs and Button -->
             <div class="flex items-center gap-4">
                 <div class="tabs tabs-border max-w-6xl mx-auto">
-                    <input type="radio" name="learn_tabs" class="tab" aria-label="Impact" checked="checked" />
-                    <input type="radio" name="learn_tabs" class="tab" aria-label="NASA Data" />
-                    <input type="radio" name="learn_tabs" class="tab" aria-label="Data Infrastructure" />
+                    <input type="radio" name="learn_tabs" class="tab" aria-label="About Us" checked="checked" />
+                    <input type="radio" name="learn_tabs" class="tab" aria-label="Impact" />
+                    <input type="radio" name="learn_tabs" class="tab" aria-label="Data" />
+                    <input type="radio" name="learn_tabs" class="tab" aria-label="Methodology" />
+                    <input type="radio" name="learn_tabs" class="tab" aria-label="Architecture" />
                     <input type="radio" name="learn_tabs" class="tab" aria-label="Media" />
                 </div>
 
@@ -57,121 +63,72 @@
 
         <!-- Tab Content -->
         <div class="tabs tabs-border max-w-6xl mx-auto">
-            <input type="radio" name="content_tabs" class="tab " aria-label="Impact" checked="checked" hidden/>
+            <input type="radio" name="content_tabs" class="tab " aria-label="About Us" checked="checked" hidden/>
+            <div class="tab-content bg-white/50 backdrop-blur-md rounded-lg p-8 border border-white/30">
+                
+                <AboutTab />
+            </div>
+
+            <input type="radio" name="content_tabs" class="tab " aria-label="Impact" hidden/>
             <div class="tab-content bg-white/50 backdrop-blur-md rounded-lg p-8 border border-white/30">
                 <h2 class="text-3xl font-bold text-black mb-6">Impact</h2>
-                <div class="prose prose-lg text-gray-700">
-                    <p class="mb-4">
-                        Urban agriculture and local food production can have transformative effects on cities:
-                    </p>
-                    <ul class="list-disc pl-6 mb-4">
-                        <li>Increased food security and resilience</li>
-                        <li>Reduced carbon footprint from food transportation</li>
-                        <li>Enhanced community engagement and education</li>
-                        <li>Improved urban biodiversity</li>
-                        <li>Economic opportunities for local communities</li>
-                    </ul>
-                </div>
+                <ImpactTab />
             </div>
 
-            <input type="radio" name="content_tabs" class="tab" aria-label="NASA Data" hidden/>
+            <input type="radio" name="content_tabs" class="tab" aria-label="Data" hidden/>
             <div class="tab-content bg-white/50 backdrop-blur-md rounded-lg p-8 border border-white/30">
-                <h2 class="text-3xl font-bold text-black mb-6">NASA Data</h2>
-                <p class="text-gray-700 mb-4">
-                    We leverage various NASA datasets to provide accurate climate and environmental data:
-                </p>
-                <div class="overflow-x-auto">
-                    <table class="table table-zebra">
-                        <thead>
-                            <tr>
-                                <th>Dataset</th>
-                                <th>Description</th>
-                                <th>Source</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>POWER API</td>
-                                <td>Climate data including temperature, precipitation, and solar radiation</td>
-                                <td>NASA POWER</td>
-                            </tr>
-                            <tr>
-                                <td>Temperature Data</td>
-                                <td>Monthly average temperatures for growing season analysis</td>
-                                <td>NASA POWER</td>
-                            </tr>
-                            <tr>
-                                <td>Precipitation Data</td>
-                                <td>Rainfall patterns and water availability</td>
-                                <td>NASA POWER</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+                
+                <DataTab />
             </div>
 
-            <input type="radio" name="content_tabs" class="tab" aria-label="Data Infrastructure" hidden/>
+            <input type="radio" name="content_tabs" class="tab" aria-label="Methodology" hidden/>
             <div class="tab-content bg-white/50 backdrop-blur-md rounded-lg p-8 border border-white/30">
-                <h2 class="text-3xl font-bold text-black mb-6">Data Infrastructure</h2>
-                <div class="mb-6">
-                    <p class="text-gray-700 mb-6">
-                        Home Grown uses a modern tech stack combining client-side rendering with server-side data processing to deliver real-time crop recommendations based on NASA climate data and AI-powered insights.
-                    </p>
+                <h2 class="text-3xl font-bold text-black mb-6">Methodology</h2>
+                <MethodologyTab />
+            </div>
 
-                    <!-- Architecture Diagram -->
-                    <div class="flex justify-center mb-8">
-                        <img src="/nasa-space-apps-2025-home-grown/architecture-diagram.png" alt="System Architecture Diagram" class="max-w-full h-auto rounded-lg shadow-lg border border-gray-200"/>
-                    </div>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div class="bg-[#E8DCC8] p-4 rounded-lg border border-gray-300">
-                            <h3 class="font-bold text-lg mb-2 text-gray-900">🎨 Client-Side Frontend</h3>
-                            <ul class="text-sm text-gray-700 space-y-1">
-                                <li>• Svelte 5 with TypeScript for reactive UI</li>
-                                <li>• Mapbox GL JS for 3D globe & polygon drawing</li>
-                                <li>• Tailwind CSS + DaisyUI for styling</li>
-                                <li>• Turf.js for geospatial calculations</li>
-                            </ul>
-                        </div>
-
-                        <div class="bg-[#D4C5E8] p-4 rounded-lg border border-gray-300">
-                            <h3 class="font-bold text-lg mb-2 text-gray-900">⚙️ Server-Side Backend</h3>
-                            <ul class="text-sm text-gray-700 space-y-1">
-                                <li>• FastAPI (Python) with REST endpoints</li>
-                                <li>• Crop database with requirements</li>
-                                <li>• CORS middleware for cross-origin requests</li>
-                                <li>• Mistral AI for LLM-powered summaries</li>
-                            </ul>
-                        </div>
-
-                        <div class="bg-[#E8C8D8] p-4 rounded-lg border border-gray-300">
-                            <h3 class="font-bold text-lg mb-2 text-gray-900">🚀 Deployment</h3>
-                            <ul class="text-sm text-gray-700 space-y-1">
-                                <li>• Frontend: GitHub Pages (static hosting)</li>
-                                <li>• Backend: Render (cloud hosting)</li>
-                                <li>• SPA routing with 404 redirect technique</li>
-                            </ul>
-                        </div>
-
-                        <div class="bg-[#F4F1D0] p-4 rounded-lg border border-gray-300">
-                            <h3 class="font-bold text-lg mb-2 text-gray-900">🛰️ External Data Sources</h3>
-                            <ul class="text-sm text-gray-700 space-y-1">
-                                <li>• NASA POWER API: Climate & solar data</li>
-                                <li>• Microsoft Planetary Computer: Landsat imagery</li>
-                                <li>• Mistral AI: Text summarization</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
+            <input type="radio" name="content_tabs" class="tab" aria-label="Architecture" hidden/>
+            <div class="tab-content bg-white/50 backdrop-blur-md rounded-lg p-8 border border-white/30">
+                <h2 class="text-3xl font-bold text-black mb-6">Architecture</h2>
+                <ArchitectureTab />
             </div>
 
             <input type="radio" name="content_tabs" class="tab" aria-label="Media" hidden/>
             <div class="tab-content bg-white/50 backdrop-blur-md rounded-lg p-8 border border-white/30">
                 <h2 class="text-3xl font-bold text-black mb-6">Media</h2>
-                <div class="prose prose-lg text-gray-700">
-                    <p class="mb-4">
-                        [Media content to be provided]
-                    </p>
+                <div class="prose prose-lg text-gray-700 max-w-none">
+                    <!-- YouTube Video Embed -->
+                    <div class="mb-8">
+                        <h3 class="text-xl font-bold mb-4">Project Video</h3>
+                        <div class="aspect-video w-full max-w-4xl mx-auto">
+                            <iframe
+                                width="100%"
+                                height="100%"
+                                src="https://www.youtube.com/embed/_Yw2AXcosS4"
+                                title="Home Grown - NASA Space Apps Challenge 2025"
+                                frameborder="0"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                allowfullscreen
+                                class="rounded-lg"
+                            ></iframe>
+                        </div>
+                        <p class="text-center mt-4">
+                            <a href="https://youtu.be/_Yw2AXcosS4" target="_blank" class="link">Watch on YouTube</a>
+                        </p>
+                    </div>
+
+                    <!-- Press Release -->
+                    <div class="mb-6">
+                        <h3 class="text-xl font-bold mb-4">Press Release</h3>
+                        <div class="bg-[#EDE8DC] p-6 rounded-lg border border-gray-300 text-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto mb-4 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                            </svg>
+                            <a href="/nasa-space-apps-2025-home-grown/pressrelease.pdf" target="_blank" class="btn bg-[#D4C5E8] hover:bg-[#C4B5D8] border-[#D4C5E8]">
+                                Download Press Release (PDF)
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
