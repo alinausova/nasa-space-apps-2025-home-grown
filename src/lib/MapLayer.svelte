@@ -83,6 +83,16 @@
         });
     }
 
+    function flyToCity(lat: number, lng: number, zoom: number = 15) {
+        if (!map) return;
+
+        map.flyTo({
+            center: [lng, lat],
+            zoom: zoom,
+            essential: true
+        });
+    }
+
     function toggleDrawMode() {
         if (!draw || !map) return;
 
@@ -273,7 +283,21 @@
 <!-- GitHub Link and Title -->
 {#if !showBackdrop}
 <div class="fixed top-5 left-5 z-[1000] flex items-center gap-3">
-    <h1 class="text-2xl font-bold text-neutral-900 uppercase">Home Grown</h1>
+
+    <h1 class="text-2xl font-bold text-neutral-900 uppercase">
+        Home Grown</h1>
+    
+    <a
+    href="/nasa-space-apps-2025-home-grown/learn-more"
+    target="_blank"
+    rel="noopener noreferrer"
+    class="w-8 h-8 flex items-center justify-center transition-opacity duration-200 hover:opacity-70 no-underline"
+    title="Learn More"
+>
+    <svg viewBox="0 0 85 85" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 fill-[#1a1a1a]">
+        <path d="M42.5,0.003C19.028,0.003,0,19.031,0,42.503s19.028,42.5,42.5,42.5S85,65.976,85,42.503S65.972,0.003,42.5,0.003z M42.288,66.27c0,0-1.972,1.311-3.32,1.305c-0.12,0.055-0.191,0.087-0.191,0.087l0.003-0.087c-0.283-0.013-0.568-0.053-0.855-0.125 l-0.426-0.105c-2.354-0.584-3.6-2.918-3.014-5.271l3.277-13.211l1.479-5.967c1.376-5.54-4.363,1.178-5.54-1.374 c-0.777-1.687,4.464-5.227,8.293-7.896c0,0,1.97-1.309,3.319-1.304c0.121-0.056,0.192-0.087,0.192-0.087l-0.005,0.087 c0.285,0.013,0.57,0.053,0.857,0.124l0.426,0.106c2.354,0.584,3.788,2.965,3.204,5.318l-3.276,13.212l-1.482,5.967 c-1.374,5.54,4.27-1.204,5.446,1.351C51.452,60.085,46.116,63.601,42.288,66.27z M50.594,24.976 c-0.818,3.295-4.152,5.304-7.446,4.486c-3.296-0.818-5.305-4.151-4.487-7.447c0.818-3.296,4.152-5.304,7.446-4.486 C49.403,18.346,51.411,21.68,50.594,24.976z"/>
+    </svg>
+</a>
     <a
         href="https://github.com/alinausova/nasa-space-apps-2025-home-grown"
         target="_blank"
@@ -319,5 +343,6 @@
         onAnalyze={analyzePolygon}
         onToggleDraw={toggleDrawMode}
         isDrawing={isDrawing}
+        onFlyTo={flyToCity}
     />
 {/if}

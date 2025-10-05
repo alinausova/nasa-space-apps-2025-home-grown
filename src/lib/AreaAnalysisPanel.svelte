@@ -10,9 +10,10 @@
         onAnalyze?: () => Promise<RecommendationsResponse>;
         onToggleDraw?: () => void;
         isDrawing?: boolean;
+        onFlyTo?: (lat: number, lng: number, zoom?: number) => void;
     }
 
-    let { coordinates = null, onClear, onAnalyze, onToggleDraw, isDrawing = false }: Props = $props();
+    let { coordinates = null, onClear, onAnalyze, onToggleDraw, isDrawing = false, onFlyTo }: Props = $props();
 
     let isLoading = $state(false);
     let recommendations = $state<CropRecommendation[] | null>(null);
@@ -141,7 +142,7 @@
 
 </style>
 
-<div class="glassmorphism-menu fixed top-5 right-5 w-[520px] z-[1000] p-5 flex flex-col max-h-[calc(100vh-40px)]">
+<div class="glassmorphism-menu fixed top-5 right-5 w-[560px] z-[1000] p-5 flex flex-col max-h-[calc(100vh-40px)]">
     <div class="flex justify-between items-center mb-4 pb-3 border-b-2 border-green-400 flex-shrink-0">
         <div class="text-base text-neutral-900 pr-9">
             {#if coordinates && coordinates.length > 0}
@@ -160,6 +161,44 @@
     </div>
 
     <div class="flex-1 overflow-y-auto pr-1">
+    {#if !coordinates || coordinates.length === 0}
+        <!-- Quick jump buttons when no area selected -->
+        {#if onFlyTo}
+            <div class="mb-4">
+                <div class="text-sm text-neutral-900 mb-2 font-semibold">Try these locations:</div>
+                <div class="grid grid-cols-4 gap-2">
+                    <button
+                        class="glassmorphism-accordion text-neutral-900 p-2 rounded-lg font-medium text-xs hover:bg-green-400/30 transition-all flex flex-col items-center cursor-pointer"
+                        onclick={() => onFlyTo(48.1460, 11.5623, 15)}
+                    >
+                        <span>🇩🇪 Munich</span>
+                        <span class="opacity-70 font-normal text-[10px]">Temperate</span>
+                    </button>
+                    <button
+                        class="glassmorphism-accordion text-neutral-900 p-2 rounded-lg font-medium text-xs hover:bg-green-400/30 transition-all flex flex-col items-center cursor-pointer"
+                        onclick={() => onFlyTo(30.0444, 31.2357, 15)}
+                    >
+                        <span>🇪🇬 Cairo</span>
+                        <span class="opacity-70 font-normal text-[10px]">Hot/Arid</span>
+                    </button>
+                    <button
+                        class="glassmorphism-accordion text-neutral-900 p-2 rounded-lg font-medium text-xs hover:bg-green-400/30 transition-all flex flex-col items-center cursor-pointer"
+                        onclick={() => onFlyTo(1.3521, 103.8198, 15)}
+                    >
+                        <span>🇸🇬 Singapore</span>
+                        <span class="opacity-70 font-normal text-[10px]">Tropical</span>
+                    </button>
+                    <button
+                        class="glassmorphism-accordion text-neutral-900 p-2 rounded-lg font-medium text-xs hover:bg-green-400/30 transition-all flex flex-col items-center cursor-pointer"
+                        onclick={() => onFlyTo(64.1466, -21.8952, 15)}
+                    >
+                        <span>🇮🇸 Reykjavik</span>
+                        <span class="opacity-70 font-normal text-[10px]">Cold</span>
+                    </button>
+                </div>
+            </div>
+        {/if}
+    {:else}
     {#if coordinates && coordinates.length > 0}
 
         {#if area() && (!recommendations || recommendations.length === 0)}
@@ -268,6 +307,7 @@
                 </div>
             </div>
         {/if}
+    {/if}
     {/if}
     </div>
 </div>
