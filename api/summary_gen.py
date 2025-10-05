@@ -30,7 +30,8 @@ def generate_crop_summary(api_response: dict, api_key: str = None) -> str:
     # System prompt - defines the assistant's role and constraints
     system_prompt = """You are an expert urban agriculture advisor providing data-driven crop recommendations.
 
-Write in a professional yet friendly tone. Use vegetable/crop emojis (🍅 🥕 🥬 🌽 🥔 🫑 etc.) when mentioning
+Write in a professional yet friendly tone, suitable to inform urban planners. 
+Use vegetable/crop emojis (🍅 🥕 🥬 🌽 🥔 🫑 etc.) when mentioning
 specific crops, and use **bold** for crop names and key metrics.
 
 Format guidelines:
