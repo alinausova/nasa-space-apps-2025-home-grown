@@ -3,16 +3,13 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 import httpx
-from typing import Dict
+from typing import Dict, Optional
 import statistics
 from crop_database import CROP_DATABASE
 from pydantic import BaseModel, Field, field_validator
 from typing import List, Tuple
 import math
-
-class PolygonInput(BaseModel):
-    """Polygon with coordinate points [(lat, lon), ...]"""
-    coordinates: List[Tuple[float, float]] = Field(..., min_length=3, description="List of (latitude, longitude) tuples")
+from collections import defaultdict
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -20,8 +17,16 @@ import httpx
 import os
 from dotenv import load_dotenv
 
-
 load_dotenv()
+
+
+class PolygonInput(BaseModel):
+    """Polygon with coordinate points [(lat, lon), ...]"""
+    coordinates: List[Tuple[float, float]] = Field(..., min_length=3,
+                                                   description="List of (latitude, longitude) tuples")
+    sunshine_duration: Optional[List[float]] = Field(..., min_length=3,
+                                                     description="List of sunlight reaching the spot (optional, 0.5 if unavailable)")
+
 
 app = FastAPI(title="Home Grown API", version="1.0.0")
 
@@ -101,6 +106,7 @@ async def external_api_example():
 # Example endpoint with caching (implement with Redis or in-memory for production)
 _cache = {}
 
+
 @app.get("/api/cached-data")
 async def get_cached_data():
     """
@@ -121,7 +127,6 @@ async def get_cached_data():
         "cached": False,
         "data": data
     }
-
 
 
 # Munich coordinates
@@ -272,6 +277,63 @@ def analyze_climate_data(nasa_data: Dict) -> Dict:
     return analysis
 
 
+def calculate_monthly_averages(nasa_data_list: List[Dict]) -> Dict:
+    """
+    Calculate average monthly temperatures across multiple years.
+
+    Args:
+        nasa_data_list: List of NASA POWER data dictionaries for different years
+
+    Returns:
+        Dictionary with monthly averages for plotting
+    """
+    # Store temps by month across all years
+    monthly_max_temps = defaultdict(list)
+    monthly_min_temps = defaultdict(list)
+    monthly_avg_temps = defaultdict(list)
+
+    for nasa_data in nasa_data_list:
+        parameters = nasa_data.get("properties", {}).get("parameter", {})
+        temp_max_data = parameters.get("T2M_MAX", {})
+        temp_min_data = parameters.get("T2M_MIN", {})
+
+        # Process each day
+        for date_key in temp_max_data.keys():
+            if date_key in temp_min_data:
+                # Extract month from date key (format: YYYYMMDD)
+                month = int(date_key[4:6])
+
+                temp_max = temp_max_data[date_key]
+                temp_min = temp_min_data[date_key]
+                temp_avg = (temp_max + temp_min) / 2
+
+                monthly_max_temps[month].append(temp_max)
+                monthly_min_temps[month].append(temp_min)
+                monthly_avg_temps[month].append(temp_avg)
+
+    # Calculate averages for each month
+    month_names = [
+        "January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
+    ]
+
+    monthly_data = []
+    for month in range(1, 13):
+        if month in monthly_avg_temps:
+            monthly_data.append({
+                "month": month,
+                "month_name": month_names[month - 1],
+                "avg_temp_max": round(statistics.mean(monthly_max_temps[month]), 1),
+                "avg_temp_min": round(statistics.mean(monthly_min_temps[month]), 1),
+                "avg_temp": round(statistics.mean(monthly_avg_temps[month]), 1)
+            })
+
+    return {
+        "monthly_averages": monthly_data,
+        "years_analyzed": len(nasa_data_list)
+    }
+
+
 @app.get("/crops")
 async def list_crops():
     """List all available crops in the database."""
@@ -311,6 +373,7 @@ async def get_climate_data(year: int = 2023):
             }
         }
     }
+
 
 # we need this to make the request to NASA POWER
 def calculate_polygon_centroid(coordinates: List[Tuple[float, float]]) -> Tuple[float, float]:
@@ -370,6 +433,7 @@ def calculate_polygon_area_m2(coordinates: List[Tuple[float, float]]) -> float:
     area = abs(area) / 2.0
     return area
 
+
 # this is the updated version with the actual precipitation values per veggie
 def calculate_yield_estimate(crop_data: Dict, suitability_score: float, area_m2: float) -> Dict:
     """Calculate expected yield based on suitability score and area."""
@@ -407,8 +471,8 @@ def calculate_yield_estimate(crop_data: Dict, suitability_score: float, area_m2:
         yield_per_m2 = lower_yield * 0.5 * (suitability_score / 50)
         yield_category = "Minimal (Poor conditions)"
 
-    # Calculate total yield for the area
-    total_yield_kg = yield_per_m2 * area_m2
+    # Calculate total yield for the area, area is corrected by 0.7 (walkways, equipment,..)
+    total_yield_kg = yield_per_m2 * area_m2 * 0.70
 
     return {
         "yield_per_m2_kg": round(yield_per_m2, 2),
@@ -543,14 +607,13 @@ def calculate_crop_suitability_with_water(crop_data: Dict, climate_analysis: Dic
     return result
 
 
-
-
 @app.post("/recommendations/polygon")
 async def get_polygon_crop_recommendations(
         polygon: PolygonInput,
         year: int = 2023,
         min_score: float = 50.0,
-        limit: int = 10
+        limit: int = 10,
+        include_monthly_temps: bool = True
 ):
     """
     Get crop recommendations for a specific polygon area based on NASA climate data.
@@ -560,6 +623,7 @@ async def get_polygon_crop_recommendations(
     - year: Year to analyze (default: 2023)
     - min_score: Minimum suitability score (0-100, default: 50)
     - limit: Maximum number of recommendations to return
+    - include_monthly_temps: Include 3-year average monthly temperatures (default: True)
     """
 
     # Calculate polygon center and area
@@ -567,9 +631,25 @@ async def get_polygon_crop_recommendations(
     area_m2 = calculate_polygon_area_m2(polygon.coordinates)
     area_hectares = area_m2 / 10000
 
-    # Fetch NASA POWER data for the centroid
+    # Fetch NASA POWER data for the specified year
     nasa_data = await fetch_nasa_power_data(center_lat, center_lon, year)
     climate_analysis = analyze_climate_data(nasa_data)
+
+    # Fetch multi-year data for monthly averages if requested
+    monthly_temperature_data = None
+    if include_monthly_temps:
+        # Fetch data for the last 3 years
+        nasa_data_multi_year = []
+        for y in [year - 2, year - 1, year]:
+            try:
+                data = await fetch_nasa_power_data(center_lat, center_lon, y)
+                nasa_data_multi_year.append(data)
+            except Exception as e:
+                # If we can't fetch a year, continue with what we have
+                print(f"Warning: Could not fetch data for year {y}: {e}")
+
+        if nasa_data_multi_year:
+            monthly_temperature_data = calculate_monthly_averages(nasa_data_multi_year)
 
     # Calculate suitability for each crop
     recommendations = []
@@ -589,7 +669,7 @@ async def get_polygon_crop_recommendations(
     # Sort by overall score
     recommendations.sort(key=lambda x: x["suitability"]["overall_score"], reverse=True)
 
-    return {
+    response = {
         "location": {
             "center_latitude": round(center_lat, 6),
             "center_longitude": round(center_lon, 6),
@@ -608,7 +688,14 @@ async def get_polygon_crop_recommendations(
         "data_source": "NASA POWER API"
     }
 
+    # Add monthly temperature data if available
+    if monthly_temperature_data:
+        response["monthly_temperature_averages"] = monthly_temperature_data
+
+    return response
+
 
 if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run(app, host="0.0.0.0", port=8000)
