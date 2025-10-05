@@ -909,7 +909,7 @@ async def get_polygon_crop_recommendations(
         polygon: PolygonInput,
         year: int = 2023,
         min_score: float = 50.0,
-        limit: int = 20,
+        limit: int = 10,
         include_monthly_temps: bool = True
 ):
     """
@@ -927,6 +927,16 @@ async def get_polygon_crop_recommendations(
     center_lat, center_lon = calculate_polygon_centroid(polygon.coordinates)
     area_m2 = calculate_polygon_area_m2(polygon.coordinates)
     area_hectares = area_m2 / 10000
+
+    # ========== AREA VALIDATION ==========
+    MAX_AREA_M2 = 750
+    if area_m2 > MAX_AREA_M2:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Selection area is too large. Maximum allowed: {MAX_AREA_M2} m² ({MAX_AREA_M2/10000:.4f} hectares). "
+                   f"Your selection: {area_m2:.2f} m² ({area_hectares:.4f} hectares). "
+                   f"Please select a smaller area."
+        )
 
     # ========== SUNSHINE FACTOR CALCULATION ==========
     if polygon.sunshine_duration is not None and len(polygon.sunshine_duration) > 0:
@@ -953,7 +963,7 @@ async def get_polygon_crop_recommendations(
     # This gives a general sense of sunshine availability
     display_sunshine = calculate_growing_season_sunshine(
         climate_data["primary_year_data"],
-        crop_base_temp=7.5,  # Representative moderate base temp
+        crop_base_temp=10.0,  # Representative moderate base temp
         sunshine_factor=sunshine_factor
     )
 
