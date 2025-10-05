@@ -2,6 +2,7 @@
     import * as turf from '@turf/turf';
     import type { CropRecommendation, RecommendationsResponse } from './api';
     import CropRecommendationCard from './CropRecommendationCard.svelte';
+    import MonthlyTemperatureChart from './MonthlyTemperatureChart.svelte';
 
     interface Props {
         coordinates: number[][][] | null;
@@ -16,6 +17,9 @@
     let isLoading = $state(false);
     let recommendations = $state<CropRecommendation[] | null>(null);
     let climateSummary = $state<RecommendationsResponse['climate_summary'] | null>(null);
+    let sunshineFactor = $state<number | null>(null);
+    let totalFilteredBySunlight = $state<number | null>(null);
+    let monthlyTemperatures = $state<RecommendationsResponse['monthly_temperature_averages'] | null>(null);
 
     async function handleAnalyze() {
         if (!onAnalyze) return;
@@ -23,11 +27,17 @@
         isLoading = true;
         recommendations = null;
         climateSummary = null;
+        sunshineFactor = null;
+        totalFilteredBySunlight = null;
+        monthlyTemperatures = null;
 
         try {
             const response = await onAnalyze();
             recommendations = response.recommendations;
             climateSummary = response.climate_summary;
+            sunshineFactor = response.sunshine_factor;
+            totalFilteredBySunlight = response.total_filtered_by_sunlight;
+            monthlyTemperatures = response.monthly_temperature_averages || null;
         } catch (error) {
             console.error('Failed to analyze polygon:', error);
             alert('Failed to get crop recommendations. Please try again.');
@@ -39,6 +49,9 @@
     function handleClear() {
         recommendations = null;
         climateSummary = null;
+        sunshineFactor = null;
+        totalFilteredBySunlight = null;
+        monthlyTemperatures = null;
         if (onClear) onClear();
     }
 
@@ -119,7 +132,7 @@
 
 </style>
 
-<div class="glassmorphism-menu fixed top-5 right-5 w-[420px] z-[1000] p-5"
+<div class="glassmorphism-menu fixed top-5 right-5 w-[460px] z-[1000] p-5"
      class:h-[calc(100vh-40px)]={recommendations && recommendations.length > 0}
      class:flex={recommendations && recommendations.length > 0}
      class:flex-col={recommendations && recommendations.length > 0}>
@@ -165,24 +178,54 @@
         {/if}
 
         {#if climateSummary}
-            <div class="climate-glassmorphism text-neutral-900 p-4 rounded-lg mb-4">
-                <div class="text-sm font-semibold opacity-90 mb-2">Climate Summary (2023)</div>
-                <div class="grid grid-cols-2 gap-2 text-sm">
-                    <div class="flex flex-col">
-                        <div class="opacity-80 text-xs mb-0.5">Temperature</div>
-                        <div class="font-semibold text-[0.95rem]">{climateSummary.avg_temp_min}° - {climateSummary.avg_temp_max}°C</div>
-                    </div>
-                    <div class="flex flex-col">
-                        <div class="opacity-80 text-xs mb-0.5">Sun Hours</div>
-                        <div class="font-semibold text-[0.95rem]">{climateSummary.avg_sun_hours_daily} hrs/day</div>
-                    </div>
-                    <div class="flex flex-col">
-                        <div class="opacity-80 text-xs mb-0.5">Precipitation</div>
-                        <div class="font-semibold text-[0.95rem]">{Math.round(climateSummary.annual_precipitation_mm)} mm/year</div>
-                    </div>
-                    <div class="flex flex-col">
-                        <div class="opacity-80 text-xs mb-0.5">Suitable Crops</div>
-                        <div class="font-semibold text-[0.95rem]">{recommendations?.length || 0} found</div>
+            <div class="collapse collapse-arrow climate-glassmorphism text-neutral-900 rounded-lg mb-4">
+                <input type="checkbox" checked />
+                <div class="collapse-title min-h-0 py-2.5 pl-3 pr-10">
+                    <span class="font-semibold text-sm">Climate Summary (2023)</span>
+                </div>
+                <div class="collapse-content px-3">
+                    <div class="pt-3">
+                        <div class="grid grid-cols-2 gap-2 text-sm mb-3">
+                            <div class="flex flex-col">
+                                <div class="opacity-80 text-xs mb-0.5">Temperature</div>
+                                <div class="font-semibold text-[0.95rem]">{climateSummary.avg_temp_min}° - {climateSummary.avg_temp_max}°C</div>
+                            </div>
+                            <div class="flex flex-col">
+                                <div class="opacity-80 text-xs mb-0.5">Sun Hours</div>
+                                <div class="font-semibold text-[0.95rem]">{climateSummary.avg_sun_hours_daily} hrs/day</div>
+                            </div>
+                            {#if climateSummary.adjusted_sun_hours_daily !== undefined}
+                            <div class="flex flex-col">
+                                <div class="opacity-80 text-xs mb-0.5">Adjusted Sun Hours</div>
+                                <div class="font-semibold text-[0.95rem]">{climateSummary.adjusted_sun_hours_daily} hrs/day</div>
+                            </div>
+                            {/if}
+                            {#if sunshineFactor !== null}
+                            <div class="flex flex-col">
+                                <div class="opacity-80 text-xs mb-0.5">Sunshine Factor</div>
+                                <div class="font-semibold text-[0.95rem]">{(sunshineFactor * 100).toFixed(0)}%</div>
+                            </div>
+                            {/if}
+                            <div class="flex flex-col">
+                                <div class="opacity-80 text-xs mb-0.5">Precipitation</div>
+                                <div class="font-semibold text-[0.95rem]">{Math.round(climateSummary.annual_precipitation_mm)} mm/year</div>
+                            </div>
+                            <div class="flex flex-col">
+                                <div class="opacity-80 text-xs mb-0.5">Suitable Crops</div>
+                                <div class="font-semibold text-[0.95rem]">{recommendations?.length || 0} found</div>
+                            </div>
+                        </div>
+                        {#if totalFilteredBySunlight && totalFilteredBySunlight > 0}
+                            <div class="mb-3 pb-3 border-b border-black/10 text-xs opacity-80">
+                                {totalFilteredBySunlight} crop{totalFilteredBySunlight === 1 ? '' : 's'} filtered due to insufficient sunlight
+                            </div>
+                        {/if}
+                        {#if monthlyTemperatures && monthlyTemperatures.monthly_averages}
+                            <MonthlyTemperatureChart
+                                data={monthlyTemperatures.monthly_averages}
+                                yearsAnalyzed={monthlyTemperatures.years_analyzed}
+                            />
+                        {/if}
                     </div>
                 </div>
             </div>

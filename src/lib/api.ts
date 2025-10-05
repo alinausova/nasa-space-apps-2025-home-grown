@@ -82,6 +82,8 @@ export interface CropRecommendation {
       total_gdd: number;
       required_gdd: number;
       avg_sun_hours: number;
+      adjusted_sun_hours?: number;
+      sunshine_factor?: number;
       required_sun_hours: number;
       annual_precipitation_mm: number;
       required_water_mm: number;
@@ -101,6 +103,14 @@ export interface CropRecommendation {
   };
 }
 
+export interface MonthlyTemperatureData {
+  month: number;
+  month_name: string;
+  avg_temp_max: number;
+  avg_temp_min: number;
+  avg_temp: number;
+}
+
 export interface RecommendationsResponse {
   location: {
     center_latitude: number;
@@ -109,14 +119,21 @@ export interface RecommendationsResponse {
     area_hectares: number;
   };
   year: number;
+  sunshine_factor?: number;
   climate_summary: {
     avg_temp_max: number;
     avg_temp_min: number;
     annual_precipitation_mm: number;
     avg_sun_hours_daily: number;
+    adjusted_sun_hours_daily?: number;
   };
   recommendations: CropRecommendation[];
   total_suitable_crops: number;
+  total_filtered_by_sunlight?: number;
+  monthly_temperature_averages?: {
+    monthly_averages: MonthlyTemperatureData[];
+    years_analyzed: number;
+  };
   data_source: string;
 }
 

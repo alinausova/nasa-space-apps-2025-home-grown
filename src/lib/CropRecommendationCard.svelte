@@ -156,6 +156,12 @@
                     <div class="bg-gray-200 h-1.5 rounded-full overflow-hidden">
                         <div class="h-full rounded-full bg-amber-400 transition-all duration-300" style="width: {crop.suitability.scores.sunlight}%;"></div>
                     </div>
+                    {#if crop.suitability.metrics.adjusted_sun_hours !== undefined}
+                    <div class="flex justify-between text-[0.65rem] mt-0.5 text-gray-400">
+                        <span>Adjusted: {crop.suitability.metrics.adjusted_sun_hours} hrs/day</span>
+                        <span>Required: {crop.suitability.metrics.required_sun_hours} hrs/day</span>
+                    </div>
+                    {/if}
                 </div>
 
                 <div class="mb-2">
