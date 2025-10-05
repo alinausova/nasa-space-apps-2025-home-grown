@@ -5,6 +5,8 @@ from fastapi.middleware.cors import CORSMiddleware
 import httpx
 from typing import Dict, Optional, List, Tuple
 import statistics
+
+from summary_gen import generate_crop_summary
 from crop_database import CROP_DATABASE
 from pydantic import BaseModel, Field
 import math
@@ -128,6 +130,10 @@ async def get_cached_data():
 MUNICH_LAT = 48.1351
 MUNICH_LON = 11.5820
 
+
+# next to Munich coordinates to tell that the NASA POWER data is not sufficient
+OBERPFRAMMERN_LAT = 48.0216
+OBERPFRAMMERN_LON = 11.8131
 
 # ============================================================================
 # GEOMETRY FUNCTIONS
@@ -884,8 +890,8 @@ async def get_climate_data(year: int = 2023):
     return {
         "location": {
             "city": "Munich",
-            "latitude": MUNICH_LAT,
-            "longitude": MUNICH_LON
+            "latitude": OBERPFRAMMERN_LAT,
+            "longitude": OBERPFRAMMERN_LON
         },
         "year": year,
         "climate_analysis": climate_data["climate_analysis"],
@@ -929,7 +935,7 @@ async def get_polygon_crop_recommendations(
     area_hectares = area_m2 / 10000
 
     # ========== AREA VALIDATION ==========
-    MAX_AREA_M2 = 750
+    MAX_AREA_M2 = 1000000
     if area_m2 > MAX_AREA_M2:
         raise HTTPException(
             status_code=400,
@@ -992,6 +998,12 @@ async def get_polygon_crop_recommendations(
     # Add monthly temperature data if available
     if climate_data["monthly_averages"]:
         response["monthly_temperature_averages"] = climate_data["monthly_averages"]
+    try:
+        llm_summary = generate_crop_summary(response)
+        response["llm_summary"] = llm_summary
+    except Exception as e:
+        response["llm_summary"] = "The LLM in charge of assembling your summary was asleep. We did not want to wake it."
+        response["llm_err"] = str(e)
 
     return response
 
