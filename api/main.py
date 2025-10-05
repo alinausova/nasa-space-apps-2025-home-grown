@@ -3,16 +3,13 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 import httpx
-from typing import Dict
+from typing import Dict, Optional
 import statistics
 from crop_database import CROP_DATABASE
 from pydantic import BaseModel, Field, field_validator
 from typing import List, Tuple
 import math
-
-class PolygonInput(BaseModel):
-    """Polygon with coordinate points [(lat, lon), ...]"""
-    coordinates: List[Tuple[float, float]] = Field(..., min_length=3, description="List of (latitude, longitude) tuples")
+from collections import defaultdict
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -20,8 +17,16 @@ import httpx
 import os
 from dotenv import load_dotenv
 
-
 load_dotenv()
+
+
+class PolygonInput(BaseModel):
+    """Polygon with coordinate points [(lat, lon), ...]"""
+    coordinates: List[Tuple[float, float]] = Field(..., min_length=3,
+                                                   description="List of (latitude, longitude) tuples")
+    sunshine_duration: Optional[List[float]] = Field(None,
+                                                     description="List of sunshine duration factors (0-1) for each point. If not provided, defaults to 0.7")
+
 
 app = FastAPI(title="Home Grown API", version="1.0.0")
 
@@ -101,6 +106,7 @@ async def external_api_example():
 # Example endpoint with caching (implement with Redis or in-memory for production)
 _cache = {}
 
+
 @app.get("/api/cached-data")
 async def get_cached_data():
     """
@@ -121,7 +127,6 @@ async def get_cached_data():
         "cached": False,
         "data": data
     }
-
 
 
 # Munich coordinates
@@ -176,10 +181,12 @@ def estimate_sun_hours(solar_radiation: float) -> float:
     Estimate daily sun hours from solar radiation.
     Rough conversion: 1 kWh/m²/day ≈ 1 hour of full sun
     NASA POWER provides MJ/m²/day, convert to kWh/m²/day (1 MJ = 0.278 kWh)
+    but with 0.278 the atacama desert got only 5 hours of sunshine
+    so lets assume 0.5
 
     This does not yet include the shade casted by buildings, todo we need to offset this with a shade index.
     """
-    kwh_per_m2_day = solar_radiation * 0.278
+    kwh_per_m2_day = solar_radiation * 0.5
     estimated_hours = kwh_per_m2_day / 1.0  # Assuming 1 kW/m² as "full sun"
     return max(0, min(16, estimated_hours))  # Cap at reasonable daylight hours
 
@@ -272,6 +279,63 @@ def analyze_climate_data(nasa_data: Dict) -> Dict:
     return analysis
 
 
+def calculate_monthly_averages(nasa_data_list: List[Dict]) -> Dict:
+    """
+    Calculate average monthly temperatures across multiple years.
+
+    Args:
+        nasa_data_list: List of NASA POWER data dictionaries for different years
+
+    Returns:
+        Dictionary with monthly averages for plotting
+    """
+    # Store temps by month across all years
+    monthly_max_temps = defaultdict(list)
+    monthly_min_temps = defaultdict(list)
+    monthly_avg_temps = defaultdict(list)
+
+    for nasa_data in nasa_data_list:
+        parameters = nasa_data.get("properties", {}).get("parameter", {})
+        temp_max_data = parameters.get("T2M_MAX", {})
+        temp_min_data = parameters.get("T2M_MIN", {})
+
+        # Process each day
+        for date_key in temp_max_data.keys():
+            if date_key in temp_min_data:
+                # Extract month from date key (format: YYYYMMDD)
+                month = int(date_key[4:6])
+
+                temp_max = temp_max_data[date_key]
+                temp_min = temp_min_data[date_key]
+                temp_avg = (temp_max + temp_min) / 2
+
+                monthly_max_temps[month].append(temp_max)
+                monthly_min_temps[month].append(temp_min)
+                monthly_avg_temps[month].append(temp_avg)
+
+    # Calculate averages for each month
+    month_names = [
+        "January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December"
+    ]
+
+    monthly_data = []
+    for month in range(1, 13):
+        if month in monthly_avg_temps:
+            monthly_data.append({
+                "month": month,
+                "month_name": month_names[month - 1],
+                "avg_temp_max": round(statistics.mean(monthly_max_temps[month]), 1),
+                "avg_temp_min": round(statistics.mean(monthly_min_temps[month]), 1),
+                "avg_temp": round(statistics.mean(monthly_avg_temps[month]), 1)
+            })
+
+    return {
+        "monthly_averages": monthly_data,
+        "years_analyzed": len(nasa_data_list)
+    }
+
+
 @app.get("/crops")
 async def list_crops():
     """List all available crops in the database."""
@@ -311,6 +375,7 @@ async def get_climate_data(year: int = 2023):
             }
         }
     }
+
 
 # we need this to make the request to NASA POWER
 def calculate_polygon_centroid(coordinates: List[Tuple[float, float]]) -> Tuple[float, float]:
@@ -370,6 +435,7 @@ def calculate_polygon_area_m2(coordinates: List[Tuple[float, float]]) -> float:
     area = abs(area) / 2.0
     return area
 
+
 # this is the updated version with the actual precipitation values per veggie
 def calculate_yield_estimate(crop_data: Dict, suitability_score: float, area_m2: float) -> Dict:
     """Calculate expected yield based on suitability score and area."""
@@ -407,8 +473,8 @@ def calculate_yield_estimate(crop_data: Dict, suitability_score: float, area_m2:
         yield_per_m2 = lower_yield * 0.5 * (suitability_score / 50)
         yield_category = "Minimal (Poor conditions)"
 
-    # Calculate total yield for the area
-    total_yield_kg = yield_per_m2 * area_m2
+    # Calculate total yield for the area, area is corrected by 0.7 (walkways, equipment,..)
+    total_yield_kg = yield_per_m2 * area_m2 * 0.70
 
     return {
         "yield_per_m2_kg": round(yield_per_m2, 2),
@@ -424,14 +490,26 @@ def calculate_yield_estimate(crop_data: Dict, suitability_score: float, area_m2:
 
 
 def calculate_crop_suitability_with_water(crop_data: Dict, climate_analysis: Dict,
-                                          nasa_raw_data: Dict, area_m2: float = None) -> Dict:
-    """Calculate suitability score for a specific crop based on climate data with actual water requirements."""
+                                          nasa_raw_data: Dict, area_m2: float = None,
+                                          sunshine_factor: float = 1.0) -> Dict:
+    """Calculate suitability score for a specific crop based on climate data with actual water requirements.
+
+    Args:
+        crop_data: Crop information from database
+        climate_analysis: Analyzed climate data
+        nasa_raw_data: Raw NASA POWER data
+        area_m2: Area in square meters (optional)
+        sunshine_factor: Factor to adjust available sunshine (0-1), accounts for shade from buildings etc.
+    """
 
     # Extract climate metrics
     avg_temp_max = climate_analysis["temperature_max"]["mean"]
     avg_temp_min = climate_analysis["temperature_min"]["mean"]
     avg_sun_hours = climate_analysis["estimated_sun_hours_daily"]
     annual_precip = climate_analysis["precipitation"]["total_annual"]
+
+    # Apply sunshine factor to account for shade, obstructions, etc.
+    adjusted_sun_hours = avg_sun_hours * sunshine_factor
 
     # Calculate total GDD for the year
     parameters = nasa_raw_data.get("properties", {}).get("parameter", {})
@@ -461,8 +539,8 @@ def calculate_crop_suitability_with_water(crop_data: Dict, climate_analysis: Dic
     else:
         scores["gdd"] = gdd_ratio * 100
 
-    # Sun Hours Score
-    sun_ratio = avg_sun_hours / crop_data["min_sun_hours"]
+    # Sun Hours Score - using adjusted sun hours
+    sun_ratio = adjusted_sun_hours / crop_data["min_sun_hours"]
     scores["sunlight"] = min(100, sun_ratio * 100)
 
     # Temperature Range Score
@@ -529,6 +607,8 @@ def calculate_crop_suitability_with_water(crop_data: Dict, climate_analysis: Dic
             "total_gdd": round(total_gdd, 1),
             "required_gdd": crop_data["gdd_required"],
             "avg_sun_hours": round(avg_sun_hours, 1),
+            "adjusted_sun_hours": round(adjusted_sun_hours, 1),
+            "sunshine_factor": round(sunshine_factor, 2),
             "required_sun_hours": crop_data["min_sun_hours"],
             "annual_precipitation_mm": round(annual_precip, 1),
             "required_water_mm": required_water,
@@ -543,14 +623,13 @@ def calculate_crop_suitability_with_water(crop_data: Dict, climate_analysis: Dic
     return result
 
 
-
-
 @app.post("/recommendations/polygon")
 async def get_polygon_crop_recommendations(
         polygon: PolygonInput,
         year: int = 2023,
         min_score: float = 50.0,
-        limit: int = 10
+        limit: int = 10,
+        include_monthly_temps: bool = True
 ):
     """
     Get crop recommendations for a specific polygon area based on NASA climate data.
@@ -560,6 +639,7 @@ async def get_polygon_crop_recommendations(
     - year: Year to analyze (default: 2023)
     - min_score: Minimum suitability score (0-100, default: 50)
     - limit: Maximum number of recommendations to return
+    - include_monthly_temps: Include 3-year average monthly temperatures (default: True)
     """
 
     # Calculate polygon center and area
@@ -567,14 +647,60 @@ async def get_polygon_crop_recommendations(
     area_m2 = calculate_polygon_area_m2(polygon.coordinates)
     area_hectares = area_m2 / 10000
 
-    # Fetch NASA POWER data for the centroid
+    # Calculate average sunshine factor
+    if polygon.sunshine_duration is not None and len(polygon.sunshine_duration) > 0:
+        sunshine_factor = statistics.mean(polygon.sunshine_duration)
+    else:
+        sunshine_factor = 0.7  # Default value
+
+    # Fetch NASA POWER data for the specified year
     nasa_data = await fetch_nasa_power_data(center_lat, center_lon, year)
     climate_analysis = analyze_climate_data(nasa_data)
 
+    # Calculate adjusted sun hours for filtering
+    avg_sun_hours = climate_analysis["estimated_sun_hours_daily"]
+    adjusted_sun_hours = avg_sun_hours * sunshine_factor
+
+    # Fetch multi-year data for monthly averages if requested
+    monthly_temperature_data = None
+    if include_monthly_temps:
+        # Fetch data for the last 3 years
+        nasa_data_multi_year = []
+        for y in [year - 2, year - 1, year]:
+            try:
+                data = await fetch_nasa_power_data(center_lat, center_lon, y)
+                nasa_data_multi_year.append(data)
+            except Exception as e:
+                # If we can't fetch a year, continue with what we have
+                print(f"Warning: Could not fetch data for year {y}: {e}")
+
+        if nasa_data_multi_year:
+            monthly_temperature_data = calculate_monthly_averages(nasa_data_multi_year)
+
     # Calculate suitability for each crop
     recommendations = []
+    filtered_crops = []  # Track crops filtered out due to insufficient sunlight
+
     for crop_id, crop_data in CROP_DATABASE.items():
-        suitability = calculate_crop_suitability_with_water(crop_data, climate_analysis, nasa_data, area_m2)
+        # Check if crop meets minimum sunlight threshold (80% of required)
+        min_required_sun_hours = crop_data["min_sun_hours"] * 0.8
+
+        if adjusted_sun_hours < min_required_sun_hours:
+            # Crop doesn't have enough sunlight - skip it
+            filtered_crops.append({
+                "crop_id": crop_id,
+                "crop_name": crop_data["name"],
+                "reason": "insufficient_sunlight",
+                "required_sun_hours": crop_data["min_sun_hours"],
+                "available_sun_hours": round(adjusted_sun_hours, 1),
+                "threshold_sun_hours": round(min_required_sun_hours, 1)
+            })
+            continue
+
+        # Calculate suitability with sunshine factor
+        suitability = calculate_crop_suitability_with_water(
+            crop_data, climate_analysis, nasa_data, area_m2, sunshine_factor
+        )
 
         if suitability["overall_score"] >= min_score:
             recommendations.append({
@@ -589,7 +715,7 @@ async def get_polygon_crop_recommendations(
     # Sort by overall score
     recommendations.sort(key=lambda x: x["suitability"]["overall_score"], reverse=True)
 
-    return {
+    response = {
         "location": {
             "center_latitude": round(center_lat, 6),
             "center_longitude": round(center_lon, 6),
@@ -597,18 +723,28 @@ async def get_polygon_crop_recommendations(
             "area_hectares": round(area_hectares, 4)
         },
         "year": year,
+        "sunshine_factor": round(sunshine_factor, 2),
         "climate_summary": {
             "avg_temp_max": round(climate_analysis["temperature_max"]["mean"], 1),
             "avg_temp_min": round(climate_analysis["temperature_min"]["mean"], 1),
             "annual_precipitation_mm": round(climate_analysis["precipitation"]["total_annual"], 1),
-            "avg_sun_hours_daily": round(climate_analysis["estimated_sun_hours_daily"], 1)
+            "avg_sun_hours_daily": round(avg_sun_hours, 1),
+            "adjusted_sun_hours_daily": round(adjusted_sun_hours, 1)
         },
         "recommendations": recommendations[:limit],
         "total_suitable_crops": len(recommendations),
+        "total_filtered_by_sunlight": len(filtered_crops),
         "data_source": "NASA POWER API"
     }
+
+    # Add monthly temperature data if available
+    if monthly_temperature_data:
+        response["monthly_temperature_averages"] = monthly_temperature_data
+
+    return response
 
 
 if __name__ == "__main__":
     import uvicorn
+
     uvicorn.run(app, host="0.0.0.0", port=8000)
