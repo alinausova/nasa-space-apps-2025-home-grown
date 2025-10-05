@@ -488,8 +488,8 @@ def analyze_climate_data(nasa_data: Dict) -> Dict:
     parameters = properties.get("parameter", {})
 
     solar_data = parameters.get("ALLSKY_SFC_SW_DWN", {})
-    # temp_max_data = parameters.get("T2M_MAX", {})
-    # temp_min_data = parameters.get("T2M_MIN", {})
+    temp_max_data = parameters.get("T2M_MAX", {})
+    temp_min_data = parameters.get("T2M_MIN", {})
     precip_data = parameters.get("PRECTOTCORR", {})
 
 
@@ -971,10 +971,10 @@ async def get_polygon_crop_recommendations(
     )
 
     # Fetch surface temperature from Landsat data (Higher Resolution)
-    stac_items_landsat = query_planetary_stac(MICROSOFT_PLANETARY_API_URL, "landsat-c2-l2", PolygonInput, "2025-01-01/2025-12-31", 10)
+    stac_items_landsat = query_planetary_stac(MICROSOFT_PLANETARY_API_URL, "landsat-c2-l2", polygon, "2025-01-01/2025-12-31", 10)
 
     # Get the min and max daily temperature
-    st_landsat_daily_min_max_temp = calculate_surface_temperature_landsat(stac_items_landsat, "lwir11", PolygonInput)
+    st_landsat_daily_min_max_temp = calculate_surface_temperature_landsat(stac_items_landsat, "lwir11", polygon)
 
 
     # ========== CROP PROCESSING ==========

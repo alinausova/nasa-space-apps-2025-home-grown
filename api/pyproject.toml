@@ -15,6 +15,7 @@ dependencies = [
     "planetary-computer>=1.0.0",
     "geopandas>=1.1.1",
     "pandas>=2.3.3",
+    "mistralai"
 ]
 
 [tool.hatch.build.targets.wheel]
