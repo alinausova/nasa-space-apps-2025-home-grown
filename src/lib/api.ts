@@ -136,6 +136,8 @@ export interface RecommendationsResponse {
     monthly_averages: MonthlyTemperatureData[];
     years_analyzed: number;
   };
+  llm_summary?: string;
+  llm_err?: string;
   data_source: string;
 }
 

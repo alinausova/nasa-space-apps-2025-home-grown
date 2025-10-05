@@ -28,20 +28,24 @@ def generate_crop_summary(api_response: dict, api_key: str = None) -> str:
     model = "mistral-large-latest"
 
     # System prompt - defines the assistant's role and constraints
-    system_prompt = """You are an expert urban agriculture advisor. You receive results from a satellite-based 
-crop recommendation system that analyzes climate data, sunshine patterns, and growing conditions for a specific 
-location. Your job is to provide a clear, actionable summary for urban farmers and gardeners.
+    system_prompt = """You are an expert urban agriculture advisor providing data-driven crop recommendations.
 
-Your summary should be approximately 300 words and include:
-1. Brief overview of the location and area analyzed
-2. Top 3-5 most suitable crops with their suitability scores
-3. Key factors influencing crop selection
-4. Expected yield estimates for the best options
-5. Any warnings or considerations (filtered crops, irrigation needs)
-6. Practical next steps for the user
+Write in a professional yet friendly tone. Use vegetable/crop emojis (🍅 🥕 🥬 🌽 🥔 🫑 etc.) when mentioning
+specific crops, and use **bold** for crop names and key metrics.
 
-Write in a friendly, accessible tone suitable for hobbyist gardeners and urban farmers. 
-Avoid technical jargon unless necessary, and explain any technical terms you use."""
+Format guidelines:
+- Keep it concise and structured - approximately 100 words
+- Use bullet points for crop recommendations
+- No section headers - flow directly from climate overview to recommendations
+- Avoid excessive emojis - only use them for actual crops
+
+Your summary should cover:
+1. Brief climate context (area, temperature range, sunlight hours)
+2. Top 3-4 suitable crops with suitability scores and expected yields
+3. Key consideration (irrigation needs, filtered crops, or growing season note)
+4. One practical recommendation
+
+Be direct and informative while maintaining an encouraging tone."""
 
     # Format the API response data for the LLM
     # Extract key information to make the prompt more focused
@@ -98,20 +102,24 @@ Avoid technical jargon unless necessary, and explain any technical terms you use
         data_summary["top_recommendations"].append(crop_summary)
 
     # Create the user prompt with formatted data
-    user_prompt = f"""Please analyze this crop recommendation data and provide a comprehensive summary:
+    user_prompt = f"""Analyze this crop recommendation data and provide a concise summary:
 
 DATA:
 {json.dumps(data_summary, indent=2)}
 
-Generate a summary of approximately 100 words that explains:
-- What area is being analyzed and its key climate characteristics
-- Which crops are most suitable and why
-- Expected yields for the top crops
-- Important factors to consider (sunlight availability, irrigation needs, growing season)
-- Any limitations or crops that were filtered out
-- Practical recommendations for the user
+Write a professional, structured summary (~100 words) using markdown:
 
-Make it clear, actionable, and easy to understand."""
+Start with climate context described in words (e.g., "warm summers with moderate rainfall" or "mild climate with ample sunshine"), not raw numbers. Mention the area size in m² or hectares.
+
+Then list the top 3-4 crops as bullet points:
+- Use crop emoji (🍅 🥕 🥬 🌽 etc.) + **crop name** + suitability score + expected yield
+- Example: "🍅 **Tomatoes** - 85% suitability, ~12 kg/m²"
+
+Include one key consideration (irrigation needs, filtered crops, or sunshine factor).
+
+End with a brief practical recommendation.
+
+Be concise, data-driven, and encouraging. Only use emojis for crops, not for other elements."""
 
     # Make API call to Mistral
     chat_response = client.chat.complete(
@@ -127,7 +135,7 @@ Make it clear, actionable, and easy to understand."""
             }
         ],
         temperature=0.7,  # Balanced creativity and consistency
-        max_tokens=600    # Approximately 400-450 words
+        max_tokens=400    # Approximately 150-200 words for concise output
     )
 
     # Extract and return the summary

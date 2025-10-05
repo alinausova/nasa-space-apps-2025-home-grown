@@ -935,12 +935,12 @@ async def get_polygon_crop_recommendations(
     area_hectares = area_m2 / 10000
 
     # ========== AREA VALIDATION ==========
-    MAX_AREA_M2 = 1000000
+    MAX_AREA_M2 = 1000000  # 1 km²
     if area_m2 > MAX_AREA_M2:
         raise HTTPException(
             status_code=400,
-            detail=f"Selection area is too large. Maximum allowed: {MAX_AREA_M2} m² ({MAX_AREA_M2/10000:.4f} hectares). "
-                   f"Your selection: {area_m2:.2f} m² ({area_hectares:.4f} hectares). "
+            detail=f"Selection area is too large. Maximum allowed: {MAX_AREA_M2} m² ({MAX_AREA_M2/1_000_000:.2f} km²). "
+                   f"Your selection: {area_m2:.2f} m² ({area_m2/1_000_000:.4f} km²). "
                    f"Please select a smaller area."
         )
 
