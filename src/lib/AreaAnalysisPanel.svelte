@@ -142,13 +142,16 @@
 
 </style>
 
-<div class="glassmorphism-menu fixed top-5 right-5 w-[560px] z-[1000] p-5 flex flex-col max-h-[calc(100vh-40px)]">
+<div class="glassmorphism-menu fixed top-5 right-5 w-[568px] z-[1000] p-5 flex flex-col max-h-[calc(100vh-40px)]">
     <div class="flex justify-between items-center mb-4 pb-3 border-b-2 border-[#A8C896] flex-shrink-0">
         <div class="text-base text-neutral-900 pr-9">
             {#if coordinates && coordinates.length > 0}
                 <span class="font-bold">Area Info</span>
             {:else}
-                <span>Select an area on the map to get crop recommendations</span>
+                <div>
+                    <p class="text-sm mb-2 font-semibold">Empowering urban communities to grow their own food 🌱</p>
+                    <span>Select an area on the map to get crop recommendations</span>
+                </div>
             {/if}
         </div>
         {#if coordinates && coordinates.length > 0}
