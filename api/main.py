@@ -444,7 +444,7 @@ async def fetch_all_climate_data(latitude: float, longitude: float, year: int,
         nasa_data_multi_year = []
         years_fetched = []
 
-        for y in [year - 2, year - 1, year]:
+        for y in [year]: # here we could potentially loop over more past years to get more reliable averages
             try:
                 data = await fetch_nasa_power_data(latitude, longitude, y)
                 nasa_data_multi_year.append(data)
