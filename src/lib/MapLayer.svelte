@@ -12,6 +12,9 @@
     let draw: MapboxDraw | null = null;
     let polygonCoordinates: number[][][] | null = $state(null);
     let isDrawing = $state(false);
+    let navControl: mapboxgl.NavigationControl | null = null;
+    let geolocateControl: mapboxgl.GeolocateControl | null = null;
+    let scaleControl: mapboxgl.ScaleControl | null = null;
 
     // Globe spinning animation settings
     const secondsPerRevolution = 120;
@@ -46,10 +49,36 @@
         showBackdrop = false;
         spinEnabled = false;
         map?.setConfigProperty('basemap', 'lightPreset', 'dawn');
+
+        // Add map controls after user starts exploring
+        if (map) {
+            navControl = new mapboxgl.NavigationControl({
+                showCompass: true,
+                showZoom: true,
+                visualizePitch: true
+            });
+            map.addControl(navControl, 'bottom-left');
+
+            geolocateControl = new mapboxgl.GeolocateControl({
+                positionOptions: {
+                    enableHighAccuracy: true
+                },
+                trackUserLocation: true,
+                showUserHeading: true
+            });
+            map.addControl(geolocateControl, 'bottom-left');
+
+            scaleControl = new mapboxgl.ScaleControl({
+                maxWidth: 100,
+                unit: 'metric'
+            });
+            map.addControl(scaleControl, 'bottom-left');
+        }
+
         // Fly to Munich
         map?.flyTo({
-            center: [11.5820, 48.1351],
-            zoom: 12,
+            center: [11.5623, 48.1460],
+            zoom: 16,
             essential: true
         });
     }
@@ -222,9 +251,17 @@
             draw = null;
         }
         if (map) {
+            // Remove other controls
+            if (navControl) map.removeControl(navControl);
+            if (geolocateControl) map.removeControl(geolocateControl);
+            if (scaleControl) map.removeControl(scaleControl);
+
             map.remove();
             map = null;
         }
+        navControl = null;
+        geolocateControl = null;
+        scaleControl = null;
         clearInterval(interval);
     });
 </script>

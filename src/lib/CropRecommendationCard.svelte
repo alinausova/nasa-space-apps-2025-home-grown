@@ -14,21 +14,21 @@
 
     function getFrostToleranceColor(tolerance: string): string {
         switch(tolerance) {
-            case 'very_hardy': return '#22c55e';  // green-600 - most resilient
-            case 'hardy': return '#4ade80';       // green-400
-            case 'half_hardy': return '#fbbf24';  // yellow-400
-            case 'tender': return '#f97316';      // orange-500 - needs protection
+            case 'very_hardy': return '#0ea5e9';  // sky-500 - icy blue, survives freezing
+            case 'hardy': return '#38bdf8';       // sky-400 - light blue, handles cold
+            case 'half_hardy': return '#a78bfa';  // violet-400 - purple, transitional
+            case 'tender': return '#ec4899';      // pink-500 - needs warmth
             default: return '#9ca3af';            // gray-400
         }
     }
 
     function getDroughtResistanceColor(resistance: string): string {
         switch(resistance) {
-            case 'tolerant': return '#92400e';           // brown-800 - needs less water
-            case 'moderate_tolerant': return '#b45309';  // amber-700
-            case 'moderate': return '#fbbf24';           // yellow-400
-            case 'moderate_sensitive': return '#60a5fa'; // blue-400
-            case 'sensitive': return '#3b82f6';          // blue-500 - needs more water
+            case 'tolerant': return '#d97706';           // amber-600 - desert adapted, low water
+            case 'moderate_tolerant': return '#eab308';  // yellow-500 - low-moderate water
+            case 'moderate': return '#84cc16';           // lime-500 - moderate water needs
+            case 'moderate_sensitive': return '#06b6d4'; // cyan-500 - needs regular water
+            case 'sensitive': return '#0891b2';          // cyan-600 - high water needs
             default: return '#9ca3af';                   // gray-400
         }
     }
@@ -39,6 +39,27 @@
             case 'hardy': return '❄️';
             case 'tender': return '🌸';
             default: return '🌱';
+        }
+    }
+
+    function getFrostToleranceDescription(tolerance: string): string {
+        switch(tolerance) {
+            case 'very_hardy': return 'Survives freezing';
+            case 'hardy': return 'Handles cold well';
+            case 'half_hardy': return 'Transitional';
+            case 'tender': return 'Needs warmth';
+            default: return '';
+        }
+    }
+
+    function getDroughtResistanceDescription(resistance: string): string {
+        switch(resistance) {
+            case 'tolerant': return 'Desert adapted, low water';
+            case 'moderate_tolerant': return 'Low-moderate water';
+            case 'moderate': return 'Moderate water';
+            case 'moderate_sensitive': return 'Needs regular water';
+            case 'sensitive': return 'High water needs';
+            default: return '';
         }
     }
 </script>
@@ -119,18 +140,23 @@
                     <span>Frost Tolerance</span>
                     <span>{getFrostIcon(crop.frost_tolerance)}</span>
                 </span>
-                <span class="badge badge-sm text-white text-[0.7rem] font-semibold uppercase whitespace-nowrap" style="background-color: {getFrostToleranceColor(crop.frost_tolerance)}">
-                    {crop.frost_tolerance.replace('_', ' ')}
-                </span>
+                <div class="tooltip tooltip-left z-[9999]" data-tip={getFrostToleranceDescription(crop.frost_tolerance)}>
+                    <span class="badge badge-sm text-white text-[0.7rem] font-semibold uppercase whitespace-nowrap" style="background-color: {getFrostToleranceColor(crop.frost_tolerance)}">
+                        {crop.frost_tolerance.replace('_', ' ')}
+                    </span>
+                </div>
             </div>
+
             <div class="flex justify-between items-center mb-2.5 text-sm gap-4">
                 <span class="text-gray-500 flex items-center gap-1.5 shrink-0">
                     <span>Drought Resistance</span>
                     <span>💧</span>
                 </span>
-                <span class="badge badge-sm text-white text-[0.7rem] font-semibold uppercase whitespace-nowrap" style="background-color: {getDroughtResistanceColor(crop.drought_resistance)}">
-                    {crop.drought_resistance.replace('_', ' ')}
-                </span>
+                <div class="tooltip tooltip-left z-[9999]" data-tip={getDroughtResistanceDescription(crop.drought_resistance)}>
+                    <span class="badge badge-sm text-white text-[0.7rem] font-semibold uppercase whitespace-nowrap" style="background-color: {getDroughtResistanceColor(crop.drought_resistance)}">
+                        {crop.drought_resistance.replace('_', ' ')}
+                    </span>
+                </div>
             </div>
 
             <div class="mt-3 pt-3 border-t border-gray-200">
@@ -138,48 +164,46 @@
                     Score Breakdown
                 </div>
 
-                <div class="mb-2">
-                    <div class="flex justify-between text-xs mb-1 text-gray-500">
+                <div class="mb-2.5">
+                    <div class="flex justify-between text-sm mb-1.5 text-gray-600">
                         <span>Growing Degree Days</span>
-                        <span>{crop.suitability.scores.gdd}%</span>
+                        <span class="font-semibold">{crop.suitability.scores.gdd}%</span>
                     </div>
-                    <div class="bg-gray-200 h-1.5 rounded-full overflow-hidden">
+                    <div class="bg-gray-200 h-2 rounded-full overflow-hidden">
                         <div class="h-full rounded-full bg-green-400 transition-all duration-300" style="width: {crop.suitability.scores.gdd}%;"></div>
                     </div>
                 </div>
 
-                <div class="mb-2">
-                    <div class="flex justify-between text-xs mb-1 text-gray-500">
+                <div class="mb-2.5">
+                    <div class="flex justify-between text-sm mb-1.5 text-gray-600">
                         <span>Sunlight</span>
-                        <span>{crop.suitability.scores.sunlight}%</span>
+                        <span class="font-semibold">{crop.suitability.scores.sunlight}%</span>
                     </div>
-                    <div class="bg-gray-200 h-1.5 rounded-full overflow-hidden">
+                    <div class="bg-gray-200 h-2 rounded-full overflow-hidden">
                         <div class="h-full rounded-full bg-amber-400 transition-all duration-300" style="width: {crop.suitability.scores.sunlight}%;"></div>
                     </div>
-                    {#if crop.suitability.metrics.adjusted_sun_hours !== undefined}
-                    <div class="flex justify-between text-[0.65rem] mt-0.5 text-gray-400">
-                        <span>Adjusted: {crop.suitability.metrics.adjusted_sun_hours} hrs/day</span>
-                        <span>Required: {crop.suitability.metrics.required_sun_hours} hrs/day</span>
+                    <div class="flex justify-between text-xs mt-1 text-gray-500">
+                        <span>Available: {crop.suitability.metrics.adjusted_sun_hours} hrs/day</span>
+                        <span>Optimal: {crop.suitability.metrics.optimal_sun_hours} hrs/day</span>
                     </div>
-                    {/if}
                 </div>
 
-                <div class="mb-2">
-                    <div class="flex justify-between text-xs mb-1 text-gray-500">
+                <div class="mb-2.5">
+                    <div class="flex justify-between text-sm mb-1.5 text-gray-600">
                         <span>Temperature</span>
-                        <span>{crop.suitability.scores.temperature}%</span>
+                        <span class="font-semibold">{crop.suitability.scores.temperature}%</span>
                     </div>
-                    <div class="bg-gray-200 h-1.5 rounded-full overflow-hidden">
+                    <div class="bg-gray-200 h-2 rounded-full overflow-hidden">
                         <div class="h-full rounded-full bg-orange-500 transition-all duration-300" style="width: {crop.suitability.scores.temperature}%;"></div>
                     </div>
                 </div>
 
-                <div class="mb-2">
-                    <div class="flex justify-between text-xs mb-1 text-gray-500">
+                <div class="mb-2.5">
+                    <div class="flex justify-between text-sm mb-1.5 text-gray-600">
                         <span>Water Availability</span>
-                        <span>{crop.suitability.scores.water}%</span>
+                        <span class="font-semibold">{crop.suitability.scores.water}%</span>
                     </div>
-                    <div class="bg-gray-200 h-1.5 rounded-full overflow-hidden">
+                    <div class="bg-gray-200 h-2 rounded-full overflow-hidden">
                         <div class="h-full rounded-full bg-blue-500 transition-all duration-300" style="width: {crop.suitability.scores.water}%;"></div>
                     </div>
                 </div>

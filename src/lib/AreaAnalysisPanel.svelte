@@ -191,21 +191,13 @@
                                 <div class="font-semibold text-[0.95rem]">{climateSummary.avg_temp_min}° - {climateSummary.avg_temp_max}°C</div>
                             </div>
                             <div class="flex flex-col">
-                                <div class="opacity-80 text-xs mb-0.5">Sun Hours</div>
-                                <div class="font-semibold text-[0.95rem]">{climateSummary.avg_sun_hours_daily} hrs/day</div>
+                                <div class="opacity-80 text-xs mb-0.5">Growing Season Sun</div>
+                                <div class="font-semibold text-[0.95rem]">{climateSummary.representative_sun_hours_daily} hrs/day</div>
                             </div>
-                            {#if climateSummary.adjusted_sun_hours_daily !== undefined}
-                            <div class="flex flex-col">
-                                <div class="opacity-80 text-xs mb-0.5">Adjusted Sun Hours</div>
-                                <div class="font-semibold text-[0.95rem]">{climateSummary.adjusted_sun_hours_daily} hrs/day</div>
-                            </div>
-                            {/if}
-                            {#if sunshineFactor !== null}
                             <div class="flex flex-col">
                                 <div class="opacity-80 text-xs mb-0.5">Sunshine Factor</div>
                                 <div class="font-semibold text-[0.95rem]">{(sunshineFactor * 100).toFixed(0)}%</div>
                             </div>
-                            {/if}
                             <div class="flex flex-col">
                                 <div class="opacity-80 text-xs mb-0.5">Precipitation</div>
                                 <div class="font-semibold text-[0.95rem]">{Math.round(climateSummary.annual_precipitation_mm)} mm/year</div>

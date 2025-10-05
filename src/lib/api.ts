@@ -81,10 +81,12 @@ export interface CropRecommendation {
     metrics: {
       total_gdd: number;
       required_gdd: number;
-      avg_sun_hours: number;
-      adjusted_sun_hours?: number;
-      sunshine_factor?: number;
-      required_sun_hours: number;
+      estimated_sun_hours: number;
+      adjusted_sun_hours: number;
+      sunshine_factor: number;
+      growing_days: number;
+      min_sun_hours: number;
+      optimal_sun_hours: number;
       annual_precipitation_mm: number;
       required_water_mm: number;
       irrigation_needed_mm: number;
@@ -119,13 +121,13 @@ export interface RecommendationsResponse {
     area_hectares: number;
   };
   year: number;
-  sunshine_factor?: number;
+  sunshine_factor: number;
   climate_summary: {
     avg_temp_max: number;
     avg_temp_min: number;
     annual_precipitation_mm: number;
-    avg_sun_hours_daily: number;
-    adjusted_sun_hours_daily?: number;
+    representative_sun_hours_daily: number;
+    note?: string;
   };
   recommendations: CropRecommendation[];
   total_suitable_crops: number;
