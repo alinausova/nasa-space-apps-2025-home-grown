@@ -149,13 +149,13 @@
 
 </style>
 
-<div class="glassmorphism-menu fixed bottom-0 left-0 right-0 md:top-5 md:right-5 md:left-auto md:bottom-auto w-full md:w-[400px] lg:w-[568px] z-[1000] flex flex-col {isExpanded ? 'max-h-screen' : 'max-h-[56vh]'} md:max-h-[calc(100vh-40px)] rounded-t-2xl md:rounded-2xl transition-all duration-300">
+<div class="glassmorphism-menu fixed bottom-0 left-0 right-0 md:top-5 md:right-5 md:left-auto md:bottom-auto w-full md:w-[400px] lg:w-[568px] z-[1000] flex flex-col {isExpanded ? 'max-h-[98vh]' : 'max-h-[56vh]'} md:max-h-[calc(100vh-40px)] rounded-t-2xl md:rounded-2xl transition-all duration-300">
     <!-- Expand/Collapse chevron (mobile only, only show when there are results) - Sticky at top -->
     {#if recommendations && recommendations.length > 0}
         <div class="md:hidden sticky top-0 w-full flex-shrink-0 z-10 rounded-t-2xl">
             <button
                 class="w-full flex items-center justify-center cursor-pointer hover:bg-black/5 active:bg-black/10 transition-colors"
-                class:pt-8={isExpanded}
+                class:pt-7={isExpanded}
                 class:pt-2={!isExpanded}
                 onclick={() => isExpanded = !isExpanded}
                 aria-label={isExpanded ? 'Collapse drawer' : 'Expand drawer'}
