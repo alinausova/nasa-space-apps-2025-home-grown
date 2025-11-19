@@ -28,6 +28,7 @@
     let totalFilteredBySunlight = $state<number | null>(null);
     let monthlyTemperatures = $state<RecommendationsResponse['monthly_temperature_averages'] | null>(null);
     let llmSummary = $state<string | null>(null);
+    let isExpanded = $state(false);
 
     async function handleAnalyze(): Promise<void> {
         if (!onAnalyze) return;
@@ -148,7 +149,25 @@
 
 </style>
 
-<div class="glassmorphism-menu fixed bottom-0 left-0 right-0 md:top-5 md:right-5 md:left-auto md:bottom-auto w-full md:w-[400px] lg:w-[568px] z-[1000] p-4 md:p-5 flex flex-col max-h-[70vh] md:max-h-[calc(100vh-40px)] rounded-t-2xl md:rounded-2xl">
+<div class="glassmorphism-menu fixed bottom-0 left-0 right-0 md:top-5 md:right-5 md:left-auto md:bottom-auto w-full md:w-[400px] lg:w-[568px] z-[1000] p-4 md:p-5 flex flex-col {isExpanded ? 'max-h-screen' : 'max-h-[50vh]'} md:max-h-[calc(100vh-40px)] rounded-t-2xl md:rounded-2xl transition-all duration-300">
+    <!-- Expand/Collapse chevron (mobile only, only show when there are results) -->
+    {#if recommendations && recommendations.length > 0}
+        <button
+            class="md:hidden w-full flex items-center justify-center pt-2 -mt-4 cursor-pointer hover:bg-black/5 active:bg-black/10 transition-colors rounded-t-2xl"
+            onclick={() => isExpanded = !isExpanded}
+            aria-label={isExpanded ? 'Collapse drawer' : 'Expand drawer'}
+        >
+            <svg
+                class="w-6 h-6 text-gray-600 transition-transform duration-300 {isExpanded ? '' : 'rotate-180'}"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+            >
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+        </button>
+    {/if}
+
     <div class="flex justify-between items-center mb-4 pb-3 border-b-2 border-[#A8C896] flex-shrink-0">
         <div class="text-base text-neutral-900 pr-9">
             {#if coordinates && coordinates.length > 0}
@@ -156,23 +175,37 @@
             {:else}
                 <div>
                     <p class="text-sm mb-2 font-semibold">Empowering urban communities to grow their own food 🌱</p>
-                    <span>Select an area on the map to get crop recommendations</span>
+                    <span class="text-sm">Draw an area on the map to get crop recommendations</span>
                 </div>
             {/if}
         </div>
-        {#if coordinates && coordinates.length > 0}
-            <button class="btn btn-sm bg-[#E8C8D8] hover:bg-[#E8C8D8]/80 border-none text-black" onclick={handleClear}>Clear</button>
-        {:else if onToggleDraw}
-            <button class="btn btn-sm bg-[#A8C896] hover:bg-[#A8C896]/80 border-none text-black" onclick={onToggleDraw}>
-                {isDrawing ? 'Cancel' : 'Select Area'}
-            </button>
-        {/if}
+        <div class="flex items-center gap-2">
+            {#if coordinates && coordinates.length > 0}
+                <button class="btn btn-sm bg-[#E8C8D8] hover:bg-[#E8C8D8]/80 border-none text-black" onclick={handleClear}>Clear</button>
+            {:else if onToggleDraw}
+                <button class="btn btn-sm bg-[#A8C896] hover:bg-[#A8C896]/80 border-none text-black flex items-center gap-1 px-4" onclick={onToggleDraw}>
+                    {#if isDrawing}
+                        Cancel
+                    {:else}
+                        <span>Start</span>
+                    {/if}
+                </button>
+            {/if}
+        </div>
     </div>
 
     <div class="flex-1 overflow-y-auto pr-1">
     {#if !coordinates || coordinates.length === 0}
-        <!-- Quick jump buttons when no area selected -->
-        {#if onFlyTo}
+        <!-- Instructions when drawing -->
+        {#if isDrawing}
+            <div class="bg-blue-50 p-3 rounded-lg mb-4 text-sm text-neutral-900">
+                <p class="font-semibold mb-1">📍 Drawing Mode Active</p>
+                <p class="text-xs opacity-80">Click on the map to place points. Double-click to finish drawing your area.</p>
+            </div>
+        {/if}
+
+        <!-- Quick jump buttons when no area selected and not drawing -->
+        {#if onFlyTo && !isDrawing}
             <div class="mb-4">
                 <div class="text-sm text-neutral-900 mb-2 font-semibold">Try these locations:</div>
                 <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-2">
