@@ -15,6 +15,12 @@
 
     let { coordinates = null, onClear, onAnalyze, onToggleDraw, isDrawing = false, onFlyTo }: Props = $props();
 
+    type AreaCalculation = {
+        sqm: string;
+        sqkm: string;
+        raw: number;
+    } | null;
+
     let isLoading = $state(false);
     let recommendations = $state<CropRecommendation[] | null>(null);
     let climateSummary = $state<RecommendationsResponse['climate_summary'] | null>(null);
@@ -23,7 +29,7 @@
     let monthlyTemperatures = $state<RecommendationsResponse['monthly_temperature_averages'] | null>(null);
     let llmSummary = $state<string | null>(null);
 
-    async function handleAnalyze() {
+    async function handleAnalyze(): Promise<void> {
         if (!onAnalyze) return;
 
         isLoading = true;
@@ -39,7 +45,7 @@
             recommendations = response.recommendations;
             climateSummary = response.climate_summary;
             sunshineFactor = response.sunshine_factor;
-            totalFilteredBySunlight = response.total_filtered_by_sunlight;
+            totalFilteredBySunlight = response.total_filtered_by_sunlight ?? null;
             monthlyTemperatures = response.monthly_temperature_averages || null;
             llmSummary = response.llm_summary || null;
         } catch (error) {
@@ -50,7 +56,7 @@
         }
     }
 
-    function handleClear() {
+    function handleClear(): void {
         recommendations = null;
         climateSummary = null;
         sunshineFactor = null;
@@ -61,7 +67,7 @@
     }
 
     // Calculate area in square meters and convert to square kilometers
-    let area = $derived(() => {
+    let area = $derived((): AreaCalculation => {
         if (!coordinates || coordinates.length === 0) return null;
 
         const polygon = turf.polygon(coordinates);
@@ -77,7 +83,7 @@
 
     // Check if area exceeds 1 km² limit
     const MAX_AREA_M2 = 1_000_000; // 1 km²
-    let isAreaTooLarge = $derived(area?.()?.raw > MAX_AREA_M2);
+    let isAreaTooLarge = $derived((area?.()?.raw ?? 0) > MAX_AREA_M2);
 </script>
 
 <style>
@@ -142,7 +148,7 @@
 
 </style>
 
-<div class="glassmorphism-menu fixed top-5 right-5 w-[568px] z-[1000] p-5 flex flex-col max-h-[calc(100vh-40px)]">
+<div class="glassmorphism-menu fixed bottom-0 left-0 right-0 md:top-5 md:right-5 md:left-auto md:bottom-auto w-full md:w-[400px] lg:w-[568px] z-[1000] p-4 md:p-5 flex flex-col max-h-[70vh] md:max-h-[calc(100vh-40px)] rounded-t-2xl md:rounded-2xl">
     <div class="flex justify-between items-center mb-4 pb-3 border-b-2 border-[#A8C896] flex-shrink-0">
         <div class="text-base text-neutral-900 pr-9">
             {#if coordinates && coordinates.length > 0}
@@ -169,30 +175,30 @@
         {#if onFlyTo}
             <div class="mb-4">
                 <div class="text-sm text-neutral-900 mb-2 font-semibold">Try these locations:</div>
-                <div class="grid grid-cols-4 gap-2">
+                <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-2">
                     <button
-                        class="glassmorphism-accordion text-neutral-900 p-2 rounded-lg font-medium text-xs hover:bg-green-400/30 transition-all flex flex-col items-center cursor-pointer"
+                        class="glassmorphism-accordion text-neutral-900 p-2 rounded-lg font-medium text-xs hover:bg-green-400/30 transition-all flex flex-col items-center cursor-pointer min-h-[60px]"
                         onclick={() => onFlyTo(48.1460, 11.5623, 15)}
                     >
                         <span>🇩🇪 Munich</span>
                         <span class="opacity-70 font-normal text-[10px]">Temperate</span>
                     </button>
                     <button
-                        class="glassmorphism-accordion text-neutral-900 p-2 rounded-lg font-medium text-xs hover:bg-green-400/30 transition-all flex flex-col items-center cursor-pointer"
+                        class="glassmorphism-accordion text-neutral-900 p-2 rounded-lg font-medium text-xs hover:bg-green-400/30 transition-all flex flex-col items-center cursor-pointer min-h-[60px]"
                         onclick={() => onFlyTo(30.0444, 31.2357, 15)}
                     >
                         <span>🇪🇬 Cairo</span>
                         <span class="opacity-70 font-normal text-[10px]">Hot/Arid</span>
                     </button>
                     <button
-                        class="glassmorphism-accordion text-neutral-900 p-2 rounded-lg font-medium text-xs hover:bg-green-400/30 transition-all flex flex-col items-center cursor-pointer"
+                        class="glassmorphism-accordion text-neutral-900 p-2 rounded-lg font-medium text-xs hover:bg-green-400/30 transition-all flex flex-col items-center cursor-pointer min-h-[60px]"
                         onclick={() => onFlyTo(1.3521, 103.8198, 15)}
                     >
                         <span>🇸🇬 Singapore</span>
                         <span class="opacity-70 font-normal text-[10px]">Tropical</span>
                     </button>
                     <button
-                        class="glassmorphism-accordion text-neutral-900 p-2 rounded-lg font-medium text-xs hover:bg-green-400/30 transition-all flex flex-col items-center cursor-pointer"
+                        class="glassmorphism-accordion text-neutral-900 p-2 rounded-lg font-medium text-xs hover:bg-green-400/30 transition-all flex flex-col items-center cursor-pointer min-h-[60px]"
                         onclick={() => onFlyTo(64.1466, -21.8952, 15)}
                     >
                         <span>🇮🇸 Reykjavik</span>
@@ -207,7 +213,7 @@
         {#if area() && (!recommendations || recommendations.length === 0)}
             <div class="glassmorphism-accordion text-neutral-900 p-3 rounded-lg mb-4 font-semibold">
                 <div class="text-sm opacity-80 mb-1">Selected Area</div>
-                <div class="text-lg">{area().sqkm} km² ({area().sqm} m²)</div>
+                <div class="text-lg">{area()?.sqkm} km² ({area()?.sqm} m²)</div>
             </div>
         {/if}
 
@@ -250,7 +256,7 @@
                             </div>
                             <div class="flex flex-col">
                                 <div class="opacity-80 text-xs mb-0.5">Sunshine Factor</div>
-                                <div class="font-semibold text-[0.95rem]">{(sunshineFactor * 100).toFixed(0)}%</div>
+                                <div class="font-semibold text-[0.95rem]">{sunshineFactor !== null ? (sunshineFactor * 100).toFixed(0) : '0'}%</div>
                             </div>
                             <div class="flex flex-col">
                                 <div class="opacity-80 text-xs mb-0.5">Precipitation</div>

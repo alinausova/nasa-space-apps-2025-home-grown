@@ -24,40 +24,41 @@
 <div class="min-h-screen bg-[#EDE8DC] p-5">
     <div class="max-w-full mx-auto px-5">
         <!-- Header with GitHub, Title, Tabs, and Button -->
-        <div class="flex justify-between items-center mb-8">
-            <!-- Left side: GitHub and Title -->
-            <div class="flex items-center gap-3">
-                <div class="flex flex-col">
-                    <h1 class="text-3xl font-bold text-black uppercase">Home Grown</h1>
-                  </div>
-                <a
-                    href="https://github.com/alinausova/nasa-space-apps-2025-home-grown"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="w-8 h-8 flex items-center justify-center transition-opacity duration-200 hover:opacity-70 no-underline self-start mt-1"
-                    title="View on GitHub"
-                >
-                    <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 fill-black">
-                        <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
-                    </svg>
-                </a>
-
-            </div>
-
-            <!-- Right side: Tabs and Button -->
-            <div class="flex items-center gap-4">
-                <div class="tabs tabs-border max-w-6xl mx-auto">
-                    <input type="radio" name="learn_tabs" class="tab" aria-label="About Us" checked="checked" />
-                    <input type="radio" name="learn_tabs" class="tab" aria-label="Impact" />
-                    <input type="radio" name="learn_tabs" class="tab" aria-label="Data" />
-                    <input type="radio" name="learn_tabs" class="tab" aria-label="Methodology" />
-                    <input type="radio" name="learn_tabs" class="tab" aria-label="Architecture" />
-                    <input type="radio" name="learn_tabs" class="tab" aria-label="Media" />
+        <div class="mb-8">
+            <div class="flex flex-col gap-4 lg:flex-row lg:justify-between lg:items-center">
+                <!-- Left side: GitHub and Title -->
+                <div class="flex items-center gap-3">
+                    <div class="flex flex-col">
+                        <h1 class="text-2xl md:text-3xl font-bold text-black uppercase">Home Grown</h1>
+                    </div>
+                    <a
+                        href="https://github.com/alinausova/nasa-space-apps-2025-home-grown"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="w-8 h-8 flex items-center justify-center transition-opacity duration-200 hover:opacity-70 no-underline self-start mt-1"
+                        title="View on GitHub"
+                    >
+                        <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 fill-black">
+                            <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+                        </svg>
+                    </a>
                 </div>
 
-                <a href="/nasa-space-apps-2025-home-grown/" class="btn bg-black text-white font-semibold whitespace-nowrap">
-                    Go to Interactive Map
-                </a>
+                <!-- Right side: Tabs and Button (stacked on mobile) -->
+                <div class="flex flex-col gap-3 lg:flex-row lg:items-center lg:gap-4">
+                    <div class="tabs tabs-border overflow-x-auto lg:overflow-visible">
+                        <input type="radio" name="learn_tabs" class="tab whitespace-nowrap" aria-label="About Us" checked="checked" />
+                        <input type="radio" name="learn_tabs" class="tab whitespace-nowrap" aria-label="Impact" />
+                        <input type="radio" name="learn_tabs" class="tab whitespace-nowrap" aria-label="Data" />
+                        <input type="radio" name="learn_tabs" class="tab whitespace-nowrap" aria-label="Methodology" />
+                        <input type="radio" name="learn_tabs" class="tab whitespace-nowrap" aria-label="Architecture" />
+                        <input type="radio" name="learn_tabs" class="tab whitespace-nowrap" aria-label="Media" />
+                    </div>
+
+                    <a href="/nasa-space-apps-2025-home-grown/" class="btn bg-black text-white font-semibold w-full lg:w-auto lg:whitespace-nowrap">
+                        Go to Interactive Map
+                    </a>
+                </div>
             </div>
         </div>
 

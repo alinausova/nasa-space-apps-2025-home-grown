@@ -92,7 +92,7 @@
         Monthly Temperature Average ({yearsAnalyzed}-Year)
     </div>
 
-    <svg width={chartWidth} height={chartHeight} class="overflow-visible">
+    <svg viewBox="0 0 {chartWidth} {chartHeight}" class="w-full h-auto overflow-visible" preserveAspectRatio="xMidYMid meet">
         <!-- Area fill -->
         <path
             d={areaPath()}
