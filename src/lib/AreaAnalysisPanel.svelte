@@ -266,7 +266,12 @@
                 onclick={handleAnalyze}
                 disabled={isLoading || isAreaTooLarge}
             >
-                {isLoading ? 'Analyzing...' : 'Analyze Crops'}
+            {#if isLoading}
+                <span class="loading loading-spinner"></span>
+                Analyzing...
+            {:else}
+                Analyze Crops
+            {/if}
             </button>
         {/if}
 
