@@ -155,7 +155,7 @@
         <div class="md:hidden sticky top-0 w-full flex-shrink-0 z-10 rounded-t-2xl">
             <button
                 class="w-full flex items-center justify-center cursor-pointer hover:bg-black/5 active:bg-black/10 transition-colors"
-                class:pt-7={isExpanded}
+                class:pt-8={isExpanded}
                 class:pt-2={!isExpanded}
                 onclick={() => isExpanded = !isExpanded}
                 aria-label={isExpanded ? 'Collapse drawer' : 'Expand drawer'}
