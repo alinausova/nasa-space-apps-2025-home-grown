@@ -149,26 +149,31 @@
 
 </style>
 
-<div class="glassmorphism-menu fixed bottom-0 left-0 right-0 md:top-5 md:right-5 md:left-auto md:bottom-auto w-full md:w-[400px] lg:w-[568px] z-[1000] p-4 md:p-5 flex flex-col {isExpanded ? 'max-h-screen' : 'max-h-[50vh]'} md:max-h-[calc(100vh-40px)] rounded-t-2xl md:rounded-2xl transition-all duration-300">
-    <!-- Expand/Collapse chevron (mobile only, only show when there are results) -->
+<div class="glassmorphism-menu fixed bottom-0 left-0 right-0 md:top-5 md:right-5 md:left-auto md:bottom-auto w-full md:w-[400px] lg:w-[568px] z-[1000] flex flex-col {isExpanded ? 'max-h-screen' : 'max-h-[56vh]'} md:max-h-[calc(100vh-40px)] rounded-t-2xl md:rounded-2xl transition-all duration-300">
+    <!-- Expand/Collapse chevron (mobile only, only show when there are results) - Sticky at top -->
     {#if recommendations && recommendations.length > 0}
-        <button
-            class="md:hidden w-full flex items-center justify-center pt-2 -mt-4 cursor-pointer hover:bg-black/5 active:bg-black/10 transition-colors rounded-t-2xl"
-            onclick={() => isExpanded = !isExpanded}
-            aria-label={isExpanded ? 'Collapse drawer' : 'Expand drawer'}
-        >
-            <svg
-                class="w-6 h-6 text-gray-600 transition-transform duration-300 {isExpanded ? '' : 'rotate-180'}"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
+        <div class="md:hidden sticky top-0 w-full flex-shrink-0 z-10 rounded-t-2xl">
+            <button
+                class="w-full flex items-center justify-center cursor-pointer hover:bg-black/5 active:bg-black/10 transition-colors"
+                class:pt-7={isExpanded}
+                class:pt-2={!isExpanded}
+                onclick={() => isExpanded = !isExpanded}
+                aria-label={isExpanded ? 'Collapse drawer' : 'Expand drawer'}
             >
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-            </svg>
-        </button>
+                <svg
+                    class="w-6 h-6 text-gray-600 transition-transform duration-300 {isExpanded ? '' : 'rotate-180'}"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                >
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+            </button>
+        </div>
     {/if}
 
-    <div class="flex justify-between items-center mb-4 pb-3 border-b-2 border-[#A8C896] flex-shrink-0">
+    <div class="p-4 md:p-5 flex flex-col flex-1 overflow-hidden">
+        <div class="flex justify-between items-center mb-4 pb-3 border-b-2 border-[#A8C896] flex-shrink-0">
         <div class="text-base text-neutral-900 pr-9">
             {#if coordinates && coordinates.length > 0}
                 <span class="font-bold">Area Info</span>
@@ -356,5 +361,6 @@
         {/if}
     {/if}
     {/if}
+    </div>
     </div>
 </div>

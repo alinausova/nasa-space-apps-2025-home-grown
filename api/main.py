@@ -19,6 +19,7 @@ import geopandas as gpd
 import pandas as pd
 import planetary_computer
 from pystac_client import Client
+from pystac_client.exceptions import APIError
 import pystac
 import rasterio
 from rasterio.merge import merge
@@ -26,6 +27,7 @@ from rasterio.windows import from_bounds
 from shapely import Polygon, wkt
 import shapely
 import asyncio
+import time
 
 
 load_dotenv()
@@ -1006,9 +1008,10 @@ async def query_planetary_stac_async(api_url: str,
                                      collection: str,
                                      polygon: PolygonInput,
                                      time_range: str,
-                                     max_cloud_coverage: int | None) -> pystac.ItemCollection:
+                                     max_cloud_coverage: int | None,
+                                     max_retries: int = 3) -> pystac.ItemCollection | None:
     """
-    Async wrapper for query_planetary_stac to enable parallel execution.
+    Async wrapper for query_planetary_stac to enable parallel execution with retry logic.
 
     Args:
         api_url: URL of the API to use
@@ -1016,29 +1019,49 @@ async def query_planetary_stac_async(api_url: str,
         polygon: Polygon representing the area of interest
         time_range: Time range to be used to fetch the data. Ex.: "2025-01-01/2025-12-31"
         max_cloud_coverage: Value in percentage for maximum cloud coverage
+        max_retries: Maximum number of retry attempts (default: 3)
 
     Returns:
-        Search results as item_collection
+        Search results as item_collection, or None if all retries failed
     """
-    # Run the synchronous STAC query in a thread pool
     loop = asyncio.get_event_loop()
-    result = await loop.run_in_executor(
-        None,
-        query_planetary_stac,
-        api_url,
-        collection,
-        polygon,
-        time_range,
-        max_cloud_coverage
-    )
-    return result
+
+    for attempt in range(max_retries):
+        try:
+            # Run the synchronous STAC query in a thread pool
+            result = await loop.run_in_executor(
+                None,
+                query_planetary_stac,
+                api_url,
+                collection,
+                polygon,
+                time_range,
+                max_cloud_coverage
+            )
+            if result is not None:
+                return result
+        except (APIError, Exception) as e:
+            if attempt < max_retries - 1:
+                # Exponential backoff: 1s, 2s, 4s
+                wait_time = 2 ** attempt
+                print(f"WARNING: Planetary Computer API timeout (attempt {attempt + 1}/{max_retries}). Retrying in {wait_time}s...")
+                await asyncio.sleep(wait_time)
+            else:
+                print(f"ERROR: Planetary Computer API failed after {max_retries} attempts: {str(e)}")
+                print("WARNING: Continuing without Landsat satellite data")
+                return None
+        except Exception as e:
+            print(f"ERROR: Unexpected error querying Planetary Computer: {str(e)}")
+            return None
+
+    return None
 
 
 def query_planetary_stac(api_url: str,
                          collection: str,
                          polygon: PolygonInput,
                          time_range: str,
-                         max_cloud_coverage: int | None) -> pystac.ItemCollection:
+                         max_cloud_coverage: int | None) -> pystac.ItemCollection | None:
     """Query the Microsoft Planetary Geospatial Catalog using STAC
 
     Args:
@@ -1051,29 +1074,36 @@ def query_planetary_stac(api_url: str,
                             the scene can have.
 
     Returns:
-        Search results in the form of item_collection.
+        Search results in the form of item_collection, or None if the request fails.
     """
-    aoi = Polygon([(lon, lat) for lat, lon in polygon.coordinates])
+    try:
+        aoi = Polygon([(lon, lat) for lat, lon in polygon.coordinates])
 
-    # Opens the connection to the api.
-    catalog = Client.open(api_url, modifier=planetary_computer.sign_inplace)
+        # Opens the connection to the api.
+        catalog = Client.open(api_url, modifier=planetary_computer.sign_inplace)
 
-    # If the cloud coverage value if provided, the parameter is taken into account.
-    if isinstance(max_cloud_coverage, int):
-        search = catalog.search(
-            collections=[collection],
-            intersects=shapely.to_geojson(aoi),
-            datetime=time_range,
-            query={"eo:cloud_cover": {"lte": [max_cloud_coverage]}}
-        )
-    else:
-        search = catalog.search(
-            collections=[collection],
-            intersects=shapely.to_geojson(aoi),
-            datetime=time_range
-        )
+        # If the cloud coverage value if provided, the parameter is taken into account.
+        if isinstance(max_cloud_coverage, int):
+            search = catalog.search(
+                collections=[collection],
+                intersects=shapely.to_geojson(aoi),
+                datetime=time_range,
+                query={"eo:cloud_cover": {"lte": [max_cloud_coverage]}}
+            )
+        else:
+            search = catalog.search(
+                collections=[collection],
+                intersects=shapely.to_geojson(aoi),
+                datetime=time_range
+            )
 
-    return search.item_collection()
+        return search.item_collection()
+    except APIError as e:
+        # Re-raise APIError so the async wrapper can handle retries
+        raise e
+    except Exception as e:
+        print(f"ERROR: Unexpected error in query_planetary_stac: {str(e)}")
+        return None
 
 
 def calculate_surface_temperature_landsat(stac_items: pystac.ItemCollection,
@@ -1252,12 +1282,17 @@ async def get_polygon_crop_recommendations(
     climate_data, stac_items_landsat = await asyncio.gather(nasa_task, landsat_task)
 
     print(f"DEBUG: NASA data fetched successfully")
-    print(f"DEBUG: Landsat items found: {len(stac_items_landsat)}")
+
+    # Check if Landsat data was successfully fetched
+    if stac_items_landsat is None:
+        print(f"WARNING: Landsat data unavailable, continuing with NASA POWER data only")
+    else:
+        print(f"DEBUG: Landsat items found: {len(stac_items_landsat)}")
 
     # ========== PROCESS LANDSAT DATA ==========
     st_landsat_daily_min_max_temp = None
     try:
-        if len(stac_items_landsat) > 0:
+        if stac_items_landsat is not None and len(stac_items_landsat) > 0:
             st_landsat_daily_min_max_temp = calculate_surface_temperature_landsat(
                 stac_items_landsat,
                 "lwir",
