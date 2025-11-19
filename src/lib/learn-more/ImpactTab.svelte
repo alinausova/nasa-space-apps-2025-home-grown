@@ -1,7 +1,7 @@
 <div class="prose prose-lg text-gray-700 max-w-none">
     <!-- Impact Image -->
     <div class="flex justify-center mb-8">
-        <img src="/nasa-space-apps-2025-home-grown/impact.jpeg" alt="Impact of Urban Agriculture" class="max-w-full h-auto rounded-lg border border-gray-200"/>
+        <img src="/nasa-space-apps-2025-home-grown/impact.jpeg" alt="Impact of Urban Agriculture" class="max-w-full h-auto rounded-lg "/>
     </div>
 
     <p class="mb-6">
@@ -20,7 +20,7 @@
     </p>
 
     <!-- SDG 2: Zero Hunger -->
-    <div class="mb-8 bg-[#DDA63A]/10 p-6 rounded-lg border border-[#DDA63A]/30">
+    <div class="mb-8 bg-[#DDA63A]/10 p-6 rounded-lg ">
         <h3 class="text-2xl font-bold text-[#DDA63A] mb-3">SDG 2: Zero Hunger</h3>
         <p class="italic mb-3">End hunger, achieve food security and improved nutrition and promote sustainable agriculture</p>
         <ul class="list-disc pl-6 space-y-2">
@@ -30,7 +30,7 @@
     </div>
 
     <!-- SDG 3: Good Health and Well-being -->
-    <div class="mb-8 bg-[#4C9F38]/10 p-6 rounded-lg border border-[#4C9F38]/30">
+    <div class="mb-8 bg-[#4C9F38]/10 p-6 rounded-lg ">
         <h3 class="text-2xl font-bold text-[#4C9F38] mb-3">SDG 3: Good Health and Well-being</h3>
         <p class="italic mb-3">Ensure healthy lives and promote well-being for all at all ages</p>
         <ul class="list-disc pl-6 space-y-2">
@@ -41,7 +41,7 @@
     </div>
 
     <!-- SDG 10: Reduced Inequalities -->
-    <div class="mb-8 bg-[#DD1367]/10 p-6 rounded-lg border border-[#DD1367]/30">
+    <div class="mb-8 bg-[#DD1367]/10 p-6 rounded-lg ">
         <h3 class="text-2xl font-bold text-[#DD1367] mb-3">SDG 10: Reduced Inequalities</h3>
         <p class="italic mb-3">Reduce inequality within and among countries</p>
         <ul class="list-disc pl-6 space-y-2">
@@ -52,7 +52,7 @@
     </div>
 
     <!-- SDG 11: Sustainable Cities and Communities -->
-    <div class="mb-8 bg-[#FD9D24]/10 p-6 rounded-lg border border-[#FD9D24]/30">
+    <div class="mb-8 bg-[#FD9D24]/10 p-6 rounded-lg ">
         <h3 class="text-2xl font-bold text-[#FD9D24] mb-3">SDG 11: Sustainable Cities and Communities</h3>
         <p class="italic mb-3">Make cities and human settlements inclusive, safe, resilient and sustainable</p>
         <ul class="list-disc pl-6 space-y-2">
@@ -64,7 +64,7 @@
     </div>
 
     <!-- SDG 12: Responsible Consumption and Production -->
-    <div class="mb-8 bg-[#BF8B2E]/10 p-6 rounded-lg border border-[#BF8B2E]/30">
+    <div class="mb-8 bg-[#BF8B2E]/10 p-6 rounded-lg ">
         <h3 class="text-2xl font-bold text-[#BF8B2E] mb-3">SDG 12: Responsible Consumption and Production</h3>
         <p class="italic mb-3">Ensure sustainable consumption and production patterns</p>
         <ul class="list-disc pl-6 space-y-2">

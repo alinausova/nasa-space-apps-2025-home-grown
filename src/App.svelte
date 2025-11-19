@@ -2,10 +2,16 @@
     import { onMount } from "svelte";
     import MapLayer from "./lib/MapLayer.svelte";
     import LearnMore from "./lib/LearnMore.svelte";
+    import { checkHealth } from "./lib/api";
 
     let currentPath = $state(window.location.pathname);
 
     onMount(() => {
+        // Wake up the backend server (Render free tier)
+        checkHealth().catch(() => {
+            // Silently ignore errors - we just want to wake up the server
+        });
+
         // Handle GitHub Pages 404 redirect
         const query = window.location.search;
         if (query.startsWith('?/')) {

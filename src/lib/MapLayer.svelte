@@ -321,9 +321,10 @@
             </h1>
         </div>
         <div class="absolute bottom-16 sm:bottom-24 md:bottom-24 left-1/2 -translate-x-1/2 flex flex-col items-center w-full opacity-80">
-            <p class="text-white text-center max-w-5xl px-4 sm:px-8 mb-4 sm:mb-8 text-sm sm:text-base md:text-lg leading-relaxed ">
-                In the ever growing cities of today, food security remains one of the biggest challenges that our society has to deal with. As climate change continues to impact our lives in unpredictable ways, incorporating resilience into our cities is one of the most impactful changes we can make. Thinking globally, but acting locally, use our tool to radically re-imagine your city
-            </p>
+            <p class="text-white text-center max-w-5xl px-4 sm:px-8 mb-8 sm:mb-12 text-sm sm:text-base md:text-lg leading-relaxed ">
+                As cities expand and climate shifts, food security faces its greatest test. Building resilient cities isn't just smart - it's essential. Think globally, act
+  locally, use our tool to reimagine your city
+ </p>
             <div class="flex flex-row items-center w-full justify-center gap-4">
                 <button class="btn btn-md sm:btn-lg glassmorphism-button text-white explore-button" onclick={startExploring}>Start Exploring</button>
                 <a href="/nasa-space-apps-2025-home-grown/learn-more" target="_blank" rel="noopener noreferrer" class="btn btn-md sm:btn-lg glassmorphism-button text-white learn-button no-underline">Learn More</a>

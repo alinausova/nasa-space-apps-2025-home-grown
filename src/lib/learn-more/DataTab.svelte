@@ -5,7 +5,8 @@
         The table below describes the different meteorological variables used to assess the suitability of different areas for various crops and plant varieties. These variables were selected as key data points needed to understand which environmental conditions - such as climate patterns, soil composition, and topography - are the primary drivers of successful growth rates and optimal yield within the selected geographic regions. The collective analysis of these variables allows users to make data-driven decisions regarding crop selection and agricultural planning.
     </p>
 
-    <div class="overflow-x-auto mb-8">
+    <!-- Desktop: Table view -->
+    <div class="hidden md:block overflow-x-auto mb-8">
         <table class="table table-zebra w-full">
             <thead>
                 <tr>
@@ -52,6 +53,96 @@
                 </tr>
             </tbody>
         </table>
+    </div>
+
+    <!-- Mobile: Card view -->
+    <div class="md:hidden space-y-4 mb-8">
+        <!-- Irradiance -->
+        <div class="card bg-base-100 ">
+            <div class="card-body p-4">
+                <h3 class="font-bold text-lg mb-2">Irradiance</h3>
+                <div class="text-sm mb-2">
+                    <span class="font-semibold">Data Source:</span>
+                    <a href="https://gmao.gsfc.nasa.gov/gmao-products/merra-2/data-access_merra-2/" target="_blank" class="link ml-1">GMAO MERRA-2</a>
+                </div>
+                <p class="text-sm text-gray-700">Sunlight is the fundamental energy source that powers all the metabolic work crops need to grow and develop. This is categorized into three types: 1) Direct radiation: Direct light from the sun; 2) Diffuse radiation: Light scattered by the atmosphere, clouds, or other objects; and 3) Global radiation: a combination of both, dominated by Direct radiation on clear days. The amount of sunlight intercepted by crops is necessary in providing fundamental energy for physiological processes, primarily photosynthesis (conversion of light, water, and carbon dioxide (CO₂) into plant material) and transpiration (the evaporation of water that helps cool the plant and move nutrients) [2].</p>
+            </div>
+        </div>
+
+        <!-- Air Temperature -->
+        <div class="card bg-base-100 ">
+            <div class="card-body p-4">
+                <h3 class="font-bold text-lg mb-2">Air Temperature</h3>
+                <div class="text-sm mb-2">
+                    <span class="font-semibold">Data Source:</span>
+                    <a href="https://gmao.gsfc.nasa.gov/gmao-products/merra-2/data-access_merra-2/" target="_blank" class="link ml-1">GMAO MERRA-2</a>,
+                    <a href="https://www.sciencebase.gov/catalog/item/6837862ed4be025379182951" target="_blank" class="link ml-1">Landsat 8/9</a>
+                </div>
+                <p class="text-sm text-gray-700">Air temperature, together with solar irradiance, is a major factor that determines how well plants grow. Warmer temperatures (up to a plant's optimal limit) generally mean faster growth, larger leaves, and longer stems. However, when air temperatures rise above the optimal range, it causes high-temperature stress, which can limit plant growth and productivity [11]. On the other hand, low temperatures slow down plant metabolic rates and overall growth due to reduced enzyme activity [1].</p>
+            </div>
+        </div>
+
+        <!-- Shade -->
+        <div class="card bg-base-100 ">
+            <div class="card-body p-4">
+                <h3 class="font-bold text-lg mb-2">Shade</h3>
+                <div class="text-sm mb-2">
+                    <span class="font-semibold">Data Source:</span>
+                    <a href="https://shademap.app/@48.13743,11.57549,15z,1759686599265t,0b,0p,0m" target="_blank" class="link ml-1">ShadeMap</a>
+                </div>
+                <p class="text-sm text-gray-700">The amount of shade applied affects stem and leaf growth patterns and yield produced, depending on the use of shade-tolerant or shade-sensitive crops [16]. When imposed early and maintained throughout the plants growing season, studies have shown that constant shade reduced growth severely by around 94% [6][18], however plants that were shaded for 45 days then placed in full light largely recovered from the effects of shading by the final harvest [6]. However, studies also show that shading or decreasing light availability also improved the height growth and seedling height of certain species, regardless of soil quality, which aligns with the characteristics typical of shade-tolerant species [18]. This is consistent with other studies which reported that species which grow well in shade are less equipped to survive severe dry months and vice versa [7]. A successful yield therefore depends on choosing crops that can be suitable to the light conditions specific to the area selected.</p>
+            </div>
+        </div>
+
+        <!-- Precipitation -->
+        <div class="card bg-base-100 ">
+            <div class="card-body p-4">
+                <h3 class="font-bold text-lg mb-2">Precipitation</h3>
+                <div class="text-sm mb-2">
+                    <span class="font-semibold">Data Source:</span>
+                    <a href="https://gmao.gsfc.nasa.gov/gmao-products/merra-2/data-access_merra-2/" target="_blank" class="link ml-1">GMAO MERRA-2</a>
+                </div>
+                <p class="text-sm text-gray-700">Plant growth is also closely associated with precipitation levels. The amount and frequency of precipitation affects soil moisture, affecting plant growth and productivity [9]. Depending on the plant species, different plants react differently to increased precipitation [13]. In most cases, an increase in rainfall have shown to have significant positive effects on photosynthetic capacities of certain species [13]. In tomatoes for example, total precipitation and frequency results in an accelerated and intensive stem elongation, whereas frequent but low amounts of precipitation, coupled with lower temperatures result in slow stem elongation growth [5], thereby producing shorter plants with thick stems. When grown in warm climates, a major factor limiting tomato plant growth, fruit yield, and quality was shown to be intense sunlight and excessively high air temperatures [5][12]. However, research in temperate climates showed that the amount and frequency of rainfall are the primary factors controlling plant development, yield, and quality, suggesting that precipitation has a greater impact than temperature in milder zones [5][14].</p>
+            </div>
+        </div>
+
+        <!-- Humidity -->
+        <div class="card bg-base-100 ">
+            <div class="card-body p-4">
+                <h3 class="font-bold text-lg mb-2">Humidity</h3>
+                <div class="text-sm mb-2">
+                    <span class="font-semibold">Data Source:</span>
+                    <a href="https://gmao.gsfc.nasa.gov/gmao-products/merra-2/data-access_merra-2/" target="_blank" class="link ml-1">GMAO MERRA-2</a>,
+                    <a href="https://www.sciencebase.gov/catalog/item/6837862ed4be025379182951" target="_blank" class="link ml-1">Landsat 8/9</a>
+                </div>
+                <p class="text-sm text-gray-700">Humidity is another key factor for plant growth. This variable directly controls how much water a plant loses through transpiration and how wide its leaf pores (also known as stomata) open [15]. By controlling humidity, the rate of a plants capacity to photosynthesize and regulate tissue temperature, also affecting how it absorbs nutrients like calcium. Humidity also regulates water taken in by tissues through condensation and direct vapor uptake [15]. Research suggests that for the best growth, the ideal humidity level is around 85±2%. When humidity drops below suitable levels, it forces the stomata to close slightly, therefore cutting down CO₂ absorption and slowing down photosynthesis. Conversely, when humidity reaches above a plants optimal limits, it reduces the transpiration rate, interfering with the plant's ability to absorb and use nutrients, affecting overall growth and leaf development [4].</p>
+            </div>
+        </div>
+
+        <!-- Soil Moisture -->
+        <div class="card bg-base-100 ">
+            <div class="card-body p-4">
+                <h3 class="font-bold text-lg mb-2">Soil Moisture</h3>
+                <div class="text-sm mb-2">
+                    <span class="font-semibold">Data Source:</span>
+                    <a href="https://catalogue.ceda.ac.uk/uuid/779f116d0477439db1874592add5848c/" target="_blank" class="link ml-1">ESA Soil Moisture CCI</a>,
+                    <a href="https://www.fao.org/soils-portal/data-hub/soil-maps-and-databases/harmonized-world-soil-database-v20/en/" target="_blank" class="link ml-1">FAO HWSD v2.0</a>
+                </div>
+                <p class="text-sm text-gray-700">Soil moisture and nutrients are critical for plant growth. The level of soil moisture content allows plants to absorb water, minerals and organic materials within the soil [8]. Increased moist and organic matter content in soil has been shown to accelerate vegetative and reproductive growth in plants [8], positively affecting plant height, stem diameter, number of leaves, and biomass [3].</p>
+            </div>
+        </div>
+
+        <!-- Air Pollutants -->
+        <div class="card bg-base-100 ">
+            <div class="card-body p-4">
+                <h3 class="font-bold text-lg mb-2">Air Pollutants (SO₂, O₃, NOₓ)</h3>
+                <div class="text-sm mb-2">
+                    <span class="font-semibold">Data Source:</span>
+                    <a href="https://dataspace.copernicus.eu/explore-data/data-collections/sentinel-data/sentinel-3" target="_blank" class="link ml-1">Copernicus Sentinel-3</a>
+                </div>
+                <p class="text-sm text-gray-700">High concentrations of air pollutants such as sulfur dioxide (SO₂), ozone (O₃), and nitrogen oxide (NOₓ) can alter physiological processes, thereby affecting quality and yield of plants [17]. Pollutants also have an effect on the plants photosynthetic capability and leaf longevity [10].</p>
+            </div>
+        </div>
     </div>
 
     <!-- Bibliography -->

@@ -21,8 +21,8 @@
     });
 </script>
 
-<div class="min-h-screen bg-[#EDE8DC] p-5">
-    <div class="max-w-full mx-auto px-5">
+<div class="min-h-screen bg-white/50 p-2 md:p-6">
+    <div class="max-w-7xl mx-auto px-2 md:px-6">
         <!-- Header with GitHub, Title, Tabs, and Button -->
         <div class="mb-8">
             <div class="flex flex-col gap-4 lg:flex-row lg:justify-between lg:items-center">
@@ -65,37 +65,37 @@
         <!-- Tab Content -->
         <div class="tabs tabs-border max-w-6xl mx-auto">
             <input type="radio" name="content_tabs" class="tab " aria-label="About Us" checked="checked" hidden/>
-            <div class="tab-content bg-white/50 backdrop-blur-md rounded-lg p-8 border border-white/30">
-                
+            <div class="tab-content backdrop-blur-md rounded-lg p-3 md:p-8 ">
+
                 <AboutTab />
             </div>
 
             <input type="radio" name="content_tabs" class="tab " aria-label="Impact" hidden/>
-            <div class="tab-content bg-white/50 backdrop-blur-md rounded-lg p-8 border border-white/30">
+            <div class="tab-content backdrop-blur-md rounded-lg p-3 md:p-8 ">
                 <h2 class="text-3xl font-bold text-black mb-6">Impact</h2>
                 <ImpactTab />
             </div>
 
             <input type="radio" name="content_tabs" class="tab" aria-label="Data" hidden/>
-            <div class="tab-content bg-white/50 backdrop-blur-md rounded-lg p-8 border border-white/30">
-                
+            <div class="tab-content backdrop-blur-md rounded-lg p-3 md:p-8 ">
+
                 <DataTab />
             </div>
 
             <input type="radio" name="content_tabs" class="tab" aria-label="Methodology" hidden/>
-            <div class="tab-content bg-white/50 backdrop-blur-md rounded-lg p-8 border border-white/30">
+            <div class="tab-content backdrop-blur-md rounded-lg p-3 md:p-8 ">
                 <h2 class="text-3xl font-bold text-black mb-6">Methodology</h2>
                 <MethodologyTab />
             </div>
 
             <input type="radio" name="content_tabs" class="tab" aria-label="Architecture" hidden/>
-            <div class="tab-content bg-white/50 backdrop-blur-md rounded-lg p-8 border border-white/30">
+            <div class="tab-content backdrop-blur-md rounded-lg p-3 md:p-8 ">
                 <h2 class="text-3xl font-bold text-black mb-6">Architecture</h2>
                 <ArchitectureTab />
             </div>
 
             <input type="radio" name="content_tabs" class="tab" aria-label="Media" hidden/>
-            <div class="tab-content bg-white/50 backdrop-blur-md rounded-lg p-8 border border-white/30">
+            <div class="tab-content backdrop-blur-md rounded-lg p-3 md:p-8 ">
                 <h2 class="text-3xl font-bold text-black mb-6">Media</h2>
                 <div class="prose prose-lg text-gray-700 max-w-none">
                     <!-- YouTube Video Embed -->

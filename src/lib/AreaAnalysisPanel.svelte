@@ -177,28 +177,28 @@
                 <div class="text-sm text-neutral-900 mb-2 font-semibold">Try these locations:</div>
                 <div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-2">
                     <button
-                        class="glassmorphism-accordion text-neutral-900 p-2 rounded-lg font-medium text-xs hover:bg-green-400/30 transition-all flex flex-col items-center cursor-pointer min-h-[60px]"
+                        class="glassmorphism-accordion text-neutral-900 p-1 rounded-lg font-medium text-xs hover:bg-green-400/30 transition-all flex flex-col items-center justify-center cursor-pointer min-h-[48px]"
                         onclick={() => onFlyTo(48.1460, 11.5623, 15)}
                     >
                         <span>🇩🇪 Munich</span>
                         <span class="opacity-70 font-normal text-[10px]">Temperate</span>
                     </button>
                     <button
-                        class="glassmorphism-accordion text-neutral-900 p-2 rounded-lg font-medium text-xs hover:bg-green-400/30 transition-all flex flex-col items-center cursor-pointer min-h-[60px]"
+                        class="glassmorphism-accordion text-neutral-900 p-1 rounded-lg font-medium text-xs hover:bg-green-400/30 transition-all flex flex-col items-center justify-center cursor-pointer min-h-[48px]"
                         onclick={() => onFlyTo(30.0444, 31.2357, 15)}
                     >
                         <span>🇪🇬 Cairo</span>
                         <span class="opacity-70 font-normal text-[10px]">Hot/Arid</span>
                     </button>
                     <button
-                        class="glassmorphism-accordion text-neutral-900 p-2 rounded-lg font-medium text-xs hover:bg-green-400/30 transition-all flex flex-col items-center cursor-pointer min-h-[60px]"
-                        onclick={() => onFlyTo(1.3521, 103.8198, 15)}
+                        class="glassmorphism-accordion text-neutral-900 p-1 rounded-lg font-medium text-xs hover:bg-green-400/30 transition-all flex flex-col items-center justify-center cursor-pointer min-h-[48px]"
+                        onclick={() => onFlyTo(-1.4218295, -48.4565636, 15)}
                     >
-                        <span>🇸🇬 Singapore</span>
+                        <span>🇧🇷 Belem</span>
                         <span class="opacity-70 font-normal text-[10px]">Tropical</span>
                     </button>
                     <button
-                        class="glassmorphism-accordion text-neutral-900 p-2 rounded-lg font-medium text-xs hover:bg-green-400/30 transition-all flex flex-col items-center cursor-pointer min-h-[60px]"
+                        class="glassmorphism-accordion text-neutral-900 p-1 rounded-lg font-medium text-xs hover:bg-green-400/30 transition-all flex flex-col items-center justify-center cursor-pointer min-h-[48px]"
                         onclick={() => onFlyTo(64.1466, -21.8952, 15)}
                     >
                         <span>🇮🇸 Reykjavik</span>

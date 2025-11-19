@@ -4,7 +4,7 @@
     </p>
 
     <div class="space-y-6">
-        <div class="bg-blue-50 p-6 rounded-lg border border-blue-200">
+        <div class="bg-blue-50 p-6 rounded-lg ">
             <h4 class="font-bold text-xl mb-3">1. Growing Season</h4>
             <p class="mb-3"><strong>Assumption:</strong> Crops only grow when daily average temperature > crop's base temperature</p>
             <p class="mb-2 font-semibold">Why this matters:</p>
@@ -15,7 +15,7 @@
             </ul>
         </div>
 
-        <div class="bg-green-50 p-6 rounded-lg border border-green-200">
+        <div class="bg-green-50 p-6 rounded-lg ">
             <h4 class="font-bold text-xl mb-3">2. Sunshine Hour Conversion</h4>
             <p class="mb-3"><strong>Formula:</strong> sunshine_hours = (solar_radiation_MJ × 0.278) / 0.35</p>
             <p class="mb-2"><strong>Assumptions:</strong></p>
@@ -28,7 +28,7 @@
             </ul>
         </div>
 
-        <div class="bg-yellow-50 p-6 rounded-lg border border-yellow-200">
+        <div class="bg-yellow-50 p-6 rounded-lg ">
             <h4 class="font-bold text-xl mb-3">3. Growing Degree Days (GDD)</h4>
             <p class="mb-3"><strong>Formula:</strong> GDD = (T_avg - T_base) when T_avg > T_base, with temperature adjustments:</p>
             <ul class="list-disc pl-6 mb-3 space-y-1">
@@ -39,7 +39,7 @@
             <p><strong>Purpose:</strong> Measures accumulated heat for crop development</p>
         </div>
 
-        <div class="bg-purple-50 p-6 rounded-lg border border-purple-200">
+        <div class="bg-purple-50 p-6 rounded-lg ">
             <h4 class="font-bold text-xl mb-3">4. Polygon Area Calculation</h4>
             <p class="mb-3"><strong>Method:</strong> Shoelace formula with equirectangular projection</p>
             <ul class="list-disc pl-6 space-y-1">
@@ -49,7 +49,7 @@
             </ul>
         </div>
 
-        <div class="bg-pink-50 p-6 rounded-lg border border-pink-200">
+        <div class="bg-pink-50 p-6 rounded-lg ">
             <h4 class="font-bold text-xl mb-3">5. Yield Estimation</h4>
             <p class="mb-3"><strong>Assumptions:</strong></p>
             <ul class="list-disc pl-6 space-y-1">
@@ -64,7 +64,7 @@
             </ul>
         </div>
 
-        <div class="bg-indigo-50 p-6 rounded-lg border border-indigo-200">
+        <div class="bg-indigo-50 p-6 rounded-lg ">
             <h4 class="font-bold text-xl mb-3">6. Suitability Scoring</h4>
             <p class="mb-3"><strong>Assumption:</strong> Filter out crop (insufficient sunlight)</p>
             <p class="mb-3">Four scored components (0-100 each):</p>

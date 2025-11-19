@@ -5,11 +5,11 @@
 
     <!-- Architecture Diagram -->
     <div class="flex justify-center mb-8">
-        <img src="/nasa-space-apps-2025-home-grown/architecture-diagram.png" alt="System Architecture Diagram" class="max-w-full h-auto rounded-lg shadow-lg border border-gray-200"/>
+        <img src="/nasa-space-apps-2025-home-grown/architecture-diagram.png" alt="System Architecture Diagram" class="max-w-full h-auto rounded-lg  "/>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div class="bg-[#E8DCC8] p-4 rounded-lg border border-gray-300">
+        <div class="bg-[#E8DCC8] p-4 rounded-lg ">
             <h3 class="font-bold text-lg mb-2 text-gray-900">🎨 Client-Side Frontend</h3>
             <ul class="text-sm text-gray-700 space-y-1">
                 <li>• Svelte 5 with TypeScript for reactive UI</li>
@@ -19,7 +19,7 @@
             </ul>
         </div>
 
-        <div class="bg-[#D4C5E8] p-4 rounded-lg border border-gray-300">
+        <div class="bg-[#D4C5E8] p-4 rounded-lg ">
             <h3 class="font-bold text-lg mb-2 text-gray-900">⚙️ Server-Side Backend</h3>
             <ul class="text-sm text-gray-700 space-y-1">
                 <li>• FastAPI (Python) with REST endpoints</li>
@@ -29,7 +29,7 @@
             </ul>
         </div>
 
-        <div class="bg-[#E8C8D8] p-4 rounded-lg border border-gray-300">
+        <div class="bg-[#E8C8D8] p-4 rounded-lg ">
             <h3 class="font-bold text-lg mb-2 text-gray-900">🚀 Deployment</h3>
             <ul class="text-sm text-gray-700 space-y-1">
                 <li>• Frontend: GitHub Pages (static hosting)</li>
@@ -38,7 +38,7 @@
             </ul>
         </div>
 
-        <div class="bg-[#F4F1D0] p-4 rounded-lg border border-gray-300">
+        <div class="bg-[#F4F1D0] p-4 rounded-lg ">
             <h3 class="font-bold text-lg mb-2 text-gray-900">🛰️ External Data Sources</h3>
             <ul class="text-sm text-gray-700 space-y-1">
                 <li>• NASA POWER API: Climate & solar data</li>
@@ -56,14 +56,14 @@
         </p>
 
         <div class="space-y-4">
-            <div class="bg-blue-50 p-4 rounded-lg border border-blue-200">
+            <div class="bg-blue-50 p-4 rounded-lg ">
                 <h4 class="font-bold text-lg mb-2">Stage 1: Geometry Processing</h4>
                 <p class="text-gray-700">
                     The polygon coordinates are analyzed to calculate the field's centroid (center point) and total area in square meters (shoelace approximation). This centroid becomes the reference point for climate data queries.
                 </p>
             </div>
 
-            <div class="bg-green-50 p-4 rounded-lg border border-green-200">
+            <div class="bg-green-50 p-4 rounded-lg ">
                 <h4 class="font-bold text-lg mb-2">Stage 2: Parallel Data Acquisition</h4>
                 <p class="text-gray-700 mb-2">
                     Two data sources are queried simultaneously using asyncio to minimize response time:
@@ -74,14 +74,14 @@
                 </ul>
             </div>
 
-            <div class="bg-yellow-50 p-4 rounded-lg border border-yellow-200">
+            <div class="bg-yellow-50 p-4 rounded-lg ">
                 <h4 class="font-bold text-lg mb-2">Stage 3: Data Integration</h4>
                 <p class="text-gray-700">
                     Landsat provides superior spatial resolution (30m vs 50km grid) but sparse temporal coverage. Landsat temperatures coverage is increased by forward-fill interpolation to simulate 365-day coverage.
                 </p>
             </div>
 
-            <div class="bg-purple-50 p-4 rounded-lg border border-purple-200">
+            <div class="bg-purple-50 p-4 rounded-lg ">
                 <h4 class="font-bold text-lg mb-2">Stage 4: Crop Suitability Analysis</h4>
                 <p class="text-gray-700 mb-2">
                     For each crop in the database, the system calculates Growing Degree Days (GDD), analyzes temperature ranges, evaluates water requirements, and assesses sunshine availability during the crop's specific growing season. Each crop receives a suitability score (0-100) with detailed metrics.
@@ -96,7 +96,7 @@
                 </ul>
             </div>
 
-            <div class="bg-pink-50 p-4 rounded-lg border border-pink-200">
+            <div class="bg-pink-50 p-4 rounded-lg ">
                 <h4 class="font-bold text-lg mb-2">Stage 5: Response Construction</h4>
                 <p class="text-gray-700">
                     Crops are ranked by suitability score, yield estimates are calculated based on the field area, and the top recommendations are returned with actionable insights including irrigation needs and expected harvest quantities.
