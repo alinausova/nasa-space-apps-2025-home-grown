@@ -98,26 +98,6 @@
             <div class="tab-content backdrop-blur-md rounded-lg p-3 md:p-8 ">
                 <h2 class="text-3xl font-bold text-black mb-6">Media</h2>
                 <div class="prose prose-lg text-gray-700 max-w-none">
-                    <!-- YouTube Video Embed -->
-                    <div class="mb-8">
-                        <h3 class="text-xl font-bold mb-4">Project Video</h3>
-                        <div class="aspect-video w-full max-w-4xl mx-auto">
-                            <iframe
-                                width="100%"
-                                height="100%"
-                                src="https://www.youtube.com/embed/_Yw2AXcosS4"
-                                title="Home Grown - NASA Space Apps Challenge 2025"
-                                frameborder="0"
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                                allowfullscreen
-                                class="rounded-lg"
-                            ></iframe>
-                        </div>
-                        <p class="text-center mt-4">
-                            <a href="https://youtu.be/_Yw2AXcosS4" target="_blank" class="link">Watch on YouTube</a>
-                        </p>
-                    </div>
-
                     <!-- Pitch Deck -->
                     <div class="mb-8">
                         <h3 class="text-xl font-bold mb-4">Pitch Deck</h3>
@@ -127,19 +107,6 @@
                             </svg>
                             <a href="https://www.canva.com/design/DAG02Mgk-xA/0-9lgKk767QYLuBgozwgFA/view?utm_content=DAG02Mgk-xA&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h39fe79359b#1" target="_blank" class="btn bg-[#E8DCC8] hover:bg-[#D8CCB8] border-[#E8DCC8]">
                                 View Pitch Deck on Canva
-                            </a>
-                        </div>
-                    </div>
-
-                    <!-- Press Release -->
-                    <div class="mb-6">
-                        <h3 class="text-xl font-bold mb-4">Press Release</h3>
-                        <div class="bg-[#EDE8DC] p-6 rounded-lg border border-gray-300 text-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto mb-4 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                            </svg>
-                            <a href="/nasa-space-apps-2025-home-grown/pressrelease.pdf" target="_blank" class="btn bg-[#D4C5E8] hover:bg-[#C4B5D8] border-[#D4C5E8]">
-                                Download Press Release (PDF)
                             </a>
                         </div>
                     </div>
