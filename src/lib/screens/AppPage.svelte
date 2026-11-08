@@ -11,11 +11,15 @@
     import ToolButton from "../map/overlays/ToolButton.svelte";
     import PlacePanel from "./place/PlacePanel.svelte";
     import DrawPanel from "./draw/DrawPanel.svelte";
+    import AnalysingPanel from "./analysing/AnalysingPanel.svelte";
+    import ScanOverlay from "../map/overlays/ScanOverlay.svelte";
+    import { ANALYSIS_STEPS, failedStep, timeline } from "../derive/progress";
+    import { formatArea } from "../derive/area";
     import { journey } from "../state/journey.svelte";
     import { mapController } from "../map/controller.svelte";
     import { router } from "../router/router.svelte";
     import { lookupPlaceName } from "../geo/placeName";
-    import { ringCenter } from "../derive/geo";
+    import { ringCenter, type LngLat } from "../derive/geo";
     import { SAMPLE_CITIES, type SampleCity } from "../data/cities";
 
     /** Below this zoom, buildings are too small to outline. */
@@ -26,6 +30,26 @@
     let cropId = $derived(router.route.name === "crop" ? router.route.id : null);
     let cityName = $derived(SAMPLE_CITIES.find((c) => c.id === journey.city)?.name ?? null);
     let zoomedIn = $derived(mapController.view.zoom >= DRAW_ZOOM);
+
+    // Analysing clock: ticks while the request runs, freezes on error so the failed step stays marked.
+    let elapsedMs = $state(0);
+    let progress = $derived(timeline(elapsedMs));
+
+    $effect(() => {
+        const request = journey.request;
+        if (request.status !== "loading") return;
+        const tick = () => (elapsedMs = Date.now() - request.startedAt);
+        tick();
+        const timer = setInterval(tick, 250);
+        return () => clearInterval(timer);
+    });
+
+    /** Zooms to the plot, keeping it clear of the mobile sheet. */
+    function fitPlot(ring: LngLat[]): void {
+        const mobile = window.matchMedia("(max-width: 767px)").matches;
+        const sheet = mobile ? window.innerHeight * 0.62 : 0;
+        mapController.fitTo(ring, mobile ? { top: 90, right: 40, bottom: sheet + 30, left: 40 } : 120);
+    }
 
     function pickCity(city: SampleCity): void {
         journey.city = city.id;
@@ -71,7 +95,10 @@
         // Read-only plot while analysing and on results; back in the editor when drawing again.
         const step = journey.step;
         const ring = untrack(() => journey.plot?.ring ?? null);
-        if (step === "analysing" || step === "results") mapController.showStatic(ring);
+        if (step === "analysing" || step === "results") {
+            mapController.showStatic(ring);
+            if (ring) fitPlot(ring);
+        }
         else if (untrack(() => mapController.isStatic)) mapController.edit(ring);
     });
 
@@ -101,13 +128,7 @@
     {:else if journey.step === "draw"}
         <DrawPanel plot={journey.plot} tooLarge={journey.isTooLarge} selectedCity={journey.city} onpick={pickCity} />
     {:else if journey.step === "analysing"}
-        <!-- TODO(redesign PR 4): Analysing screen. -->
-        <StepLabel step={3} label="Reading your plot">
-            <h1 class="m-0 text-[34px] leading-[1.1] font-normal tracking-[-0.02em]">Checking a year of sun, heat and rain</h1>
-            {#if journey.request.status === "error"}
-                <p class="m-0 text-[15px] text-warn-ink" role="alert">{journey.request.message}</p>
-            {/if}
-        </StepLabel>
+        <AnalysingPanel plot={journey.plot} request={journey.request} {progress} {elapsedMs} />
     {:else}
         <!-- TODO(redesign PR 5): Results screen. -->
         <StepLabel step={3} label="What grows here">
@@ -127,9 +148,11 @@
             </Button>
             <Button variant="outline" size="lg" onclick={beginDrawing}>Redraw</Button>
         {:else if journey.step === "analysing"}
-            <Button variant="outline" onclick={() => journey.cancel()}>Cancel</Button>
             {#if journey.request.status === "error"}
-                <Button onclick={() => journey.analyse()}>Try again</Button>
+                <Button size="lg" block onclick={() => journey.analyse()}>Try again</Button>
+                <Button variant="outline" size="lg" onclick={() => journey.cancel()}>Back to drawing</Button>
+            {:else}
+                <Button variant="outline" onclick={() => journey.cancel()}>Cancel</Button>
             {/if}
         {:else}
             <Button variant="outline" onclick={() => { journey.newPlot(); beginDrawing(); }}>New plot</Button>
@@ -168,6 +191,13 @@
                 <ToolButton label="Delete plot" disabled={!journey.plot && !mapController.isDrawing} onclick={deletePlot}><Icon name="trash" /></ToolButton>
             </MapTools>
             <MapCoords />
+        {:else if journey.step === "analysing" && journey.plot}
+            <MapBack label="Cancel and go back to drawing" onclick={() => journey.cancel()} />
+            <ScanOverlay ring={journey.plot.ring} active={journey.request.status === "loading"} />
+            <MapChip only="desktop" live>
+                {#if journey.request.status === "error"}Stopped at: {ANALYSIS_STEPS[failedStep(progress.current)].short.toLowerCase()}{:else}<span class="size-2 rounded-full bg-bright" aria-hidden="true"></span>{ANALYSIS_STEPS[progress.current].short}{/if}
+            </MapChip>
+            <MapChip only="mobile" tone="bright">{formatArea(journey.plot.areaM2)}</MapChip>
         {/if}
     {/snippet}
 </AppShell>
