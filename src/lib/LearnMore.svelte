@@ -47,7 +47,7 @@
                 <!-- Right side: Tabs and Button (stacked on mobile) -->
                 <div class="flex flex-col gap-3 lg:flex-row lg:items-center lg:gap-4">
                     <div class="tabs tabs-border overflow-x-auto lg:overflow-visible">
-                        <input type="radio" name="learn_tabs" class="tab whitespace-nowrap" aria-label="About Us" checked="checked" />
+                        <input type="radio" name="learn_tabs" class="tab whitespace-nowrap" aria-label="About Us" checked />
                         <input type="radio" name="learn_tabs" class="tab whitespace-nowrap" aria-label="Impact" />
                         <input type="radio" name="learn_tabs" class="tab whitespace-nowrap" aria-label="Data" />
                         <input type="radio" name="learn_tabs" class="tab whitespace-nowrap" aria-label="Methodology" />
@@ -64,7 +64,7 @@
 
         <!-- Tab Content -->
         <div class="tabs tabs-border max-w-6xl mx-auto">
-            <input type="radio" name="content_tabs" class="tab " aria-label="About Us" checked="checked" hidden/>
+            <input type="radio" name="content_tabs" class="tab " aria-label="About Us" checked hidden/>
             <div class="tab-content backdrop-blur-md rounded-lg p-3 md:p-8 ">
 
                 <AboutTab />

@@ -52,7 +52,11 @@
     });
 </script>
 
-{#if currentPath === "/nasa-space-apps-2025-home-grown/learn-more"}
+{#if import.meta.env.DEV && currentPath === "/nasa-space-apps-2025-home-grown/dev/ui"}
+    {#await import("./lib/dev/UiGallery.svelte") then gallery}
+        <gallery.default />
+    {/await}
+{:else if currentPath === "/nasa-space-apps-2025-home-grown/learn-more"}
     <LearnMore />
 {:else}
     <MapLayer />

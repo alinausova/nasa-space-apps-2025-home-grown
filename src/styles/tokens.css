@@ -1,0 +1,64 @@
+/* Home Grown design tokens, taken from the final journey screens. */
+:root {
+  /* App (vivid leaf) */
+  --hg-paper: #D9FCD4;          /* page background */
+  --hg-surface: #F2FEF0;        /* cards, map panels, inputs */
+  --hg-ink: #1B6A24;            /* text, borders, icons */
+  --hg-ink-muted: #256F2D;      /* secondary text */
+  --hg-line: rgba(27, 106, 36, 0.18);   /* hairline dividers */
+  --hg-line-strong: rgba(27, 106, 36, 0.25);
+  --hg-bright: #22C55E;         /* primary buttons, score dots, selected */
+  --hg-on-bright: #0B3D18;      /* text on bright green */
+  --hg-selected: #B2F0BE;       /* selected list item */
+
+  /* Planting plan beds, darkest to lightest */
+  --hg-bed-1: #1FA34A;
+  --hg-bed-2: #22C55E;
+  --hg-bed-3: #5ED68A;
+  --hg-bed-4: #9BE6B2;
+
+  /* Score factors (option E): three greens and water blue */
+  --hg-factor-heat: #1B6A24;
+  --hg-factor-sun: #4E9A55;
+  --hg-factor-temp: #9BD39F;
+  --hg-factor-water: #2F7DD1;
+
+  /* Water / irrigation pill */
+  --hg-water-pill-bg: rgba(47, 125, 209, 0.14);
+  --hg-water-pill-ink: #1F4FA8;
+
+  /* Calendar and climate chart */
+  --hg-harvest: #F2A93B;
+  --hg-daily-high: #E86A2B;
+  --hg-daily-low: #1F4FA8;
+  --hg-rain: rgba(47, 125, 209, 0.28);
+  --hg-season-band: rgba(34, 197, 94, 0.2);
+
+  /* Warnings (plot too large, Landsat error, location off) */
+  --hg-warn-bg: #FFF4E0;
+  --hg-warn-border: #C97A12;
+  --hg-warn-ink: #9A4A0B;
+
+  /* Landing (night orbit) */
+  --hg-night: #0C2414;
+  --hg-night-ink: #D9FCD4;
+  --hg-night-muted: #A8D9AE;
+  --hg-night-line: rgba(217, 252, 212, 0.22);
+
+  /* Learn more (stone) */
+  --hg-stone-paper: #E8E6E0;
+  --hg-stone-surface: #F3F2EE;
+  --hg-stone-ink: #2F3336;
+  --hg-stone-muted: #55595C;
+  --hg-stone-line: rgba(47, 51, 54, 0.18);
+
+  /* Type */
+  --hg-font: 'Figtree', system-ui, sans-serif;            /* 400 headings, 500/600 labels */
+  --hg-font-mono: 'IBM Plex Mono', ui-monospace, monospace; /* numbers, step labels, units */
+
+  /* Shape */
+  --hg-radius-card: 16px;
+  --hg-radius-panel: 18px;
+  --hg-radius-pill: 999px;
+  --hg-tap: 44px;               /* minimum touch target */
+}

@@ -2,6 +2,8 @@
     import {onDestroy, onMount} from "svelte";
     import mapboxgl from "mapbox-gl";
     import MapboxDraw from "@mapbox/mapbox-gl-draw";
+    import "mapbox-gl/dist/mapbox-gl.css";
+    import "@mapbox/mapbox-gl-draw/dist/mapbox-gl-draw.css";
     import AreaAnalysisPanel from "./AreaAnalysisPanel.svelte";
     import { getCropRecommendations, type CropRecommendation } from "./api";
 

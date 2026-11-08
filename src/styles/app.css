@@ -1,0 +1,146 @@
+@import "tailwindcss";
+@import "./tokens.css";
+
+/* TODO(redesign PR 9): remove DaisyUI once the last pre-redesign component is deleted. */
+@plugin "daisyui" {
+  "themes": ["light"]
+};
+
+/*
+ * Design tokens exposed as Tailwind utilities (bg-paper, text-ink, border-line, font-mono, rounded-card, ...).
+ * `inline` keeps the var() reference, so the theme classes below can swap values per subtree.
+ */
+@theme inline {
+  --color-paper: var(--hg-paper);
+  --color-surface: var(--hg-surface);
+  --color-ink: var(--hg-ink);
+  --color-ink-muted: var(--hg-ink-muted);
+  --color-line: var(--hg-line);
+  --color-line-strong: var(--hg-line-strong);
+  --color-bright: var(--hg-bright);
+  --color-on-bright: var(--hg-on-bright);
+  --color-selected: var(--hg-selected);
+
+  --color-bed-1: var(--hg-bed-1);
+  --color-bed-2: var(--hg-bed-2);
+  --color-bed-3: var(--hg-bed-3);
+  --color-bed-4: var(--hg-bed-4);
+
+  --color-factor-heat: var(--hg-factor-heat);
+  --color-factor-sun: var(--hg-factor-sun);
+  --color-factor-temp: var(--hg-factor-temp);
+  --color-factor-water: var(--hg-factor-water);
+
+  --color-water-pill: var(--hg-water-pill-bg);
+  --color-water-pill-ink: var(--hg-water-pill-ink);
+
+  --color-harvest: var(--hg-harvest);
+  --color-daily-high: var(--hg-daily-high);
+  --color-daily-low: var(--hg-daily-low);
+  --color-rain: var(--hg-rain);
+  --color-season-band: var(--hg-season-band);
+
+  --color-warn: var(--hg-warn-bg);
+  --color-warn-border: var(--hg-warn-border);
+  --color-warn-ink: var(--hg-warn-ink);
+
+  --font-sans: var(--hg-font);
+  --font-mono: var(--hg-font-mono);
+
+  --radius-card: var(--hg-radius-card);
+  --radius-panel: var(--hg-radius-panel);
+}
+
+/* Themes: one per area of the app. Components only use the semantic tokens. */
+.theme-night {
+  --hg-paper: var(--hg-night);
+  --hg-surface: #123320;
+  --hg-ink: var(--hg-night-ink);
+  --hg-ink-muted: var(--hg-night-muted);
+  --hg-line: var(--hg-night-line);
+  --hg-line-strong: rgba(217, 252, 212, 0.35);
+}
+
+.theme-stone {
+  --hg-paper: var(--hg-stone-paper);
+  --hg-surface: var(--hg-stone-surface);
+  --hg-ink: var(--hg-stone-ink);
+  --hg-ink-muted: var(--hg-stone-muted);
+  --hg-line: var(--hg-stone-line);
+  --hg-line-strong: rgba(47, 51, 54, 0.25);
+}
+
+.theme-leaf,
+.theme-night,
+.theme-stone {
+  background-color: var(--hg-paper);
+  color: var(--hg-ink);
+}
+
+@layer base {
+  :root {
+    font-family: var(--hg-font);
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    margin: 0;
+    min-width: 320px;
+    min-height: 100vh;
+    background-color: var(--hg-paper);
+    color: var(--hg-ink);
+  }
+}
+
+@utility tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Texture tiles. Never behind running text or the ranked list. */
+@utility bg-furrows {
+  background-image: url("../assets/texture-furrows-green.svg");
+  background-size: 112px 56px;
+}
+
+@utility bg-furrows-stone {
+  background-image: url("../assets/texture-furrows-stone.svg");
+  background-size: 112px 56px;
+}
+
+@utility bg-geo-lines {
+  background-image: url("../assets/texture-geo-lines.svg");
+  background-size: cover;
+  background-position: center;
+}
+
+/* Extends a small control's hit area to the 44px minimum without changing its look. */
+@utility tap-target {
+  position: relative;
+
+  &::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: max(100%, var(--hg-tap));
+    height: max(100%, var(--hg-tap));
+    transform: translate(-50%, -50%);
+  }
+}
+
+/* Pre-redesign styles, removed with the old components in PR 9. */
+.glassmorphism-button {
+  backdrop-filter: blur(8px) saturate(110%);
+  -webkit-backdrop-filter: blur(8px) saturate(110%);
+  background: rgba(255, 255, 255, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0px 2px 8px 0 rgba(12, 74, 110, 0.1),
+              inset 0px 0px 2px 1px rgba(255, 255, 255, 0.3);
+}
+
+.glassmorphism-button:hover {
+  background: rgba(255, 255, 255, 0.4);
+}
