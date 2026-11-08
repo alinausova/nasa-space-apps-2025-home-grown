@@ -70,3 +70,7 @@ design-handoff/
 
 # Local working notes (plans, analysis)
 .claude/scratchpads/
+
+# Playwright
+e2e/.output/
+playwright-report/

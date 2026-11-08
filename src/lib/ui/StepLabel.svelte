@@ -13,7 +13,7 @@
 </script>
 
 <div class="flex gap-[22px]">
-    <span class="flex flex-col gap-1.5 pt-1.5" aria-hidden="true">
+    <span class="hidden flex-col gap-1.5 pt-1.5 md:flex" aria-hidden="true">
         {#each Array.from({ length: total }, (_, i) => i + 1) as tick (tick)}
             <span class="w-0.5 {tick === step ? 'h-[22px] bg-ink' : 'h-3 bg-ink/30'}"></span>
         {/each}
