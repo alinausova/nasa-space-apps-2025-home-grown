@@ -50,6 +50,13 @@ export interface MockOptions {
 export async function mockApi(page: Page, name: Fixture = 'munich', options: MockOptions = {}): Promise<{ calls: number }> {
   const counter = { calls: 0 };
   await page.route('**/api/health', (route) => route.fulfill({ json: { status: 'ok' } }));
+  await page.route('**/search/geocode/v6/reverse**', (route) =>
+    route.fulfill({
+      json: {
+        features: [{ properties: { context: { neighborhood: { name: 'Maxvorstadt' }, place: { name: 'Munich' } } } }],
+      },
+    }),
+  );
   await page.route('**/recommendations/polygon**', async (route) => {
     counter.calls += 1;
     if (options.delayMs) await new Promise((r) => setTimeout(r, options.delayMs));
