@@ -1,14 +1,16 @@
 """CROP DATABASE TAKEN FROM https://www.sciencedirect.com/science/article/pii/S037837742500469X"""
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Query, Request
 from fastapi.middleware.cors import CORSMiddleware
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.errors import RateLimitExceeded
 import httpx
-from typing import Dict, Optional, List, Tuple
+from typing import Annotated, Dict, Optional, List, Tuple
 import statistics
 
 from summary_gen import generate_crop_summary
 from crop_database import CROP_DATABASE
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 import math
 from collections import defaultdict
 import os
@@ -36,13 +38,35 @@ MICROSOFT_PLANETARY_API_URL = "https://planetarycomputer.microsoft.com/api/stac/
 
 class PolygonInput(BaseModel):
     """Polygon with coordinate points [(lat, lon), ...]"""
-    coordinates: List[Tuple[float, float]] = Field(..., min_length=3,
+    coordinates: List[Tuple[float, float]] = Field(..., min_length=3, max_length=500,
                                                    description="List of (latitude, longitude) tuples")
-    sunshine_duration: Optional[List[float]] = Field(None,
-                                                     description="List of sunshine duration factors (0-1) for each point. If not provided, defaults to 0.7")
+    sunshine_duration: Optional[List[Annotated[float, Field(ge=0, le=1)]]] = Field(
+        None, max_length=500,
+        description="List of sunshine duration factors (0-1) for each point. If not provided, defaults to 0.7")
 
+    @field_validator("coordinates")
+    @classmethod
+    def check_coordinates(cls, value: List[Tuple[float, float]]) -> List[Tuple[float, float]]:
+        for lat, lon in value:
+            if not (-90 <= lat <= 90) or not (-180 <= lon <= 180):
+                raise ValueError("Coordinates must be (latitude, longitude) with latitude in [-90, 90] and longitude in [-180, 180]")
+        return value
+
+
+def client_ip(request: Request) -> str:
+    """Rate-limit key. Render sits behind a proxy, so prefer the first X-Forwarded-For address."""
+    forwarded = request.headers.get("x-forwarded-for")
+    if forwarded:
+        return forwarded.split(",")[0].strip()
+    return request.client.host if request.client else "unknown"
+
+
+RECOMMENDATION_RATE_LIMIT = os.getenv("RECOMMENDATION_RATE_LIMIT", "20/minute")
+limiter = Limiter(key_func=client_ip)
 
 app = FastAPI(title="Home Grown API", version="1.0.0")
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 # Configure CORS
 app.add_middleware(
@@ -456,23 +480,10 @@ async def fetch_all_climate_data(latitude: float, longitude: float, year: int,
         "years_analyzed": [year]
     }
 
-    # Fetch multi-year data if requested
+    # Monthly averages come from the same year's data; no second request.
+    # (Averaging over more years would mean fetching those years here.)
     if include_multi_year:
-        nasa_data_multi_year = []
-        years_fetched = []
-
-        for y in [year]: # here we could potentially loop over more past years to get more reliable averages
-            try:
-                data = await fetch_nasa_power_data(latitude, longitude, y)
-                nasa_data_multi_year.append(data)
-                years_fetched.append(y)
-            except Exception as e:
-                # Log but continue with available years
-                print(f"Warning: Could not fetch data for year {y}: {e}")
-
-        if nasa_data_multi_year:
-            result["monthly_averages"] = calculate_monthly_averages(nasa_data_multi_year)
-            result["years_analyzed"] = years_fetched
+        result["monthly_averages"] = calculate_monthly_averages([primary_data])
 
     return result
 
@@ -781,7 +792,10 @@ def calculate_crop_suitability(crop_data: Dict, climate_analysis: Dict,
             "optimal_sun_hours": crop_data["optimal_sun_hours"],
             "annual_precipitation_mm": round(annual_precip, 1),
             "required_water_mm": required_water,
-            "irrigation_needed_mm": round(irrigation_needed, 1)
+            "irrigation_needed_mm": round(irrigation_needed, 1),
+            "optimal_temp_min": crop_data["optimal_temp_min"],
+            "optimal_temp_max": crop_data["optimal_temp_max"],
+            "base_temp": crop_data["base_temp"],
         }
     }
 
@@ -1024,13 +1038,10 @@ async def query_planetary_stac_async(api_url: str,
     Returns:
         Search results as item_collection, or None if all retries failed
     """
-    loop = asyncio.get_event_loop()
-
     for attempt in range(max_retries):
         try:
-            # Run the synchronous STAC query in a thread pool
-            result = await loop.run_in_executor(
-                None,
+            # Run the synchronous STAC query in a worker thread
+            result = await asyncio.to_thread(
                 query_planetary_stac,
                 api_url,
                 collection,
@@ -1220,11 +1231,13 @@ def calculate_surface_temperature_landsat(stac_items: pystac.ItemCollection,
 # ============================================================================
 
 @app.post("/recommendations/polygon")
+@limiter.limit(RECOMMENDATION_RATE_LIMIT)
 async def get_polygon_crop_recommendations(
+        request: Request,
         polygon: PolygonInput,
-        year: int = 2023,
-        min_score: float = 50.0,
-        limit: int = 10,
+        year: int = Query(2023, ge=1984, le=datetime.now().year - 1),
+        min_score: float = Query(50.0, ge=0, le=100),
+        limit: int = Query(10, ge=1, le=50),
         include_monthly_temps: bool = True
 ):
     """
@@ -1235,7 +1248,7 @@ async def get_polygon_crop_recommendations(
     - year: Year to analyze (default: 2023)
     - min_score: Minimum suitability score (0-100, default: 50)
     - limit: Maximum number of recommendations to return
-    - include_monthly_temps: Include 3-year average monthly temperatures (default: True)
+    - include_monthly_temps: Include monthly average temperatures for the analysed year (default: True)
     """
 
     # ========== GEOMETRY CALCULATIONS ==========
@@ -1293,7 +1306,9 @@ async def get_polygon_crop_recommendations(
     st_landsat_daily_min_max_temp = None
     try:
         if stac_items_landsat is not None and len(stac_items_landsat) > 0:
-            st_landsat_daily_min_max_temp = calculate_surface_temperature_landsat(
+            # Remote raster reads: keep them off the event loop.
+            st_landsat_daily_min_max_temp = await asyncio.to_thread(
+                calculate_surface_temperature_landsat,
                 stac_items_landsat,
                 "lwir",
                 polygon
@@ -1363,7 +1378,7 @@ async def get_polygon_crop_recommendations(
         response["monthly_temperature_averages"] = climate_data["monthly_averages"]
 
     try:
-        llm_summary = generate_crop_summary(response)
+        llm_summary = await asyncio.to_thread(generate_crop_summary, response)
         response["llm_summary"] = llm_summary
     except Exception as e:
         response["llm_summary"] = "The LLM in charge of assembling your summary was asleep. We did not want to wake it."

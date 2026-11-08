@@ -10,7 +10,7 @@
 - 🗺️ Interactive 3D globe with polygon drawing
 - 🌱 Crop recommendations based on NASA climate data
 - 🤖 AI-generated crop summaries (Mistral)
-- 🌍 Quick city location jumps (Munich, Cairo, Singapore, Reykjavik)
+- 🌍 Quick city location jumps (Munich, Cairo, Belém, Reykjavík)
 - 📊 Yield estimates for selected areas
 - 📈 Monthly temperature analysis
 - ☀️ Climate analysis (temperature, precipitation, sunlight)
@@ -33,6 +33,7 @@ cd api
 uv sync
 cp .env.example .env  # Add MISTRAL_API_KEY
 uv run uvicorn main:app --reload --port 8000
+uv run pytest            # backend tests (NASA, Landsat and Mistral are stubbed)
 ```
 
 ## Tech Stack

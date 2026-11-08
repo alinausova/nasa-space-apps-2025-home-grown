@@ -14,7 +14,7 @@ def generate_crop_summary(api_response: dict, api_key: str = None) -> str:
         api_key: Mistral API key (defaults to MISTRAL_API_KEY env variable)
 
     Returns:
-        String containing ~300 word summary of recommendations
+        Two or three plain sentences summarising the recommendations
     """
 
     # Get API key
@@ -28,25 +28,16 @@ def generate_crop_summary(api_response: dict, api_key: str = None) -> str:
     model = "mistral-large-latest"
 
     # System prompt - defines the assistant's role and constraints
-    system_prompt = """You are an expert urban agriculture advisor providing data-driven crop recommendations.
+    system_prompt = """You are an urban agriculture advisor. You explain crop recommendations to people
+planning a garden on a roof, yard or empty lot.
 
-Write in a professional yet friendly tone, suitable to inform urban planners. 
-Use vegetable/crop emojis (🍅 🥕 🥬 🌽 🥔 🫑 etc.) when mentioning
-specific crops, and use **bold** for crop names and key metrics.
+Write two or three short, plain sentences:
+1. What the climate at this plot favours, in words (for example "cool, wet summers"), not raw numbers.
+2. Which crops suit it best, by name.
+3. One practical point: irrigation, a short season, or shade.
 
-Format guidelines:
-- Keep it concise and structured - approximately 100 words
-- Use bullet points for crop recommendations
-- No section headers - flow directly from climate overview to recommendations
-- Avoid excessive emojis - only use them for actual crops
-
-Your summary should cover:
-1. Brief climate context (area, temperature range, sunlight hours)
-2. Top 3-4 suitable crops with suitability scores and expected yields
-3. Key consideration (irrigation needs, filtered crops, or growing season note)
-4. One practical recommendation
-
-Be direct and informative while maintaining an encouraging tone."""
+Rules: plain text only. No markdown, no bullet points, no headings, no bold, no emojis.
+No greeting and no sign-off. Do not invent numbers that are not in the data."""
 
     # Format the API response data for the LLM
     # Extract key information to make the prompt more focused
@@ -103,24 +94,11 @@ Be direct and informative while maintaining an encouraging tone."""
         data_summary["top_recommendations"].append(crop_summary)
 
     # Create the user prompt with formatted data
-    user_prompt = f"""Analyze this crop recommendation data and provide a concise summary:
+    user_prompt = f"""Here is the crop recommendation data for one plot:
 
-DATA:
 {json.dumps(data_summary, indent=2)}
 
-Write a professional, structured summary (~100 words) using markdown:
-
-Start with climate context described in words (e.g., "warm summers with moderate rainfall" or "mild climate with ample sunshine"), not raw numbers. Mention the area size in m² or hectares.
-
-Then list the top 3-4 crops as bullet points:
-- Use crop emoji (🍅 🥕 🥬 🌽 etc.) + **crop name** + suitability score + expected yield
-- Example: "🍅 **Tomatoes** - 85% suitability, ~12 kg/m²"
-
-Include one key consideration (irrigation needs, filtered crops, or sunshine factor).
-
-End with a brief practical recommendation.
-
-Be concise, data-driven, and encouraging. Only use emojis for crops, not for other elements."""
+Write the two or three sentences now."""
 
     # Make API call to Mistral
     chat_response = client.chat.complete(
@@ -135,8 +113,8 @@ Be concise, data-driven, and encouraging. Only use emojis for crops, not for oth
                 "content": user_prompt
             }
         ],
-        temperature=0.7,  # Balanced creativity and consistency
-        max_tokens=400    # Approximately 150-200 words for concise output
+        temperature=0.5,
+        max_tokens=180    # Two or three sentences
     )
 
     # Extract and return the summary
