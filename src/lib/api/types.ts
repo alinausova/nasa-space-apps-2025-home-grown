@@ -1,7 +1,7 @@
 // Response of POST /recommendations/polygon (api/main.py).
 
 export type Season = 'warm' | 'cool' | string;
-export type FrostTolerance = 'tender' | 'semi_hardy' | 'hardy' | 'very_hardy' | string;
+export type FrostTolerance = 'tender' | 'half_hardy' | 'hardy' | 'very_hardy' | string;
 
 export interface SuitabilityMetrics {
   total_gdd: number;

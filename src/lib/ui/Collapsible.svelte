@@ -22,9 +22,9 @@
     >
         <span class="flex min-w-0 flex-col gap-0.5">
             <span class="text-[17px] font-medium">{title}</span>
-            {#if subtitle}<span class="font-mono text-xs text-ink-muted">{subtitle}</span>{/if}
+            {#if subtitle}<span class="font-mono text-[11px] text-ink-muted">{subtitle}</span>{/if}
         </span>
-        <span class="flex size-9 shrink-0 items-center justify-center rounded-full border border-ink/35" aria-hidden="true">
+        <span class="flex size-8 shrink-0 items-center justify-center rounded-full border border-ink/35" aria-hidden="true">
             <svg
                 width="14"
                 height="14"
