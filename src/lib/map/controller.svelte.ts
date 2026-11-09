@@ -68,16 +68,13 @@ export class MapController {
 
     map.on('style.load', () => applyLeafStyle(map));
 
-    let frame = 0;
     const updateView = () => {
-      frame = 0;
       const c = map.getCenter();
       this.view = { lng: c.lng, lat: c.lat, zoom: map.getZoom() };
     };
     updateView();
-    map.on('move', () => {
-      if (!frame) frame = requestAnimationFrame(updateView);
-    });
+    // Synchronous so HTML overlays (scan grid, chips) stay glued to the map during animations.
+    map.on('move', updateView);
     map.on('load', () => {
       this.ready = true;
       this.setTone(this.#tone);
@@ -117,7 +114,7 @@ export class MapController {
     this.map?.flyTo({ center, zoom, essential: true });
   }
 
-  fitTo(ring: LngLat[], padding = 80): void {
+  fitTo(ring: LngLat[], padding: number | mapboxgl.PaddingOptions = 80): void {
     if (!this.map || ring.length === 0) return;
     const bounds = new mapboxgl.LngLatBounds(ring[0], ring[0]);
     for (const point of ring) bounds.extend(point);

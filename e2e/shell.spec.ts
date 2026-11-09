@@ -42,7 +42,7 @@ test.describe('app shell', () => {
 
     await drawPlot(page, PLOTS.munich);
     await page.getByRole('button', { name: /Analyse this plot/ }).click();
-    await page.getByRole('button', { name: 'Cancel' }).click();
+    await page.getByRole('button', { name: 'Cancel', exact: true }).click();
 
     await expect(page.getByRole('button', { name: /Analyse this plot/ })).toBeEnabled();
   });
