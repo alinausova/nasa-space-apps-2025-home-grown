@@ -3,7 +3,6 @@
     import AppShell, { type SheetSize } from "../layout/AppShell.svelte";
     import Button from "../ui/Button.svelte";
     import Icon from "../ui/Icon.svelte";
-    import StepLabel from "../ui/StepLabel.svelte";
     import MapBack from "../map/overlays/MapBack.svelte";
     import MapChip from "../map/overlays/MapChip.svelte";
     import MapCoords from "../map/overlays/MapCoords.svelte";
@@ -13,6 +12,8 @@
     import DrawPanel from "./draw/DrawPanel.svelte";
     import AnalysingPanel from "./analysing/AnalysingPanel.svelte";
     import ScanOverlay from "../map/overlays/ScanOverlay.svelte";
+    import ResultsPanel from "./results/ResultsPanel.svelte";
+    import { formatKg } from "../derive/format";
     import { ANALYSIS_STEPS, failedStep, timeline } from "../derive/progress";
     import { formatArea } from "../derive/area";
     import { journey } from "../state/journey.svelte";
@@ -76,6 +77,11 @@
         mapController.edit(journey.undo());
     }
 
+    function startNewPlot(): void {
+        journey.newPlot();
+        beginDrawing();
+    }
+
     function deletePlot(): void {
         journey.setPlot(null);
         mapController.clear();
@@ -98,8 +104,11 @@
         if (step === "analysing" || step === "results") {
             mapController.showStatic(ring);
             if (ring) fitPlot(ring);
+        } else if (untrack(() => mapController.isStatic)) {
+            // With a plot, put it back in the editor; without one ("New plot"), leave a fresh drawing running.
+            if (ring) mapController.edit(ring);
+            else mapController.showStatic(null);
         }
-        else if (untrack(() => mapController.isStatic)) mapController.edit(ring);
     });
 
     $effect(() => {
@@ -118,9 +127,38 @@
     });
 </script>
 
-<AppShell wide={journey.step === "results" || cropId !== null} sheet={SHEET[journey.step]}>
+{#snippet stepFooter()}
+    {#if journey.step === "place"}
+        <div class="flex w-full flex-col items-center gap-3">
+            <Button size="lg" block onclick={beginDrawing}>Draw your plot here <span aria-hidden="true">→</span></Button>
+            <span class="hidden text-sm text-ink-muted md:block">Tip: zoom in until you can see buildings.</span>
+        </div>
+    {:else if journey.step === "draw"}
+        <Button size="lg" block disabled={!journey.canAnalyse} onclick={() => journey.analyse()}>
+            Analyse this plot <span aria-hidden="true">→</span>
+        </Button>
+        <Button variant="outline" size="lg" onclick={beginDrawing}>Redraw</Button>
+    {:else if journey.step === "analysing"}
+        {#if journey.request.status === "error"}
+            <Button size="lg" block onclick={() => journey.analyse()}>Try again</Button>
+            <Button variant="outline" size="lg" onclick={() => journey.cancel()}>Back to drawing</Button>
+        {:else}
+            <Button variant="outline" onclick={() => journey.cancel()}>Cancel</Button>
+        {/if}
+    {/if}
+{/snippet}
+
+<AppShell
+    wide={journey.step === "results" || cropId !== null}
+    sheet={SHEET[journey.step]}
+    footer={journey.step === "results" ? undefined : stepFooter}
+>
     {#snippet headerAction()}
-        <a href={router.href({ name: "learn", tab: "scoring" })} class="text-sm text-ink no-underline hover:underline">How it works</a>
+        {#if journey.step === "results"}
+            <Button variant="outline" size="sm" onclick={startNewPlot}>New plot</Button>
+        {:else}
+            <a href={router.href({ name: "learn", tab: "scoring" })} class="text-sm text-ink no-underline hover:underline">How it works</a>
+        {/if}
     {/snippet}
 
     {#if journey.step === "place"}
@@ -129,35 +167,17 @@
         <DrawPanel plot={journey.plot} tooLarge={journey.isTooLarge} selectedCity={journey.city} onpick={pickCity} />
     {:else if journey.step === "analysing"}
         <AnalysingPanel plot={journey.plot} request={journey.request} {progress} {elapsedMs} />
-    {:else}
-        <!-- TODO(redesign PR 5): Results screen. -->
-        <StepLabel step={3} label="What grows here">
-            <h1 class="m-0 text-[38px] leading-[1.1] font-normal tracking-[-0.02em]">{journey.plot?.placeName ?? "Your plot"}</h1>
-        </StepLabel>
+    {:else if journey.results && journey.plot}
+        <ResultsPanel
+            results={journey.results}
+            plot={journey.plot}
+            bind:filter={journey.filter}
+            onNewPlot={startNewPlot}
+            onCompare={() => journey.goToPlace()}
+        />
     {/if}
 
-    {#snippet footer()}
-        {#if journey.step === "place"}
-            <div class="flex w-full flex-col items-center gap-3">
-                <Button size="lg" block onclick={beginDrawing}>Draw your plot here <span aria-hidden="true">→</span></Button>
-                <span class="hidden text-sm text-ink-muted md:block">Tip: zoom in until you can see buildings.</span>
-            </div>
-        {:else if journey.step === "draw"}
-            <Button size="lg" block disabled={!journey.canAnalyse} onclick={() => journey.analyse()}>
-                Analyse this plot <span aria-hidden="true">→</span>
-            </Button>
-            <Button variant="outline" size="lg" onclick={beginDrawing}>Redraw</Button>
-        {:else if journey.step === "analysing"}
-            {#if journey.request.status === "error"}
-                <Button size="lg" block onclick={() => journey.analyse()}>Try again</Button>
-                <Button variant="outline" size="lg" onclick={() => journey.cancel()}>Back to drawing</Button>
-            {:else}
-                <Button variant="outline" onclick={() => journey.cancel()}>Cancel</Button>
-            {/if}
-        {:else}
-            <Button variant="outline" onclick={() => { journey.newPlot(); beginDrawing(); }}>New plot</Button>
-        {/if}
-    {/snippet}
+
 
     {#snippet mapOverlay()}
         {#if journey.step === "place"}
@@ -198,6 +218,16 @@
                 {#if journey.request.status === "error"}Stopped at: {ANALYSIS_STEPS[failedStep(progress.current)].short.toLowerCase()}{:else}<span class="size-2 rounded-full bg-bright" aria-hidden="true"></span>{ANALYSIS_STEPS[progress.current].short}{/if}
             </MapChip>
             <MapChip only="mobile" tone="bright">{formatArea(journey.plot.areaM2)}</MapChip>
+        {:else if journey.step === "results" && journey.plot}
+            <MapBack label="Back to your plot" onclick={() => journey.editPlot()} />
+            <MapChip only="mobile" tone="bright">{formatArea(journey.plot.areaM2)}</MapChip>
+            {@const top = journey.results?.recommendations[0]}
+            {#if top}
+                <div class="absolute right-5 bottom-14 z-10 hidden flex-col gap-0.5 rounded-[14px] border border-ink bg-surface px-[18px] py-3.5 md:flex">
+                    <span class="text-xs text-ink-muted">Top pick</span>
+                    <span class="text-xl">{top.crop_name} · <span class="font-mono">{formatKg(top.suitability.yield_estimate.total_yield_kg)}</span> a season</span>
+                </div>
+            {/if}
         {/if}
     {/snippet}
 </AppShell>

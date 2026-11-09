@@ -131,6 +131,13 @@ export class Journey {
     this.request = { status: 'idle' };
   }
 
+  /** Back from results to the editor with the same plot. */
+  editPlot(): void {
+    this.cancel();
+    this.results = null;
+    this.step = 'draw';
+  }
+
   /** "New plot" on results: back to drawing, place kept, plot cleared. */
   newPlot(): void {
     this.cancel();

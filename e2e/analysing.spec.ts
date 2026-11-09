@@ -23,7 +23,7 @@ test.describe('analysing', () => {
     }
     await page.screenshot({ path: `e2e/.output/shots/${info.project.name}-analysing.png` });
 
-    await expect(page.getByRole('button', { name: 'New plot' })).toBeVisible({ timeout: 10_000 });
+    await expect(page.getByTestId('crop-row').first()).toBeVisible({ timeout: 10_000 });
   });
 
   test('pause button stops the loader', async ({ page }) => {
@@ -74,7 +74,7 @@ test.describe('analysing', () => {
 
     fail = false;
     await page.getByRole('button', { name: 'Try again' }).click();
-    await expect(page.getByRole('button', { name: 'New plot' })).toBeVisible();
+    await expect(page.getByTestId('crop-row').first()).toBeVisible();
   });
 
   test('back to drawing after an error keeps the plot', async ({ page }) => {

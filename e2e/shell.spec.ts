@@ -22,7 +22,7 @@ test.describe('app shell', () => {
     await expect(analyse).toBeEnabled();
     await analyse.click();
 
-    await expect(page.getByRole('button', { name: 'New plot' })).toBeVisible();
+    await expect(page.getByTestId('crop-row').first()).toBeVisible();
     expect(api.calls).toBe(1);
   });
 
