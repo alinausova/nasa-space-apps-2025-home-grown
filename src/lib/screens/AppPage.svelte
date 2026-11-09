@@ -241,7 +241,7 @@
             proximity={() => [mapController.view.lng, mapController.view.lat]}
         />
     {:else if journey.step === "draw"}
-        <DrawPanel plot={journey.plot} tooLarge={journey.isTooLarge} selectedCity={journey.city} onpick={pickCity} />
+        <DrawPanel plot={journey.plot} tooLarge={journey.isTooLarge} selectedCity={journey.city} onpick={pickCity} onBack={backToPlace} />
     {:else if journey.step === "analysing"}
         <AnalysingPanel
             plot={journey.plot}
