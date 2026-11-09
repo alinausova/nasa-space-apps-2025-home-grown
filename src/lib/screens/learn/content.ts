@@ -79,22 +79,32 @@ export const CONTACT = [
 // Scoring ---------------------------------------------------------------------
 
 export const SCORE_PARTS = [
-  { weight: 35, title: 'Heat', body: 'Growing degree days against what the crop needs.' },
+  { weight: 35, title: 'Heat', body: 'Growing degree days against what the crop needs. Just enough scores 80; full marks need a quarter to spare.' },
   { weight: 25, title: 'Sunlight', body: 'Sun hours after shade against the optimum.' },
-  { weight: 25, title: 'Temperature', body: 'Full marks when the average over its growing days is within 3°C of its ideal.' },
+  { weight: 25, title: 'Temperature', body: 'Each growing day scored against the crop’s ideal range, falling to zero at its base and upper limits.' },
   { weight: 15, title: 'Water', body: 'Rain while it grows against its seasonal need. A shortfall costs more than a surplus.' },
 ];
 
 export const FORMULAS = [
   {
     title: 'Growing season',
-    body: 'A crop only grows on days averaging above its base temperature. Lettuce 4°C, tomatoes 8.5°C, peppers 10°C.',
+    body: 'A crop only grows on days averaging above its base temperature, inside the months its calendar grows through. Lettuce 4°C, tomatoes 7°C, peppers 10°C.',
     code: 'growing_day  =  T_avg > T_base',
   },
   {
     title: 'Sunshine hours',
     body: '0.278 converts MJ to kWh. 0.35 kW/m² is the average intensity in sunny periods. Capped at 16 hours. Without shade data, multiplied by 0.7 for buildings.',
     code: 'sunshine_hours = (solar_radiation_MJ × 0.278) / 0.35',
+  },
+  {
+    title: 'Temperature response',
+    body: 'Full marks inside the crop’s ideal range, a straight line down to zero at its base and upper temperature, averaged over its growing days. The same response the FAO EcoCrop model uses.',
+    code: 'r(T) = 1                        ideal_min ≤ T ≤ ideal_max\nr(T) = (T − T_base) / (ideal_min − T_base)   below\nr(T) = (T_upper − T) / (T_upper − ideal_max)  above',
+  },
+  {
+    title: 'Weakest factor',
+    body: 'Plenty of rain cannot make up for a crop being too cold. The score stays within 12 points of the weakest of heat, sun and temperature. Water is left out: watering fixes it. The 12 is our choice.',
+    code: 'score = min(weighted_average,\n            min(heat, sun, temperature) + 12)',
   },
   {
     title: 'Growing degree days',

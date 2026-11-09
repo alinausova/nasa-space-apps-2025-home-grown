@@ -1,11 +1,12 @@
 import { describe, expect, it } from 'vitest';
 import type { CropRecommendation } from '../api/types';
-import { alsoGood, factorReasons, neighbours } from './why';
+import { alsoGood, factorReasons, heldBack, neighbours } from './why';
 
-function crop(metrics: Partial<CropRecommendation['suitability']['metrics']>): CropRecommendation {
+function crop(metrics: Partial<CropRecommendation['suitability']['metrics']>, overall_score = 72): CropRecommendation {
   return {
     crop_id: 'kale',
     suitability: {
+      overall_score,
       metrics: {
         total_gdd: 665,
         required_gdd: 700,
@@ -93,5 +94,37 @@ describe('ranking helpers', () => {
   it('suggests the next crops, wrapping to the top', () => {
     expect(alsoGood(list, 'a').map((c) => c.crop_id)).toEqual(['b', 'c', 'd']);
     expect(alsoGood(list, 'd').map((c) => c.crop_id)).toEqual(['e', 'a', 'b']);
+  });
+});
+
+describe('heldBack', () => {
+  const held = (extra: object) => heldBack(crop({ season_mean_temp: 18, ...extra }));
+
+  it('says nothing when no factor held the score back', () => {
+    expect(held({ limited_by: null })).toBeNull();
+    expect(held({})).toBeNull();
+  });
+
+  it('says nothing for an Excellent crop, even if the limit shaved a point off', () => {
+    expect(heldBack(crop({ limited_by: 'temperature', temperature_mean: 14 }, 91))).toBeNull();
+  });
+
+  it('names temperature with the average it was judged on', () => {
+    expect(held({ limited_by: 'temperature', temperature_mean: 16.2, optimal_temp_min: 20, optimal_temp_max: 30 })).toBe(
+      'Held back by temperature: it averages 16°C while growing, it wants 20–30°C.',
+    );
+  });
+
+  it('names heat and sun', () => {
+    expect(held({ limited_by: 'heat', total_gdd: 1247, required_gdd: 1505 })).toBe(
+      'Held back by heat: about 1,247 heat units here, it needs 1,505 with some to spare.',
+    );
+    expect(held({ limited_by: 'sun', adjusted_sun_hours: 4.26, optimal_sun_hours: 8 })).toBe('Held back by sun: 4.3 h a day after shade, it wants 8 h.');
+  });
+});
+
+describe('temperature reason uses the growing-days average when present', () => {
+  it('prefers temperature_mean over season_mean_temp', () => {
+    expect(factorReasons(crop({ season_mean_temp: 18, temperature_mean: 11 }), MILD).temperature).toBe('Growing-season average 11°C, ideal 15–23°C');
   });
 });

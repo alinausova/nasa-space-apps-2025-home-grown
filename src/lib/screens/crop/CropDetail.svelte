@@ -10,7 +10,7 @@
     import { FROST_LABEL, SEASON_LABEL, formatKg } from "../../derive/format";
     import { PLANTED_SHARE } from "../../derive/plan";
     import { filterCrops } from "../../derive/crops";
-    import { alsoGood, factorReasons } from "../../derive/why";
+    import { alsoGood, factorReasons, heldBack } from "../../derive/why";
     import { router } from "../../router/router.svelte";
     import { cropIcon } from "../../derive/cropIcons";
 
@@ -40,6 +40,7 @@
     let suggestions = $derived(alsoGood(ranking, crop.crop_id));
     let score = $derived(Math.round(crop.suitability.overall_score));
     let reasons = $derived(factorReasons(crop, results.climate_summary));
+    let limit = $derived(heldBack(crop));
     let yieldEstimate = $derived(crop.suitability.yield_estimate);
     let plantedM2 = $derived(plot.areaM2 * PLANTED_SHARE);
     let pad = (value: number) => String(value).padStart(2, "0");
@@ -74,6 +75,7 @@
 
     <section class="flex flex-col gap-3.5" aria-labelledby="why-score">
         <h2 id="why-score" class="m-0 text-[19px] font-medium md:text-[22px]">Why it scores {score}</h2>
+        {#if limit}<p class="m-0 text-[15px] leading-relaxed text-warn-ink" data-testid="held-back">{limit}</p>{/if}
         <div class="grid grid-cols-4 gap-2.5">
             {#each FACTORS as factor (factor.key)}
                 <span class="flex flex-col items-center gap-2 text-center">

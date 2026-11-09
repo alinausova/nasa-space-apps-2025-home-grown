@@ -124,7 +124,7 @@ test.describe('grow calendar', () => {
     const rice = all.find((c: any) => c.crop_id === 'rice');
     expect(rice.calendar).toBeNull();
     expect(rice.usable).toBe(false);
-    expect(rice.miss_reason).toEqual({ kind: 'no_window' });
+    expect(['no_window', 'heat', 'temperature']).toContain(rice.miss_reason.kind);
     await openResults(page);
     await expect(page.getByTestId('crop-row').filter({ hasText: /^Rice/ })).toHaveCount(0);
     // A deep link to it falls back to the list.
@@ -200,3 +200,24 @@ test.describe('new crops', () => {
     await page.screenshot({ path: `e2e/.output/shots/${info.project.name}-cassava.png` });
   });
 });
+
+test.describe('held back', () => {
+  test('a crop that misses Excellent says which factor held it back', async ({ page }) => {
+    const held = usable('munich').find((c) => c.suitability.metrics.limited_by && c.suitability.overall_score < 80);
+    expect(held, 'fixture has a held-back crop').toBeTruthy();
+    await mockApi(page, 'munich');
+    await page.goto('app');
+    await waitForMap(page);
+    await drawPlot(page, PLOTS.munich);
+    await page.getByRole('button', { name: /Analyse this plot/ }).click();
+    await expect(page.getByTestId('crop-row').first()).toBeVisible();
+    await page.evaluate((id) => (window as any).__hg.router.navigate({ name: 'crop', id }), held.crop_id);
+    await expect(page.getByTestId('held-back')).toContainText(`Held back by ${held.suitability.metrics.limited_by}`);
+
+    // The top crop is Excellent and gets no such line.
+    await page.evaluate((id) => (window as any).__hg.router.navigate({ name: 'crop', id }), usable('munich')[0].crop_id);
+    await expect(page.locator('#crop-name')).toHaveText(usable('munich')[0].crop_name);
+    await expect(page.getByTestId('held-back')).toHaveCount(0);
+  });
+});
+

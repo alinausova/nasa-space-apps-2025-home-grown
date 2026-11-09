@@ -113,12 +113,12 @@
    "usable": false,
    "calendar": null,
    "suitability": {
-    "overall_score": 25.6,
+    "overall_score": 20.5,
     "category": "Poor",
     "scores": {
-     "gdd": 25.6,
+     "gdd": 20.5,
      "sunlight": 92.0,
-     "temperature": 39.2,
+     "temperature": 22.2,
      "water": 43.8
     },
     "metrics": {
@@ -134,16 +134,20 @@
      "season_precipitation_mm": 246.3,
      "season_mean_temp": 3.3,
      "heat_capped": true,
+     "limited_by": "heat",
+     "temperature_days": 109,
+     "temperature_mean": 3.3,
      "required_water_mm": 550,
      "irrigation_needed_mm": 303.7,
      "optimal_temp_min": 15,
      "optimal_temp_max": 20,
-     "base_temp": 0
+     "base_temp": 0,
+     "upper_temp": 30
     },
     "yield_estimate": {
-     "yield_per_m2_kg": 0.04,
-     "total_yield_kg": 173.51,
-     "total_yield_tons": 0.174,
+     "yield_per_m2_kg": 0.03,
+     "total_yield_kg": 138.81,
+     "total_yield_tons": 0.139,
      "yield_category": "Minimal (Poor conditions)",
      "yield_range": {
       "lower_kg_m2": 0.16,
@@ -168,12 +172,12 @@
    "usable": false,
    "calendar": null,
    "suitability": {
-    "overall_score": 22.5,
+    "overall_score": 18.0,
     "category": "Poor",
     "scores": {
-     "gdd": 22.5,
+     "gdd": 18.0,
      "sunlight": 100,
-     "temperature": 29.2,
+     "temperature": 22.2,
      "water": 43.8
     },
     "metrics": {
@@ -189,16 +193,20 @@
      "season_precipitation_mm": 246.3,
      "season_mean_temp": 3.3,
      "heat_capped": true,
+     "limited_by": "heat",
+     "temperature_days": 109,
+     "temperature_mean": 3.3,
      "required_water_mm": 550,
      "irrigation_needed_mm": 303.7,
      "optimal_temp_min": 15,
      "optimal_temp_max": 24,
-     "base_temp": 0
+     "base_temp": 0,
+     "upper_temp": 35
     },
     "yield_estimate": {
-     "yield_per_m2_kg": 0.07,
-     "total_yield_kg": 286.77,
-     "total_yield_tons": 0.287,
+     "yield_per_m2_kg": 0.05,
+     "total_yield_kg": 229.41,
+     "total_yield_tons": 0.229,
      "yield_category": "Minimal (Poor conditions)",
      "yield_range": {
       "lower_kg_m2": 0.3,
@@ -223,12 +231,12 @@
    "usable": false,
    "calendar": null,
    "suitability": {
-    "overall_score": 20.0,
+    "overall_score": 16.0,
     "category": "Poor",
     "scores": {
-     "gdd": 20.0,
+     "gdd": 16.0,
      "sunlight": 92.0,
-     "temperature": 36.7,
+     "temperature": 20.8,
      "water": 43.8
     },
     "metrics": {
@@ -244,16 +252,20 @@
      "season_precipitation_mm": 246.3,
      "season_mean_temp": 3.3,
      "heat_capped": true,
+     "limited_by": "heat",
+     "temperature_days": 109,
+     "temperature_mean": 3.3,
      "required_water_mm": 550,
      "irrigation_needed_mm": 303.7,
      "optimal_temp_min": 16,
      "optimal_temp_max": 20,
-     "base_temp": 0
+     "base_temp": 0,
+     "upper_temp": 30
     },
     "yield_estimate": {
-     "yield_per_m2_kg": 0.03,
-     "total_yield_kg": 112.2,
-     "total_yield_tons": 0.112,
+     "yield_per_m2_kg": 0.02,
+     "total_yield_kg": 89.76,
+     "total_yield_tons": 0.09,
      "yield_category": "Minimal (Poor conditions)",
      "yield_range": {
       "lower_kg_m2": 0.132,
@@ -278,12 +290,12 @@
    "usable": false,
    "calendar": null,
    "suitability": {
-    "overall_score": 15.9,
+    "overall_score": 12.7,
     "category": "Poor",
     "scores": {
-     "gdd": 15.9,
+     "gdd": 12.7,
      "sunlight": 100,
-     "temperature": 60.0,
+     "temperature": 15.3,
      "water": 56.9
     },
     "metrics": {
@@ -299,16 +311,20 @@
      "season_precipitation_mm": 108.5,
      "season_mean_temp": 4.9,
      "heat_capped": true,
+     "limited_by": "heat",
+     "temperature_days": 51,
+     "temperature_mean": 4.9,
      "required_water_mm": 350,
      "irrigation_needed_mm": 241.5,
      "optimal_temp_min": 10,
      "optimal_temp_max": 17,
-     "base_temp": 4
+     "base_temp": 4,
+     "upper_temp": 35
     },
     "yield_estimate": {
-     "yield_per_m2_kg": 0.28,
-     "total_yield_kg": 1201.77,
-     "total_yield_tons": 1.202,
+     "yield_per_m2_kg": 0.23,
+     "total_yield_kg": 961.41,
+     "total_yield_tons": 0.961,
      "yield_category": "Minimal (Poor conditions)",
      "yield_range": {
       "lower_kg_m2": 1.781,
@@ -333,12 +349,12 @@
    "usable": false,
    "calendar": null,
    "suitability": {
-    "overall_score": 14.5,
+    "overall_score": 11.6,
     "category": "Poor",
     "scores": {
-     "gdd": 14.5,
+     "gdd": 11.6,
      "sunlight": 96.1,
-     "temperature": 30.6,
+     "temperature": 13.4,
      "water": 35.5
     },
     "metrics": {
@@ -354,16 +370,20 @@
      "season_precipitation_mm": 139.0,
      "season_mean_temp": 4.6,
      "heat_capped": true,
+     "limited_by": "heat",
+     "temperature_days": 66,
+     "temperature_mean": 4.6,
      "required_water_mm": 450,
      "irrigation_needed_mm": 311.0,
      "optimal_temp_min": 15,
      "optimal_temp_max": 26,
-     "base_temp": 3
+     "base_temp": 3,
+     "upper_temp": 30
     },
     "yield_estimate": {
-     "yield_per_m2_kg": 0.22,
-     "total_yield_kg": 924.07,
-     "total_yield_tons": 0.924,
+     "yield_per_m2_kg": 0.17,
+     "total_yield_kg": 739.26,
+     "total_yield_tons": 0.739,
      "yield_category": "Minimal (Poor conditions)",
      "yield_range": {
       "lower_kg_m2": 1.5,
@@ -388,12 +408,12 @@
    "usable": false,
    "calendar": null,
    "suitability": {
-    "overall_score": 13.3,
+    "overall_score": 10.6,
     "category": "Poor",
     "scores": {
-     "gdd": 13.3,
+     "gdd": 10.6,
      "sunlight": 90.1,
-     "temperature": 21.6,
+     "temperature": 17.8,
      "water": 56.7
     },
     "metrics": {
@@ -409,16 +429,20 @@
      "season_precipitation_mm": 182.7,
      "season_mean_temp": 4.3,
      "heat_capped": true,
+     "limited_by": "heat",
+     "temperature_days": 77,
+     "temperature_mean": 4.3,
      "required_water_mm": 425,
      "irrigation_needed_mm": 242.3,
      "optimal_temp_min": 15,
      "optimal_temp_max": 29,
-     "base_temp": 2
+     "base_temp": 2,
+     "upper_temp": 35
     },
     "yield_estimate": {
      "yield_per_m2_kg": 0.01,
-     "total_yield_kg": 34.34,
-     "total_yield_tons": 0.034,
+     "total_yield_kg": 27.47,
+     "total_yield_tons": 0.027,
      "yield_category": "Minimal (Poor conditions)",
      "yield_range": {
       "lower_kg_m2": 0.061,
@@ -443,12 +467,12 @@
    "usable": false,
    "calendar": null,
    "suitability": {
-    "overall_score": 12.1,
+    "overall_score": 9.7,
     "category": "Poor",
     "scores": {
-     "gdd": 12.1,
+     "gdd": 9.7,
      "sunlight": 100,
-     "temperature": 57.1,
+     "temperature": 15.3,
      "water": 61.7
     },
     "metrics": {
@@ -464,16 +488,20 @@
      "season_precipitation_mm": 108.5,
      "season_mean_temp": 4.9,
      "heat_capped": true,
+     "limited_by": "heat",
+     "temperature_days": 51,
+     "temperature_mean": 4.9,
      "required_water_mm": 300,
      "irrigation_needed_mm": 191.5,
      "optimal_temp_min": 10,
      "optimal_temp_max": 21,
-     "base_temp": 4
+     "base_temp": 4,
+     "upper_temp": 27
     },
     "yield_estimate": {
-     "yield_per_m2_kg": 0.06,
-     "total_yield_kg": 256.41,
-     "total_yield_tons": 0.256,
+     "yield_per_m2_kg": 0.05,
+     "total_yield_kg": 205.13,
+     "total_yield_tons": 0.205,
      "yield_category": "Minimal (Poor conditions)",
      "yield_range": {
       "lower_kg_m2": 0.5,
@@ -498,12 +526,12 @@
    "usable": false,
    "calendar": null,
    "suitability": {
-    "overall_score": 12.0,
+    "overall_score": 9.6,
     "category": "Poor",
     "scores": {
-     "gdd": 12.0,
+     "gdd": 9.6,
      "sunlight": 100,
-     "temperature": 57.1,
+     "temperature": 15.3,
      "water": 81.7
     },
     "metrics": {
@@ -519,16 +547,20 @@
      "season_precipitation_mm": 108.5,
      "season_mean_temp": 4.9,
      "heat_capped": true,
+     "limited_by": "heat",
+     "temperature_days": 51,
+     "temperature_mean": 4.9,
      "required_water_mm": 200,
      "irrigation_needed_mm": 91.5,
      "optimal_temp_min": 10,
      "optimal_temp_max": 21,
-     "base_temp": 4
+     "base_temp": 4,
+     "upper_temp": 25
     },
     "yield_estimate": {
-     "yield_per_m2_kg": 0.12,
-     "total_yield_kg": 507.75,
-     "total_yield_tons": 0.508,
+     "yield_per_m2_kg": 0.1,
+     "total_yield_kg": 406.2,
+     "total_yield_tons": 0.406,
      "yield_category": "Minimal (Poor conditions)",
      "yield_range": {
       "lower_kg_m2": 1.0,
@@ -553,12 +585,12 @@
    "usable": false,
    "calendar": null,
    "suitability": {
-    "overall_score": 11.9,
+    "overall_score": 9.5,
     "category": "Poor",
     "scores": {
-     "gdd": 11.9,
+     "gdd": 9.5,
      "sunlight": 100,
-     "temperature": 60.0,
+     "temperature": 11.5,
      "water": 75.0
     },
     "metrics": {
@@ -574,16 +606,20 @@
      "season_precipitation_mm": 75.0,
      "season_mean_temp": 5.1,
      "heat_capped": true,
+     "limited_by": "heat",
+     "temperature_days": 38,
+     "temperature_mean": 5.1,
      "required_water_mm": 200,
      "irrigation_needed_mm": 125.0,
      "optimal_temp_min": 10,
      "optimal_temp_max": 18,
-     "base_temp": 4.5
+     "base_temp": 4.5,
+     "upper_temp": 30
     },
     "yield_estimate": {
-     "yield_per_m2_kg": 0.04,
-     "total_yield_kg": 150.83,
-     "total_yield_tons": 0.151,
+     "yield_per_m2_kg": 0.03,
+     "total_yield_kg": 120.67,
+     "total_yield_tons": 0.121,
      "yield_category": "Minimal (Poor conditions)",
      "yield_range": {
       "lower_kg_m2": 0.3,
@@ -608,12 +644,12 @@
    "usable": false,
    "calendar": null,
    "suitability": {
-    "overall_score": 11.6,
+    "overall_score": 9.3,
     "category": "Poor",
     "scores": {
-     "gdd": 11.6,
+     "gdd": 9.3,
      "sunlight": 90.1,
-     "temperature": 41.6,
+     "temperature": 17.8,
      "water": 39.1
     },
     "metrics": {
@@ -629,16 +665,20 @@
      "season_precipitation_mm": 182.7,
      "season_mean_temp": 4.3,
      "heat_capped": true,
+     "limited_by": "heat",
+     "temperature_days": 77,
+     "temperature_mean": 4.3,
      "required_water_mm": 500,
      "irrigation_needed_mm": 317.3,
      "optimal_temp_min": 15,
      "optimal_temp_max": 21,
-     "base_temp": 2
+     "base_temp": 2,
+     "upper_temp": 30
     },
     "yield_estimate": {
-     "yield_per_m2_kg": 0.23,
-     "total_yield_kg": 985.21,
-     "total_yield_tons": 0.985,
+     "yield_per_m2_kg": 0.19,
+     "total_yield_kg": 788.17,
+     "total_yield_tons": 0.788,
      "yield_category": "Minimal (Poor conditions)",
      "yield_range": {
       "lower_kg_m2": 2.0,
@@ -663,12 +703,12 @@
    "usable": false,
    "calendar": null,
    "suitability": {
-    "overall_score": 10.3,
+    "overall_score": 8.3,
     "category": "Poor",
     "scores": {
-     "gdd": 10.3,
+     "gdd": 8.3,
      "sunlight": 100,
-     "temperature": 58.2,
+     "temperature": 11.5,
      "water": 65.0
     },
     "metrics": {
@@ -684,16 +724,20 @@
      "season_precipitation_mm": 75.0,
      "season_mean_temp": 5.1,
      "heat_capped": true,
+     "limited_by": "heat",
+     "temperature_days": 38,
+     "temperature_mean": 5.1,
      "required_water_mm": 250,
      "irrigation_needed_mm": 175.0,
      "optimal_temp_min": 10,
      "optimal_temp_max": 21,
-     "base_temp": 4.5
+     "base_temp": 4.5,
+     "upper_temp": 30
     },
     "yield_estimate": {
-     "yield_per_m2_kg": 0.1,
-     "total_yield_kg": 438.31,
-     "total_yield_tons": 0.438,
+     "yield_per_m2_kg": 0.08,
+     "total_yield_kg": 350.65,
+     "total_yield_tons": 0.351,
      "yield_category": "Minimal (Poor conditions)",
      "yield_range": {
       "lower_kg_m2": 1.0,
@@ -718,12 +762,12 @@
    "usable": false,
    "calendar": null,
    "suitability": {
-    "overall_score": 6.1,
+    "overall_score": 4.9,
     "category": "Poor",
     "scores": {
-     "gdd": 6.1,
+     "gdd": 4.9,
      "sunlight": 100,
-     "temperature": 57.1,
+     "temperature": 30.6,
      "water": 71.7
     },
     "metrics": {
@@ -739,16 +783,20 @@
      "season_precipitation_mm": 108.5,
      "season_mean_temp": 4.9,
      "heat_capped": true,
+     "limited_by": "heat",
+     "temperature_days": 51,
+     "temperature_mean": 4.9,
      "required_water_mm": 250,
      "irrigation_needed_mm": 141.5,
      "optimal_temp_min": 7,
      "optimal_temp_max": 24,
-     "base_temp": 4
+     "base_temp": 4,
+     "upper_temp": 28
     },
     "yield_estimate": {
-     "yield_per_m2_kg": 0.09,
-     "total_yield_kg": 390.48,
-     "total_yield_tons": 0.39,
+     "yield_per_m2_kg": 0.07,
+     "total_yield_kg": 312.38,
+     "total_yield_tons": 0.312,
      "yield_category": "Minimal (Poor conditions)",
      "yield_range": {
       "lower_kg_m2": 1.5,
@@ -773,12 +821,12 @@
    "usable": false,
    "calendar": null,
    "suitability": {
-    "overall_score": 5.9,
+    "overall_score": 4.7,
     "category": "Poor",
     "scores": {
-     "gdd": 5.9,
+     "gdd": 4.7,
      "sunlight": 100,
-     "temperature": 40.7,
+     "temperature": 6.0,
      "water": 39.8
     },
     "metrics": {
@@ -794,16 +842,20 @@
      "season_precipitation_mm": 75.0,
      "season_mean_temp": 5.1,
      "heat_capped": true,
+     "limited_by": "heat",
+     "temperature_days": 38,
+     "temperature_mean": 5.1,
      "required_water_mm": 380,
      "irrigation_needed_mm": 305.0,
      "optimal_temp_min": 15,
      "optimal_temp_max": 23,
-     "base_temp": 4.5
+     "base_temp": 4.5,
+     "upper_temp": 30
     },
     "yield_estimate": {
-     "yield_per_m2_kg": 0.12,
-     "total_yield_kg": 499.1,
-     "total_yield_tons": 0.499,
+     "yield_per_m2_kg": 0.09,
+     "total_yield_kg": 399.28,
+     "total_yield_tons": 0.399,
      "yield_category": "Minimal (Poor conditions)",
      "yield_range": {
       "lower_kg_m2": 2.0,
@@ -828,12 +880,12 @@
    "usable": false,
    "calendar": null,
    "suitability": {
-    "overall_score": 5.3,
+    "overall_score": 4.3,
     "category": "Poor",
     "scores": {
-     "gdd": 5.3,
+     "gdd": 4.3,
      "sunlight": 100,
-     "temperature": 45.7,
+     "temperature": 6.0,
      "water": 36.3
     },
     "metrics": {
@@ -849,16 +901,20 @@
      "season_precipitation_mm": 75.0,
      "season_mean_temp": 5.1,
      "heat_capped": true,
+     "limited_by": "heat",
+     "temperature_days": 38,
+     "temperature_mean": 5.1,
      "required_water_mm": 450,
      "irrigation_needed_mm": 375.0,
      "optimal_temp_min": 15,
      "optimal_temp_max": 21,
-     "base_temp": 4.5
+     "base_temp": 4.5,
+     "upper_temp": 30
     },
     "yield_estimate": {
-     "yield_per_m2_kg": 0.03,
-     "total_yield_kg": 113.21,
-     "total_yield_tons": 0.113,
+     "yield_per_m2_kg": 0.02,
+     "total_yield_kg": 90.57,
+     "total_yield_tons": 0.091,
      "yield_category": "Minimal (Poor conditions)",
      "yield_range": {
       "lower_kg_m2": 0.5,
@@ -883,12 +939,12 @@
    "usable": false,
    "calendar": null,
    "suitability": {
-    "overall_score": 5.3,
+    "overall_score": 4.2,
     "category": "Poor",
     "scores": {
-     "gdd": 5.3,
+     "gdd": 4.2,
      "sunlight": 100,
-     "temperature": 42.1,
+     "temperature": 10.2,
      "water": 37.9
     },
     "metrics": {
@@ -904,16 +960,20 @@
      "season_precipitation_mm": 108.5,
      "season_mean_temp": 4.9,
      "heat_capped": true,
+     "limited_by": "heat",
+     "temperature_days": 51,
+     "temperature_mean": 4.9,
      "required_water_mm": 450,
      "irrigation_needed_mm": 341.5,
      "optimal_temp_min": 13,
      "optimal_temp_max": 24,
-     "base_temp": 4
+     "base_temp": 4,
+     "upper_temp": 30
     },
     "yield_estimate": {
-     "yield_per_m2_kg": 0.04,
-     "total_yield_kg": 179.94,
-     "total_yield_tons": 0.18,
+     "yield_per_m2_kg": 0.03,
+     "total_yield_kg": 143.95,
+     "total_yield_tons": 0.144,
      "yield_category": "Minimal (Poor conditions)",
      "yield_range": {
       "lower_kg_m2": 0.8,
@@ -938,12 +998,12 @@
    "usable": false,
    "calendar": null,
    "suitability": {
-    "overall_score": 4.8,
+    "overall_score": 3.9,
     "category": "Poor",
     "scores": {
-     "gdd": 4.8,
+     "gdd": 3.9,
      "sunlight": 100,
-     "temperature": 45.7,
+     "temperature": 6.0,
      "water": 36.3
     },
     "metrics": {
@@ -959,16 +1019,20 @@
      "season_precipitation_mm": 75.0,
      "season_mean_temp": 5.1,
      "heat_capped": true,
+     "limited_by": "heat",
+     "temperature_days": 38,
+     "temperature_mean": 5.1,
      "required_water_mm": 450,
      "irrigation_needed_mm": 375.0,
      "optimal_temp_min": 15,
      "optimal_temp_max": 21,
-     "base_temp": 4.5
+     "base_temp": 4.5,
+     "upper_temp": 30
     },
     "yield_estimate": {
-     "yield_per_m2_kg": 0.05,
-     "total_yield_kg": 204.72,
-     "total_yield_tons": 0.205,
+     "yield_per_m2_kg": 0.04,
+     "total_yield_kg": 163.78,
+     "total_yield_tons": 0.164,
      "yield_category": "Minimal (Poor conditions)",
      "yield_range": {
       "lower_kg_m2": 1.0,
@@ -993,12 +1057,12 @@
    "usable": false,
    "calendar": null,
    "suitability": {
-    "overall_score": 4.7,
+    "overall_score": 3.8,
     "category": "Poor",
     "scores": {
-     "gdd": 4.7,
+     "gdd": 3.8,
      "sunlight": 100,
-     "temperature": 35.7,
+     "temperature": 6.0,
      "water": 45.0
     },
     "metrics": {
@@ -1014,16 +1078,20 @@
      "season_precipitation_mm": 75.0,
      "season_mean_temp": 5.1,
      "heat_capped": true,
+     "limited_by": "heat",
+     "temperature_days": 38,
+     "temperature_mean": 5.1,
      "required_water_mm": 350,
      "irrigation_needed_mm": 275.0,
      "optimal_temp_min": 15,
      "optimal_temp_max": 25,
-     "base_temp": 4.5
+     "base_temp": 4.5,
+     "upper_temp": 30
     },
     "yield_estimate": {
-     "yield_per_m2_kg": 0.11,
-     "total_yield_kg": 450.48,
-     "total_yield_tons": 0.45,
+     "yield_per_m2_kg": 0.09,
+     "total_yield_kg": 360.39,
+     "total_yield_tons": 0.36,
      "yield_category": "Minimal (Poor conditions)",
      "yield_range": {
       "lower_kg_m2": 2.24,
@@ -1048,12 +1116,12 @@
    "usable": false,
    "calendar": null,
    "suitability": {
-    "overall_score": 4.6,
+    "overall_score": 3.6,
     "category": "Poor",
     "scores": {
-     "gdd": 4.6,
+     "gdd": 3.6,
      "sunlight": 100,
-     "temperature": 45.7,
+     "temperature": 6.0,
      "water": 36.3
     },
     "metrics": {
@@ -1069,16 +1137,20 @@
      "season_precipitation_mm": 75.0,
      "season_mean_temp": 5.1,
      "heat_capped": true,
+     "limited_by": "heat",
+     "temperature_days": 38,
+     "temperature_mean": 5.1,
      "required_water_mm": 450,
      "irrigation_needed_mm": 375.0,
      "optimal_temp_min": 15,
      "optimal_temp_max": 21,
-     "base_temp": 4.5
+     "base_temp": 4.5,
+     "upper_temp": 30
     },
     "yield_estimate": {
-     "yield_per_m2_kg": 0.09,
-     "total_yield_kg": 386.31,
-     "total_yield_tons": 0.386,
+     "yield_per_m2_kg": 0.07,
+     "total_yield_kg": 309.05,
+     "total_yield_tons": 0.309,
      "yield_category": "Minimal (Poor conditions)",
      "yield_range": {
       "lower_kg_m2": 2.0,
@@ -1103,12 +1175,12 @@
    "usable": false,
    "calendar": null,
    "suitability": {
-    "overall_score": 2.3,
+    "overall_score": 1.9,
     "category": "Poor",
     "scores": {
-     "gdd": 2.3,
+     "gdd": 1.9,
      "sunlight": 100,
-     "temperature": 60.0,
+     "temperature": 10.4,
      "water": 39.8
     },
     "metrics": {
@@ -1124,16 +1196,20 @@
      "season_precipitation_mm": 46.9,
      "season_mean_temp": 5.5,
      "heat_capped": true,
+     "limited_by": "heat",
+     "temperature_days": 19,
+     "temperature_mean": 5.5,
      "required_water_mm": 350,
      "irrigation_needed_mm": 303.1,
      "optimal_temp_min": 10,
      "optimal_temp_max": 21,
-     "base_temp": 5
+     "base_temp": 5,
+     "upper_temp": 27
     },
     "yield_estimate": {
-     "yield_per_m2_kg": 0.02,
-     "total_yield_kg": 79.45,
-     "total_yield_tons": 0.079,
+     "yield_per_m2_kg": 0.01,
+     "total_yield_kg": 63.56,
+     "total_yield_tons": 0.064,
      "yield_category": "Minimal (Poor conditions)",
      "yield_range": {
       "lower_kg_m2": 0.8,
@@ -1158,12 +1234,12 @@
    "usable": false,
    "calendar": null,
    "suitability": {
-    "overall_score": 1.8,
+    "overall_score": 1.4,
     "category": "Poor",
     "scores": {
-     "gdd": 1.8,
+     "gdd": 1.4,
      "sunlight": 100,
-     "temperature": 43.2,
+     "temperature": 7.4,
      "water": 33.8
     },
     "metrics": {
@@ -1179,16 +1255,20 @@
      "season_precipitation_mm": 75.0,
      "season_mean_temp": 5.1,
      "heat_capped": true,
+     "limited_by": "heat",
+     "temperature_days": 38,
+     "temperature_mean": 5.1,
      "required_water_mm": 500,
      "irrigation_needed_mm": 425.0,
      "optimal_temp_min": 13,
      "optimal_temp_max": 24,
-     "base_temp": 4.5
+     "base_temp": 4.5,
+     "upper_temp": 35
     },
     "yield_estimate": {
-     "yield_per_m2_kg": 0.05,
-     "total_yield_kg": 223.94,
-     "total_yield_tons": 0.224,
+     "yield_per_m2_kg": 0.04,
+     "total_yield_kg": 179.15,
+     "total_yield_tons": 0.179,
      "yield_category": "Minimal (Poor conditions)",
      "yield_range": {
       "lower_kg_m2": 3.0,
@@ -1213,12 +1293,12 @@
    "usable": false,
    "calendar": null,
    "suitability": {
-    "overall_score": 1.7,
+    "overall_score": 1.3,
     "category": "Poor",
     "scores": {
-     "gdd": 1.7,
+     "gdd": 1.3,
      "sunlight": 100,
-     "temperature": 27.6,
+     "temperature": 5.2,
      "water": 39.7
     },
     "metrics": {
@@ -1234,16 +1314,20 @@
      "season_precipitation_mm": 46.9,
      "season_mean_temp": 5.5,
      "heat_capped": true,
+     "limited_by": "heat",
+     "temperature_days": 19,
+     "temperature_mean": 5.5,
      "required_water_mm": 425,
      "irrigation_needed_mm": 378.1,
      "optimal_temp_min": 15,
      "optimal_temp_max": 29,
-     "base_temp": 5
+     "base_temp": 5,
+     "upper_temp": 32
     },
     "yield_estimate": {
      "yield_per_m2_kg": 0.0,
-     "total_yield_kg": 4.21,
-     "total_yield_tons": 0.004,
+     "total_yield_kg": 3.37,
+     "total_yield_tons": 0.003,
      "yield_category": "Minimal (Poor conditions)",
      "yield_range": {
       "lower_kg_m2": 0.06,
@@ -1268,12 +1352,12 @@
    "usable": false,
    "calendar": null,
    "suitability": {
-    "overall_score": 1.4,
+    "overall_score": 1.1,
     "category": "Poor",
     "scores": {
-     "gdd": 1.4,
+     "gdd": 1.1,
      "sunlight": 100,
-     "temperature": 22.6,
+     "temperature": 4.0,
      "water": 39.7
     },
     "metrics": {
@@ -1289,16 +1373,20 @@
      "season_precipitation_mm": 46.9,
      "season_mean_temp": 5.5,
      "heat_capped": true,
+     "limited_by": "heat",
+     "temperature_days": 19,
+     "temperature_mean": 5.5,
      "required_water_mm": 425,
      "irrigation_needed_mm": 378.1,
      "optimal_temp_min": 18,
      "optimal_temp_max": 28,
-     "base_temp": 5
+     "base_temp": 5,
+     "upper_temp": 30
     },
     "yield_estimate": {
      "yield_per_m2_kg": 0.0,
-     "total_yield_kg": 18.71,
-     "total_yield_tons": 0.019,
+     "total_yield_kg": 14.97,
+     "total_yield_tons": 0.015,
      "yield_category": "Minimal (Poor conditions)",
      "yield_range": {
       "lower_kg_m2": 0.314,
@@ -1323,12 +1411,12 @@
    "usable": false,
    "calendar": null,
    "suitability": {
-    "overall_score": 0.5,
+    "overall_score": 0.4,
     "category": "Poor",
     "scores": {
-     "gdd": 0.5,
+     "gdd": 0.4,
      "sunlight": 100,
-     "temperature": 48.0,
+     "temperature": 1.0,
      "water": 37.8
     },
     "metrics": {
@@ -1344,16 +1432,20 @@
      "season_precipitation_mm": 6.1,
      "season_mean_temp": 6.1,
      "heat_capped": true,
+     "limited_by": "heat",
+     "temperature_days": 4,
+     "temperature_mean": 6.1,
      "required_water_mm": 350,
      "irrigation_needed_mm": 343.9,
      "optimal_temp_min": 16,
      "optimal_temp_max": 21,
-     "base_temp": 6
+     "base_temp": 6,
+     "upper_temp": 30
     },
     "yield_estimate": {
      "yield_per_m2_kg": 0.01,
-     "total_yield_kg": 61.01,
-     "total_yield_tons": 0.061,
+     "total_yield_kg": 48.81,
+     "total_yield_tons": 0.049,
      "yield_category": "Minimal (Poor conditions)",
      "yield_range": {
       "lower_kg_m2": 3.0,
@@ -1399,16 +1491,20 @@
      "season_precipitation_mm": 0.0,
      "season_mean_temp": null,
      "heat_capped": true,
+     "limited_by": null,
+     "temperature_days": 0,
+     "temperature_mean": null,
      "required_water_mm": 500,
      "irrigation_needed_mm": 500.0,
      "optimal_temp_min": 21,
      "optimal_temp_max": 27,
-     "base_temp": 7
+     "base_temp": 7,
+     "upper_temp": 28
     },
     "yield_estimate": {
      "yield_per_m2_kg": 0.0,
-     "total_yield_kg": 9.98,
-     "total_yield_tons": 0.01,
+     "total_yield_kg": 7.98,
+     "total_yield_tons": 0.008,
      "yield_category": "Minimal (Poor conditions)",
      "yield_range": {
       "lower_kg_m2": 3.0,
@@ -1453,11 +1549,15 @@
      "season_precipitation_mm": 0.0,
      "season_mean_temp": null,
      "heat_capped": true,
+     "limited_by": null,
+     "temperature_days": 0,
+     "temperature_mean": null,
      "required_water_mm": 600,
      "irrigation_needed_mm": 600.0,
      "optimal_temp_min": 21,
      "optimal_temp_max": 29,
-     "base_temp": 10
+     "base_temp": 10,
+     "upper_temp": 35
     },
     "yield_estimate": {
      "yield_per_m2_kg": 0.0,
@@ -1507,11 +1607,15 @@
      "season_precipitation_mm": 0.0,
      "season_mean_temp": null,
      "heat_capped": true,
+     "limited_by": null,
+     "temperature_days": 0,
+     "temperature_mean": null,
      "required_water_mm": 300,
      "irrigation_needed_mm": 300.0,
      "optimal_temp_min": 21,
      "optimal_temp_max": 27,
-     "base_temp": 10
+     "base_temp": 10,
+     "upper_temp": 32
     },
     "yield_estimate": {
      "yield_per_m2_kg": 0.0,
@@ -1561,11 +1665,15 @@
      "season_precipitation_mm": 0.0,
      "season_mean_temp": null,
      "heat_capped": true,
+     "limited_by": null,
+     "temperature_days": 0,
+     "temperature_mean": null,
      "required_water_mm": 500,
      "irrigation_needed_mm": 500.0,
      "optimal_temp_min": 21,
      "optimal_temp_max": 29,
-     "base_temp": 10
+     "base_temp": 10,
+     "upper_temp": 32
     },
     "yield_estimate": {
      "yield_per_m2_kg": 0.0,
@@ -1615,11 +1723,15 @@
      "season_precipitation_mm": 0.0,
      "season_mean_temp": null,
      "heat_capped": true,
+     "limited_by": null,
+     "temperature_days": 0,
+     "temperature_mean": null,
      "required_water_mm": 550,
      "irrigation_needed_mm": 550.0,
      "optimal_temp_min": 21,
      "optimal_temp_max": 29,
-     "base_temp": 10
+     "base_temp": 10,
+     "upper_temp": 35
     },
     "yield_estimate": {
      "yield_per_m2_kg": 0.0,
@@ -1669,11 +1781,15 @@
      "season_precipitation_mm": 0.0,
      "season_mean_temp": null,
      "heat_capped": true,
+     "limited_by": null,
+     "temperature_days": 0,
+     "temperature_mean": null,
      "required_water_mm": 600,
      "irrigation_needed_mm": 600.0,
      "optimal_temp_min": 21,
      "optimal_temp_max": 29,
-     "base_temp": 12
+     "base_temp": 12,
+     "upper_temp": 30
     },
     "yield_estimate": {
      "yield_per_m2_kg": 0.0,
@@ -1723,11 +1839,15 @@
      "season_precipitation_mm": 0.0,
      "season_mean_temp": null,
      "heat_capped": true,
+     "limited_by": null,
+     "temperature_days": 0,
+     "temperature_mean": null,
      "required_water_mm": 450,
      "irrigation_needed_mm": 450.0,
      "optimal_temp_min": 18,
      "optimal_temp_max": 27,
-     "base_temp": 10
+     "base_temp": 10,
+     "upper_temp": 32
     },
     "yield_estimate": {
      "yield_per_m2_kg": 0.0,
@@ -1777,11 +1897,15 @@
      "season_precipitation_mm": 0.0,
      "season_mean_temp": null,
      "heat_capped": true,
+     "limited_by": null,
+     "temperature_days": 0,
+     "temperature_mean": null,
      "required_water_mm": 500,
      "irrigation_needed_mm": 500.0,
      "optimal_temp_min": 18,
      "optimal_temp_max": 27,
-     "base_temp": 10
+     "base_temp": 10,
+     "upper_temp": 32
     },
     "yield_estimate": {
      "yield_per_m2_kg": 0.0,
@@ -1831,11 +1955,15 @@
      "season_precipitation_mm": 0.0,
      "season_mean_temp": null,
      "heat_capped": true,
+     "limited_by": null,
+     "temperature_days": 0,
+     "temperature_mean": null,
      "required_water_mm": 400,
      "irrigation_needed_mm": 400.0,
      "optimal_temp_min": 21,
      "optimal_temp_max": 29,
-     "base_temp": 10
+     "base_temp": 10,
+     "upper_temp": 38
     },
     "yield_estimate": {
      "yield_per_m2_kg": 0.0,
@@ -1885,11 +2013,15 @@
      "season_precipitation_mm": 0.0,
      "season_mean_temp": null,
      "heat_capped": true,
+     "limited_by": null,
+     "temperature_days": 0,
+     "temperature_mean": null,
      "required_water_mm": 500,
      "irrigation_needed_mm": 500.0,
      "optimal_temp_min": 21,
      "optimal_temp_max": 32,
-     "base_temp": 10
+     "base_temp": 10,
+     "upper_temp": 35
     },
     "yield_estimate": {
      "yield_per_m2_kg": 0.0,
@@ -1939,11 +2071,15 @@
      "season_precipitation_mm": 0.0,
      "season_mean_temp": null,
      "heat_capped": true,
+     "limited_by": null,
+     "temperature_days": 0,
+     "temperature_mean": null,
      "required_water_mm": 550,
      "irrigation_needed_mm": 550.0,
      "optimal_temp_min": 21,
      "optimal_temp_max": 32,
-     "base_temp": 10
+     "base_temp": 10,
+     "upper_temp": 32
     },
     "yield_estimate": {
      "yield_per_m2_kg": 0.0,
@@ -1993,11 +2129,15 @@
      "season_precipitation_mm": 0.0,
      "season_mean_temp": null,
      "heat_capped": true,
+     "limited_by": null,
+     "temperature_days": 0,
+     "temperature_mean": null,
      "required_water_mm": 300,
      "irrigation_needed_mm": 300.0,
      "optimal_temp_min": 18,
      "optimal_temp_max": 27,
-     "base_temp": 10
+     "base_temp": 10,
+     "upper_temp": 30
     },
     "yield_estimate": {
      "yield_per_m2_kg": 0.0,
@@ -2047,11 +2187,15 @@
      "season_precipitation_mm": 0.0,
      "season_mean_temp": null,
      "heat_capped": true,
+     "limited_by": null,
+     "temperature_days": 0,
+     "temperature_mean": null,
      "required_water_mm": 1000,
      "irrigation_needed_mm": 1000.0,
      "optimal_temp_min": 21,
      "optimal_temp_max": 32,
-     "base_temp": 12
+     "base_temp": 12,
+     "upper_temp": 35
     },
     "yield_estimate": {
      "yield_per_m2_kg": 0.0,
@@ -2101,11 +2245,15 @@
      "season_precipitation_mm": 0.0,
      "season_mean_temp": null,
      "heat_capped": true,
+     "limited_by": null,
+     "temperature_days": 0,
+     "temperature_mean": null,
      "required_water_mm": 500,
      "irrigation_needed_mm": 500.0,
      "optimal_temp_min": 21,
      "optimal_temp_max": 29,
-     "base_temp": 10
+     "base_temp": 10,
+     "upper_temp": 40
     },
     "yield_estimate": {
      "yield_per_m2_kg": 0.0,
@@ -2155,11 +2303,15 @@
      "season_precipitation_mm": 0.0,
      "season_mean_temp": null,
      "heat_capped": true,
+     "limited_by": null,
+     "temperature_days": 0,
+     "temperature_mean": null,
      "required_water_mm": 500,
      "irrigation_needed_mm": 500.0,
      "optimal_temp_min": 18,
      "optimal_temp_max": 27,
-     "base_temp": 8
+     "base_temp": 8,
+     "upper_temp": 30
     },
     "yield_estimate": {
      "yield_per_m2_kg": 0.0,
@@ -2209,11 +2361,15 @@
      "season_precipitation_mm": 0.0,
      "season_mean_temp": null,
      "heat_capped": true,
+     "limited_by": null,
+     "temperature_days": 0,
+     "temperature_mean": null,
      "required_water_mm": 600,
      "irrigation_needed_mm": 600.0,
      "optimal_temp_min": 20,
      "optimal_temp_max": 30,
-     "base_temp": 10
+     "base_temp": 10,
+     "upper_temp": 35
     },
     "yield_estimate": {
      "yield_per_m2_kg": 0.0,
@@ -2263,11 +2419,15 @@
      "season_precipitation_mm": 0.0,
      "season_mean_temp": null,
      "heat_capped": true,
+     "limited_by": null,
+     "temperature_days": 0,
+     "temperature_mean": null,
      "required_water_mm": 1000,
      "irrigation_needed_mm": 1000.0,
      "optimal_temp_min": 20,
      "optimal_temp_max": 29,
-     "base_temp": 10
+     "base_temp": 10,
+     "upper_temp": 40
     },
     "yield_estimate": {
      "yield_per_m2_kg": 0.0,
@@ -2317,11 +2477,15 @@
      "season_precipitation_mm": 0.0,
      "season_mean_temp": null,
      "heat_capped": true,
+     "limited_by": null,
+     "temperature_days": 0,
+     "temperature_mean": null,
      "required_water_mm": 550,
      "irrigation_needed_mm": 550.0,
      "optimal_temp_min": 22,
      "optimal_temp_max": 35,
-     "base_temp": 10
+     "base_temp": 10,
+     "upper_temp": 30
     },
     "yield_estimate": {
      "yield_per_m2_kg": 0.0,
@@ -2371,11 +2535,15 @@
      "season_precipitation_mm": 0.0,
      "season_mean_temp": null,
      "heat_capped": true,
+     "limited_by": null,
+     "temperature_days": 0,
+     "temperature_mean": null,
      "required_water_mm": 550,
      "irrigation_needed_mm": 550.0,
      "optimal_temp_min": 25,
      "optimal_temp_max": 35,
-     "base_temp": 10
+     "base_temp": 10,
+     "upper_temp": 40
     },
     "yield_estimate": {
      "yield_per_m2_kg": 0.0,
@@ -2425,11 +2593,15 @@
      "season_precipitation_mm": 0.0,
      "season_mean_temp": null,
      "heat_capped": true,
+     "limited_by": null,
+     "temperature_days": 0,
+     "temperature_mean": null,
      "required_water_mm": 600,
      "irrigation_needed_mm": 600.0,
      "optimal_temp_min": 22,
      "optimal_temp_max": 32,
-     "base_temp": 10
+     "base_temp": 10,
+     "upper_temp": 35
     },
     "yield_estimate": {
      "yield_per_m2_kg": 0.0,
@@ -2479,11 +2651,15 @@
      "season_precipitation_mm": 0.0,
      "season_mean_temp": null,
      "heat_capped": true,
+     "limited_by": null,
+     "temperature_days": 0,
+     "temperature_mean": null,
      "required_water_mm": 400,
      "irrigation_needed_mm": 400.0,
      "optimal_temp_min": 20,
      "optimal_temp_max": 35,
-     "base_temp": 10
+     "base_temp": 10,
+     "upper_temp": 35
     },
     "yield_estimate": {
      "yield_per_m2_kg": 0.0,
@@ -2533,11 +2709,15 @@
      "season_precipitation_mm": 0.0,
      "season_mean_temp": null,
      "heat_capped": true,
+     "limited_by": null,
+     "temperature_days": 0,
+     "temperature_mean": null,
      "required_water_mm": 1800,
      "irrigation_needed_mm": 1800.0,
      "optimal_temp_min": 21,
      "optimal_temp_max": 28,
-     "base_temp": 10
+     "base_temp": 10,
+     "upper_temp": 35
     },
     "yield_estimate": {
      "yield_per_m2_kg": 0.0,

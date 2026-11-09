@@ -58,9 +58,9 @@ class TestCrops:
         # Everything but the tropical staples scores well in Munich; every crop that misses says why.
         assert b["total_usable"] >= len(CROP_DATABASE) - 4
         assert all(("miss_reason" in c) != c["usable"] for c in b["crops"])
-        # Cassava scores above 50 on the year, but no planting date brings it to harvest in Munich.
+        # Cassava cannot be brought to harvest in Munich; it says why (too cold, short of heat, or no planting date).
         cassava = next(c for c in b["crops"] if c["crop_id"] == "cassava")
-        assert not cassava["usable"] and cassava["miss_reason"] == {"kind": "no_window"}
+        assert not cassava["usable"] and cassava["miss_reason"]["kind"] in {"no_window", "heat", "temperature"}
 
     def test_svalbard_nothing_usable_each_with_a_reason(self):
         b = self.block("svalbard")

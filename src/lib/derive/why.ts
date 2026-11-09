@@ -25,7 +25,9 @@ export function factorReasons(crop: CropRecommendation, climate: Recommendations
   const sunlight = `${m.adjusted_sun_hours.toFixed(1)} h a day after shade`;
 
   const label = seasonal ? 'Growing-season average' : 'Year average';
-  const average = seasonal ? m.season_mean_temp : (climate.avg_temp_max + climate.avg_temp_min) / 2;
+  // The scoring pass judges temperature over the crop's own growing days; prefer that average when present.
+  const growing = m.temperature_mean !== undefined ? m.temperature_mean : m.season_mean_temp;
+  const average = seasonal ? growing : (climate.avg_temp_max + climate.avg_temp_min) / 2;
   let temperature: string;
   if (average === null || average === undefined) {
     temperature = 'Too cold to grow on any day';
@@ -49,6 +51,32 @@ export function factorReasons(crop: CropRecommendation, climate: Recommendations
   else water = `Rain covers its ${n(m.required_water_mm)} mm need`;
 
   return { gdd: heat, sunlight, temperature, water };
+}
+
+/** Below this score the crop page explains what held it back; Excellent crops need no excuse. */
+const HELD_BACK_BELOW = 80;
+
+/**
+ * One plain line when the weakest factor a gardener cannot change held the score back
+ * (back end `limited_by`) and the crop did not make Excellent; null otherwise.
+ */
+export function heldBack(crop: CropRecommendation): string | null {
+  const m = crop.suitability.metrics;
+  if (crop.suitability.overall_score >= HELD_BACK_BELOW) return null;
+  switch (m.limited_by) {
+    case 'temperature': {
+      const t = m.temperature_mean;
+      const ideal = m.optimal_temp_min !== undefined && m.optimal_temp_max !== undefined ? `, it wants ${m.optimal_temp_min}–${m.optimal_temp_max}°C` : '';
+      if (t === null || t === undefined) return 'Held back by temperature: rarely warm enough to grow.';
+      return `Held back by temperature: it averages ${Math.round(t)}°C while growing${ideal}.`;
+    }
+    case 'heat':
+      return `Held back by heat: about ${n(m.total_gdd)} heat units here, it needs ${n(m.required_gdd)} with some to spare.`;
+    case 'sun':
+      return `Held back by sun: ${m.adjusted_sun_hours.toFixed(1)} h a day after shade, it wants ${m.optimal_sun_hours} h.`;
+    default:
+      return null;
+  }
 }
 
 /** Neighbours in a ranking, for the up/down buttons. */
