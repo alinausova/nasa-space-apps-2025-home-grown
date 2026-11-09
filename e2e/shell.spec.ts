@@ -23,7 +23,7 @@ test.describe('app shell', () => {
     await analyse.click();
 
     await expect(page.getByTestId('crop-row').first()).toBeVisible();
-    expect(api).toEqual({ climate: 1, crops: 1, summary: 1 });
+    expect(api).toEqual({ climate: 1, crops: 1, summary: 1, tips: 0 });
   });
 
   test('blocks plots over 1 km²', async ({ page }) => {

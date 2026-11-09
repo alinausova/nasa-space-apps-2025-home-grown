@@ -29,3 +29,9 @@ describe('closestCalls', () => {
     expect(closestCalls(list).map((c) => c.crop_id)).toEqual(['c', 'e', 'b']);
   });
 });
+
+describe('no sowing window', () => {
+  it('explains it plainly', () => {
+    expect(missSentence({ kind: 'no_window' })).toBe('No sowing date ripens before frost or heat here');
+  });
+});

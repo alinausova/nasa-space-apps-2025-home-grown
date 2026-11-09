@@ -7,7 +7,7 @@
 <LearnSection
     label="01"
     title="What happens when you press Analyse"
-    body="A static front end on GitHub Pages sends your plot to a Python API on Render in three calls: climate, crops, summary."
+    body="A static front end on GitHub Pages sends your plot to a Python API on Render in four calls: climate, crops, summary, and tips when you ask for them."
 >
     {#snippet aside()}
         <ol class="m-0 list-none overflow-hidden rounded-card border border-line-strong bg-surface p-0">

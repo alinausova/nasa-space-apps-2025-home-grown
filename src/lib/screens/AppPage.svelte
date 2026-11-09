@@ -24,7 +24,9 @@
     import { router } from "../router/router.svelte";
     import { lookupPlaceName } from "../geo/placeName";
     import { ringCenter, type LngLat } from "../derive/geo";
-    import { SAMPLE_CITIES, type SampleCity } from "../data/cities";
+    import type { SampleCity } from "../data/cities";
+    import type { PlaceSuggestion } from "../derive/search";
+    import { locate, type LocateResult } from "../geo/location";
 
     onMount(() => {
         if (import.meta.env.DEV) {
@@ -40,7 +42,8 @@
 
     let cropId = $derived(router.route.name === "crop" ? router.route.id : null);
     let crop = $derived(cropId ? (journey.results?.recommendations.find((c) => c.crop_id === cropId) ?? null) : null);
-    let cityName = $derived(SAMPLE_CITIES.find((c) => c.id === journey.city)?.name ?? null);
+    /** Searched place or the user's position; shown as a pin while picking a place. */
+    let pin = $state<LngLat | null>(null);
     let zoomedIn = $derived(mapController.view.zoom >= DRAW_ZOOM);
 
     // Analysing clock: total time (for the slow-server note) and time on the current call (for progress).
@@ -78,8 +81,36 @@
 
     function pickCity(city: SampleCity): void {
         journey.city = city.id;
+        journey.placeLabel = city.name;
+        pin = null;
         mapController.flyTo(city.center, 15);
     }
+
+    function pickPlace(place: PlaceSuggestion): void {
+        journey.city = null;
+        journey.placeLabel = place.label;
+        pin = place.center;
+        mapController.flyTo(place.center, place.zoom);
+    }
+
+    const YOUR_LOCATION = "Your location";
+
+    async function useMyLocation(): Promise<LocateResult["status"]> {
+        const result = await locate();
+        if (result.status !== "ok") return result.status;
+        journey.city = null;
+        journey.placeLabel = YOUR_LOCATION;
+        pin = result.center;
+        mapController.flyTo(result.center, 17);
+        void lookupPlaceName(result.center).then((name) => {
+            if (name && journey.placeLabel === YOUR_LOCATION) journey.placeLabel = name;
+        });
+        return "ok";
+    }
+
+    $effect(() => {
+        mapController.setPin(journey.step === "place" && mapController.ready ? pin : null);
+    });
 
     /** Starts a new outline. An existing plot is cleared first, so undo can bring it back. */
     function beginDrawing(): void {
@@ -202,7 +233,13 @@
     {/snippet}
 
     {#if journey.step === "place"}
-        <PlacePanel selected={journey.city} onpick={pickCity} />
+        <PlacePanel
+            selected={journey.city}
+            onpick={pickCity}
+            onplace={pickPlace}
+            onlocate={useMyLocation}
+            proximity={() => [mapController.view.lng, mapController.view.lat]}
+        />
     {:else if journey.step === "draw"}
         <DrawPanel plot={journey.plot} tooLarge={journey.isTooLarge} selectedCity={journey.city} onpick={pickCity} />
     {:else if journey.step === "analysing"}
@@ -217,7 +254,14 @@
             onContinue={() => journey.continueWithoutLandsat()}
         />
     {:else if crop && journey.results && journey.plot}
-        <CropDetail {crop} results={journey.results} plot={journey.plot} filter={journey.filter} />
+        <CropDetail
+            {crop}
+            results={journey.results}
+            plot={journey.plot}
+            filter={journey.filter}
+            tips={journey.tips[crop.crop_id]}
+            onAskTips={() => journey.loadTips(crop.crop_id)}
+        />
     {:else if journey.results && journey.climate && journey.crops && journey.plot}
         <ResultsPanel
             results={journey.results}
@@ -237,7 +281,7 @@
         {#if journey.step === "place"}
             <MapBack label="Back to start" href={router.href({ name: "landing" })} />
             <MapChip>
-                {#if cityName}{cityName} · {zoomedIn ? "ready to draw" : "zoom in to draw"}{:else}{zoomedIn ? "Ready to draw" : "Zoom in to draw"}{/if}
+                {#if journey.placeLabel}{journey.placeLabel} · {zoomedIn ? "ready to draw" : "zoom in to draw"}{:else}{zoomedIn ? "Ready to draw" : "Zoom in to draw"}{/if}
             </MapChip>
             <MapTools>
                 <ToolButton label="Zoom in" onclick={() => mapController.zoomBy(1)}><Icon name="plus" /></ToolButton>

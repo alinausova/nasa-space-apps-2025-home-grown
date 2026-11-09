@@ -21,6 +21,8 @@ export function missSentence(reason: MissReason | undefined): string {
         : `Growing season averages ${Math.round(reason.season_mean_temp)}°C, it wants ${reason.ideal_min}–${reason.ideal_max}°C`;
     case 'water':
       return `Would need about ${n(reason.irrigation_mm)} mm of watering`;
+    case 'no_window':
+      return 'No sowing date ripens before frost or heat here';
   }
 }
 

@@ -1,5 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
-import { PLOTS, drawPlot, mockApi, usable, waitForMap } from './helpers';
+import { PLOTS, drawPlot, mockApi, usable, v2, waitForMap } from './helpers';
 
 const RECS = usable('munich');
 const TOP = RECS[0];
@@ -32,7 +32,7 @@ test.describe('crop detail', () => {
 
     // v2 responses carry growing-season figures, so the reasons talk about the growing season.
     const m = TOP.suitability.metrics;
-    await expect(page.getByText(`More than the ${m.required_gdd} heat units it needs`).filter({ visible: true })).toBeVisible();
+    await expect(page.getByText(`More than the ${m.required_gdd.toLocaleString('en-US')} heat units it needs`).filter({ visible: true })).toBeVisible();
     await expect(page.getByText(`Growing-season average inside the ideal ${m.optimal_temp_min}–${m.optimal_temp_max}°C`).filter({ visible: true })).toBeVisible();
 
     if (isMobile) await expect(page.getByRole('link', { name: 'All crops', exact: true })).toBeVisible();
@@ -83,5 +83,116 @@ test.describe('crop detail', () => {
     await page.evaluate(() => (window as any).__hg.router.navigate({ name: 'crop', id: 'durian' }));
     await expect(page).toHaveURL(/\/app$/);
     await expect(page.getByTestId('crop-row').first()).toBeVisible();
+  });
+});
+
+test.describe('grow calendar', () => {
+  const crop = (id: string) => RECS.find((r) => r.crop_id === id)!;
+  const open = (page: Page, id: string) => page.evaluate((cropId) => (window as any).__hg.router.navigate({ name: 'crop', id: cropId }), id);
+  const cells = (page: Page, row: string) => page.locator(`[data-testid="grow-calendar"] [data-row="${row}"][data-on]`);
+
+  test('shows the sow, grow and harvest months from the response', async ({ page }, info) => {
+    await openResults(page);
+    await page.getByTestId('crop-row').first().click();
+    const cal = TOP.calendar;
+    const section = page.getByTestId('grow-calendar');
+    await expect(section.getByRole('heading', { name: 'When to grow it' })).toBeVisible();
+    await expect(cells(page, 'sow')).toHaveCount(cal.sow.length);
+    await expect(cells(page, 'grow')).toHaveCount(cal.grow.length);
+    await expect(cells(page, 'harvest')).toHaveCount(cal.harvest.length);
+    await expect(section.getByText(/^Sow .*\. Grows .*\. Harvest .*\.$/)).toBeAttached();
+    await section.scrollIntoViewIfNeeded();
+    await page.screenshot({ path: `e2e/.output/shots/${info.project.name}-calendar.png` });
+  });
+
+  test('frost-tender crops are planted out as seedlings', async ({ page }) => {
+    expect(crop('tomatoes').calendar.mode).toBe('plant_out');
+    await openResults(page);
+    await open(page, 'tomatoes');
+    await expect(cropHeading(page)).toHaveText('Tomatoes');
+    const section = page.getByTestId('grow-calendar');
+    await expect(section.getByText('Plant out', { exact: true })).toBeVisible();
+    await expect(section.getByText(/Start seeds indoors about six weeks earlier/)).toBeVisible();
+  });
+
+  test('crops with no sowing window are left out of the list', async ({ page }) => {
+    const all = v2('munich', 'crops').crops;
+    const rice = all.find((c: any) => c.crop_id === 'rice');
+    expect(rice.calendar).toBeNull();
+    expect(rice.usable).toBe(false);
+    expect(rice.miss_reason).toEqual({ kind: 'no_window' });
+    await openResults(page);
+    await expect(page.getByTestId('crop-row').filter({ hasText: /^Rice/ })).toHaveCount(0);
+    // A deep link to it falls back to the list.
+    await open(page, 'rice');
+    await expect(page).toHaveURL(/\/app$/);
+  });
+});
+
+test.describe('crop tips', () => {
+  test('asks once, shows the answer as plain text', async ({ page }, info) => {
+    const counter = await mockApi(page, 'munich', { tips: { delayMs: 600 } });
+    await page.goto('app');
+    await waitForMap(page);
+    await drawPlot(page, PLOTS.munich);
+    await page.getByRole('button', { name: /Analyse this plot/ }).click();
+    await page.getByTestId('crop-row').first().click();
+
+    const ask = page.getByRole('button', { name: `Any tips for ${TOP.crop_name.toLowerCase()} here?` });
+    await ask.click();
+    await expect(page.getByText(`Writing tips for ${TOP.crop_name.toLowerCase()} at your plot…`)).toBeVisible();
+    const tips = page.getByTestId('crop-tips');
+    await expect(tips).toContainText(`Sow ${TOP.crop_id} in spring.`);
+    // Model text is escaped, never rendered as HTML.
+    await expect(tips).toContainText('Keep <b>it</b> watered in July.');
+    await expect(tips.locator('b')).toHaveCount(0);
+    await expect(ask).toBeHidden();
+    await tips.scrollIntoViewIfNeeded();
+    await page.screenshot({ path: `e2e/.output/shots/${info.project.name}-tips.png` });
+
+    // Going to another crop and back keeps the answer without asking again.
+    await page.getByRole('link', { name: `Next crop: ${RECS[1].crop_name}` }).filter({ visible: true }).click();
+    await expect(page.getByRole('button', { name: `Any tips for ${RECS[1].crop_name.toLowerCase()} here?` })).toBeVisible();
+    await page.getByRole('link', { name: `Previous crop: ${TOP.crop_name}` }).filter({ visible: true }).click();
+    await expect(page.getByTestId('crop-tips')).toContainText(`Sow ${TOP.crop_id} in spring.`);
+    expect(counter.tips).toBe(1);
+  });
+
+  test('offers to ask again when tips are not available', async ({ page }) => {
+    await mockApi(page, 'munich', { tips: { body: { plot_id: 'x', crop_id: 'x', tips: null, error: 'Tips are not available right now.' } } });
+    await openResultsWithMock(page);
+    await page.getByTestId('crop-row').first().click();
+    await page.getByRole('button', { name: /Any tips for/ }).click();
+    await expect(page.getByText('Tips are not available right now.')).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Ask again' })).toBeVisible();
+  });
+});
+
+async function openResultsWithMock(page: Page): Promise<void> {
+  await page.goto('app');
+  await waitForMap(page);
+  await drawPlot(page, PLOTS.munich);
+  await page.getByRole('button', { name: /Analyse this plot/ }).click();
+  await expect(page.getByTestId('crop-row').first()).toBeVisible();
+}
+
+
+test.describe('new crops', () => {
+  test('Cairo lists the tropical crops; cassava is planted from cuttings', async ({ page }, info) => {
+    await mockApi(page, 'cairo');
+    await page.goto('app');
+    await waitForMap(page);
+    await drawPlot(page, PLOTS.cairo);
+    await page.getByRole('button', { name: /Analyse this plot/ }).click();
+    await expect(page.getByTestId('crop-row').first()).toBeVisible();
+    for (const name of ['Okra', 'Groundnut', 'Pearl millet', 'Cassava']) {
+      await expect(page.getByTestId('crop-row').filter({ hasText: name })).toHaveCount(1);
+    }
+    await page.evaluate(() => (window as any).__hg.router.navigate({ name: 'crop', id: 'cassava' }));
+    const section = page.getByTestId('grow-calendar');
+    await expect(section.getByText('Plant', { exact: true })).toBeVisible();
+    await expect(section.getByText(/Planted from cuttings or corms/)).toBeVisible();
+    await section.scrollIntoViewIfNeeded();
+    await page.screenshot({ path: `e2e/.output/shots/${info.project.name}-cassava.png` });
   });
 });

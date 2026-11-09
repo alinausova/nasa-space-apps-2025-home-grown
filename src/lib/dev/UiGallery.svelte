@@ -42,7 +42,7 @@
                 <Button size="lg">Analyse this plot <span aria-hidden="true">→</span></Button>
                 <Button size="lg" disabled>Analyse this plot</Button>
                 <Button variant="outline">Cancel</Button>
-                <Button variant="outline" size="sm">Export PDF</Button>
+                <Button variant="outline" size="sm">New plot</Button>
                 <Button variant="ghost">How it works</Button>
             </div>
         </section>

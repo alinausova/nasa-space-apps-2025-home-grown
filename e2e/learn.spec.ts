@@ -56,6 +56,7 @@ test.describe('learn more', () => {
     await expect(section).toContainText('Climate Pitch, Munich Climate Week');
     await expect(section).toContainText('Climate Café, Global Shapers Munich and TUM Think Tank');
     await expect(section).toContainText('Where it started: NASA International Space Apps Challenge');
+    await expect(section).toContainText('The first version of Home Grown was built here, in a weekend');
   });
 
   test('get in touch: contact the team via LinkedIn, report an issue on GitHub', async ({ page }) => {
@@ -93,9 +94,17 @@ test.describe('learn more', () => {
     await page.goto('learn/data');
     await expect(page.getByRole('table', { name: 'Variables used in your results' })).toContainText('NASA POWER (MERRA-2)');
     await expect(page.getByRole('table', { name: 'Variables researched but not used yet' })).toContainText('Copernicus Sentinel-3');
+    const crops = page.getByRole('table', { name: 'Where the crop numbers come from' });
+    await expect(crops.getByRole('rowheader')).toHaveCount(9);
+    await expect(crops).toContainText('Consolidated thresholds from Paredes et al. for 43 crops');
+    await expect(crops).toContainText('FAO Irrigation and Drainage Paper 56');
+    await expect(crops).toContainText('Field-measured totals from Paredes et al. for 16 crops');
 
-    await page.getByRole('button', { name: 'Show bibliography · 18 sources' }).click();
-    await expect(page.locator('#bibliography li')).toHaveCount(18);
+    await page.getByRole('button', { name: 'Show bibliography · 32 sources' }).click();
+    await expect(page.locator('#bibliography li')).toHaveCount(32);
+    await expect(page.locator('#bibliography')).toContainText('Agricultural Water Management 319, 109758');
+    await expect(page.locator('#bibliography')).toContainText('Oregon State University Extension, EM 9305');
+    await expect(page.locator('#bibliography')).toContainText('Agricultural Water Management 319, 109755');
     await page.getByRole('button', { name: 'Hide bibliography' }).click();
     await expect(page.locator('#bibliography')).toHaveCount(0);
   });

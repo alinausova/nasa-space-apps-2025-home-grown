@@ -13,13 +13,13 @@ export const TAB_INFO: Record<LearnTab, { n: string; label: string; title: strin
     n: '02',
     label: 'How scoring works',
     title: 'How a crop gets its score',
-    intro: 'Four weighted parts, checked against each crop’s own needs. Here is every formula we use.',
+    intro: 'Four weighted parts, checked against each crop’s own needs from published crop research. Here is every formula we use.',
   },
   data: {
     n: '03',
     label: 'Data sources',
     title: 'Where the data comes from',
-    intro: 'What your results are built on today, and the other variables we researched for later.',
+    intro: 'What your results are built on: NASA climate data, and the published crop studies behind every number we use.',
   },
   architecture: {
     n: '04',
@@ -39,9 +39,9 @@ export const TAB_ORDER: LearnTab[] = ['about', 'scoring', 'data', 'architecture'
 
 // About -----------------------------------------------------------------------
 
-// TODO(redesign v3): add "When should you plant it?" once the planting calendar ships.
 export const QUESTIONS = [
   'Which crop suits it best?',
+  'When should you plant it?',
   'How much should it yield?',
   'Does it need irrigation?',
   'How should the planting be laid out?',
@@ -67,9 +67,8 @@ export const RECOGNITION_FEATURED = {
 
 export const RECOGNITION = [
   { year: '2026', title: 'Climate Pitch, Munich Climate Week', body: 'Pitched Home Grown in Munich' },
-  // TODO: confirm the Climate Café year with the team (assumed 2026 in the design handoff).
   { year: '2026', title: 'Climate Café, Global Shapers Munich and TUM Think Tank', body: 'Presented Home Grown in Munich' },
-  { year: '2025', title: 'Where it started: NASA International Space Apps Challenge', body: 'Built in a weekend for the 2025 hackathon' },
+  { year: '2025', title: 'Where it started: NASA International Space Apps Challenge', body: 'The first version of Home Grown was built here, in a weekend' },
 ];
 
 export const CONTACT = [
@@ -99,7 +98,7 @@ export const FORMULAS = [
   },
   {
     title: 'Growing degree days',
-    body: 'Highs above the crop’s upper limit count as the limit, lows below the base count as the base. Based on FAO56.',
+    body: 'Highs above the crop’s upper limit count as the limit, lows below the base count as the base. Method from the FAO56 revision.',
     code: 'GDD = T_avg − T_base    when T_avg > T_base',
   },
   {
@@ -122,6 +121,19 @@ export const DATA_USED = [
   { variable: 'Surface temperature', source: 'Landsat 8/9, via Microsoft Planetary Computer', why: 'Shows how much warmer the plot’s surface runs than the air, at 30 m detail. Reported alongside the scores, not used in them.', refs: '' },
   { variable: 'Precipitation', source: 'NASA POWER (MERRA-2)', why: 'Sets soil moisture. In mild climates it matters more than temperature.', refs: '[5][9][14]' },
   { variable: 'Shade', source: 'Assumed: 30% of sunlight lost to buildings', why: 'Constant shade can cut growth by about 94%.', refs: '[6][16][18]' },
+];
+
+/** Where each crop number comes from (api/crop_database.py) and what it drives. Refs point into BIBLIOGRAPHY. */
+export const CROP_DATA = [
+  { variable: 'Base and upper temperature', source: 'Consolidated thresholds from Paredes et al. for 43 crops. Kale and arugula use cabbage-family values.', why: 'Which days count towards growth, in the heat score and the calendar.', refs: '[20][28]' },
+  { variable: 'Heat units to first harvest', source: 'Field-measured totals from Paredes et al. for 16 crops and Oregon State’s Croptime for tomatoes, peppers, cucumbers and green beans. The other 25 are estimates, from FAO ECOCROP crop cycles for the newest crops.', why: 'Heat score, the cap on every score, and when a sowing is ready.', refs: '[27][28]' },
+  { variable: 'Ideal temperature range', source: 'FAO ECOCROP for the newest crops; team estimates for the original 31, being checked against ECOCROP', why: 'Temperature score over the growing season.', refs: '[26]' },
+  { variable: 'Frost tolerance', source: 'Team estimates', why: 'Which frosts end a sowing in the calendar.', refs: '' },
+  { variable: 'Water need per season', source: 'FAO Irrigation and Drainage Paper 56 and FAO Irrigation Water Management Training Manual 3', why: 'Water score: growing-season rain against this need.', refs: '[19][29]' },
+  { variable: 'Germination temperatures', source: 'J. F. Harrington, UC Davis', why: 'The week after sowing has to be warm enough for seeds to come up.', refs: '[21]' },
+  { variable: 'Sun hours', source: 'University extension services (Rutgers, Penn State, Maryland, Michigan State)', why: 'Sunlight score, and crops below their minimum are left out.', refs: '[24]' },
+  { variable: 'Yield per m²', source: 'Michigan State University Extension, La Ferme de Sainte Marthe, Knott’s Handbook, University of Vermont Extension; FAOSTAT world averages for field crops', why: 'Expected harvest on the planted 70% of the plot.', refs: '[22][23][30][31][32]' },
+  { variable: 'Drought tolerance', source: 'Estimated from crop type; Nemeskéri & Helyes for peas, beans, tomatoes and sweet corn', why: 'Shown as a tag. Not used in the score.', refs: '[25]' },
 ];
 
 export const DATA_RESEARCHED = [
@@ -150,6 +162,20 @@ export const BIBLIOGRAPHY = [
   'Wang, J. et al. (2024). Shading on shade-tolerant peanut varieties.',
   'Winner, W. E. & Atkinson, C. J. (1986). Absorption of air pollution by plants.',
   'Youn, W. B. et al. (2021). Shade and planting methods on Heracleum moellendorffii.',
+  'Allen, R. G., Pereira, L. S., Raes, D. & Smith, M. (1998). Crop evapotranspiration. FAO Irrigation and Drainage Paper 56.',
+  'Paredes, P. et al. (2025). Base and upper temperature thresholds to support the calculation of growing degree days aiming at their use with the FAO56rev crop coefficients curve: a review. Agricultural Water Management 319, 109755.',
+  'Harrington, J. F. (1954). Soil temperature conditions for vegetable seed germination. University of California, Davis, Agricultural Extension.',
+  'Michigan State University Extension. Vegetable yields per 100 square feet (Table 4).',
+  'La Ferme de Sainte Marthe. Vegetable yields per square metre.',
+  'Rutgers, Penn State, University of Maryland and Michigan State University Extension. Sunlight needs of vegetable crops.',
+  'Nemeskéri, E. & Helyes, L. (2019). Physiological responses of selected vegetable crop species to water stress. Agronomy 9(8), 447.',
+  'FAO. ECOCROP crop environmental requirements database. Copy used: OpenCLIM ecocrop, EcoCrop_DB.csv.',
+  'Andrews, N., Coop, L., Stoven, H., Noordijk, H. & Heinrich, A. Vegetable degree-day models: an introduction for farmers and gardeners. Oregon State University Extension, EM 9305.',
+  'Paredes, P. et al. (2025). Estimating the lengths of crop growth stages to define the crop coefficient curves using growing degree days (GDD): application of the revised FAO56 guidelines. Agricultural Water Management 319, 109758.',
+  'Brouwer, C. & Heibloem, M. (1986). Irrigation water management: irrigation water needs. FAO Training Manual 3.',
+  'Maynard, D. N. & Hochmuth, G. J. (2007). Knott’s Handbook for Vegetable Growers, 5th edition. Wiley.',
+  'University of Vermont Extension. Vegetable and berry crop yield estimates for New England.',
+  'FAO (2025). FAOSTAT Crops and livestock products: world yields 2024. Bulk download, and via Our World in Data.',
 ];
 
 // Architecture ----------------------------------------------------------------
@@ -164,7 +190,7 @@ export const PIPELINE = [
 
 export const STACK = [
   { title: 'Front end', body: 'Svelte 5, TypeScript, Mapbox GL JS, Turf.js' },
-  { title: 'Back end', body: 'FastAPI in Python, crop database, Mistral AI summaries' },
+  { title: 'Back end', body: 'FastAPI in Python, crop database, Mistral AI summaries and crop tips' },
   { title: 'Data', body: 'NASA POWER, Microsoft Planetary Computer (Landsat)' },
   { title: 'Hosting', body: 'GitHub Pages and Render' },
 ];

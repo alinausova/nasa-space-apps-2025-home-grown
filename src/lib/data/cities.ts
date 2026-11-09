@@ -12,4 +12,8 @@ export const SAMPLE_CITIES: readonly SampleCity[] = [
   { id: 'cairo', name: 'Cairo', climate: 'Hot and arid', center: [31.2357, 30.0444] },
   { id: 'belem', name: 'Belém', climate: 'Tropical', center: [-48.4566, -1.4218] },
   { id: 'reykjavik', name: 'Reykjavík', climate: 'Cold', center: [-21.8952, 64.1466] },
+  { id: 'antalya', name: 'Antalya', climate: 'Mediterranean', center: [30.7133, 36.8969] },
+  { id: 'omsk', name: 'Omsk', climate: 'Continental', center: [73.3242, 54.9885] },
+  { id: 'nairobi', name: 'Nairobi', climate: 'Tropical highland', center: [36.8172, -1.2864] },
+  { id: 'cape-town', name: 'Cape Town', climate: 'Southern Mediterranean', center: [18.4241, -33.9249] },
 ];

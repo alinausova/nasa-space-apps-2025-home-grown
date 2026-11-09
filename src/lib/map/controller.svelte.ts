@@ -19,6 +19,21 @@ function ringOf(feature: GeoJSON.Feature | undefined): LngLat[] | null {
   return feature.geometry.coordinates[0] as LngLat[];
 }
 
+/** Dark pin with its tip on the point, over a soft halo. Ignores the pointer so drawing still works. */
+function pinElement(): HTMLElement {
+  const el = document.createElement('div');
+  el.dataset.testid = 'map-pin';
+  el.setAttribute('aria-hidden', 'true');
+  el.style.cssText = 'width:72px;height:72px;pointer-events:none;position:relative;';
+  el.innerHTML = `
+    <span style="position:absolute;inset:0;border-radius:9999px;background:color-mix(in srgb, var(--hg-bright) 22%, transparent);"></span>
+    <svg width="36" height="50" viewBox="0 0 36 50" style="position:absolute;left:18px;bottom:36px;">
+      <path d="M18 49C18 49 2 30 2 18a16 16 0 0 1 32 0c0 12-16 31-16 31z" fill="var(--hg-ink)"/>
+      <circle cx="18" cy="18" r="6" fill="var(--hg-surface)"/>
+    </svg>`;
+  return el;
+}
+
 /** Owns the Mapbox map and Draw control. Components talk to this, never to Mapbox directly. */
 export class MapController {
   ready = $state(false);
@@ -44,6 +59,7 @@ export class MapController {
   #draw: MapboxDraw | null = null;
   #tone: Tone = 'ok';
   #pendingStatic: LngLat[] | null | undefined = undefined;
+  #pin: mapboxgl.Marker | null = null;
 
   mount(container: HTMLElement, { center = [11.5623, 48.146], zoom = 15, onPlotChange }: MountOptions): void {
     const token = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN;
@@ -61,8 +77,6 @@ export class MapController {
       projection: 'globe',
       attributionControl: false,
       logoPosition: 'bottom-right',
-      // Keep the canvas readable for screenshots and PDF export.
-      preserveDrawingBuffer: true,
     });
     this.map = map;
 
@@ -110,6 +124,8 @@ export class MapController {
   }
 
   destroy(): void {
+    this.#pin?.remove();
+    this.#pin = null;
     this.map?.remove();
     this.map = null;
     this.#draw = null;
@@ -123,6 +139,17 @@ export class MapController {
 
   flyTo(center: LngLat, zoom = 16): void {
     this.map?.flyTo({ center, zoom, essential: true });
+  }
+
+  /** Marks a searched place or the user's position. `null` removes the pin. */
+  setPin(center: LngLat | null): void {
+    if (!center || !this.map) {
+      this.#pin?.remove();
+      this.#pin = null;
+      return;
+    }
+    if (!this.#pin) this.#pin = new mapboxgl.Marker({ element: pinElement(), anchor: 'center' });
+    this.#pin.setLngLat(center).addTo(this.map);
   }
 
   fitTo(ring: LngLat[], padding: number | mapboxgl.PaddingOptions = 80): void {

@@ -1,6 +1,7 @@
 {
   "name": "Home Grown",
   "short_name": "Home Grown",
+  "description": "Home Grown turns NASA climate data and the latest crop research into a planting list for any roof, yard or empty lot.",
   "start_url": "./",
   "scope": "./",
   "icons": [

@@ -5,6 +5,7 @@ import analysis
 import main
 from analysis import PlotCache, crops_block, days_above, growing_season, monthly_climate, winter_sun_hours
 from climate import analyze_climate_data
+from crop_database import CROP_DATABASE
 from tests.golden import nasa
 
 client = TestClient(main.app)
@@ -49,12 +50,17 @@ class TestCrops:
         data = nasa(name)
         return crops_block(data, analyze_climate_data(data), 0.7, 10_000)
 
-    def test_munich_every_crop_usable_and_sorted(self):
+    def test_munich_nearly_every_crop_usable_and_sorted(self):
         b = self.block("munich")
         scores = [c["suitability"]["overall_score"] for c in b["crops"]]
-        assert len(b["crops"]) == 31 and b["total_usable"] == 31
+        assert len(b["crops"]) == len(CROP_DATABASE)
         assert scores == sorted(scores, reverse=True)
-        assert all("miss_reason" not in c for c in b["crops"])
+        # Everything but the tropical staples scores well in Munich; every crop that misses says why.
+        assert b["total_usable"] >= len(CROP_DATABASE) - 4
+        assert all(("miss_reason" in c) != c["usable"] for c in b["crops"])
+        # Cassava scores above 50 on the year, but no planting date brings it to harvest in Munich.
+        cassava = next(c for c in b["crops"] if c["crop_id"] == "cassava")
+        assert not cassava["usable"] and cassava["miss_reason"] == {"kind": "no_window"}
 
     def test_svalbard_nothing_usable_each_with_a_reason(self):
         b = self.block("svalbard")
@@ -121,7 +127,7 @@ class TestApiFlow:
         pid = body["plot_id"]
 
         crops = client.post("/analysis/crops", json={"plot_id": pid}).json()
-        assert len(crops["crops"]) == 31
+        assert len(crops["crops"]) == len(CROP_DATABASE)
         assert crops["landsat"]["status"] == "ok"
 
         summary = client.post("/analysis/summary", json={"plot_id": pid}).json()

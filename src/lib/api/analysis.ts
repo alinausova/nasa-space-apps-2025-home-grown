@@ -42,7 +42,8 @@ export type MissReason =
   | { kind: 'too_cold' }
   | { kind: 'heat'; short_heat_units: number; approx_warm_days: number | null; beyond_a_year: boolean }
   | { kind: 'temperature'; season_mean_temp: number | null; ideal_min: number; ideal_max: number }
-  | { kind: 'water'; irrigation_mm: number };
+  | { kind: 'water'; irrigation_mm: number }
+  | { kind: 'no_window' };
 
 export interface AnalysedCrop extends CropRecommendation {
   usable: boolean;
@@ -62,6 +63,13 @@ export interface SummaryResponse {
   error?: string;
 }
 
+export interface TipsResponse {
+  plot_id: string;
+  crop_id: string;
+  tips: string | null;
+  error?: string;
+}
+
 type Options = { signal?: AbortSignal; fetchImpl?: typeof fetch };
 
 export function fetchClimate(ring: LngLat[], { signal, fetchImpl }: Options = {}): Promise<ClimateResponse> {
@@ -76,13 +84,18 @@ export function fetchSummary(plotId: string, { signal, fetchImpl }: Options = {}
   return apiFetch('/analysis/summary', { method: 'POST', body: JSON.stringify({ plot_id: plotId }), signal }, fetchImpl);
 }
 
+export function fetchTips(plotId: string, cropId: string, { signal, fetchImpl }: Options = {}): Promise<TipsResponse> {
+  return apiFetch('/analysis/tips', { method: 'POST', body: JSON.stringify({ plot_id: plotId, crop_id: cropId }), signal }, fetchImpl);
+}
+
 export interface AnalysisApi {
   climate: typeof fetchClimate;
   crops: typeof fetchCrops;
   summary: typeof fetchSummary;
+  tips: typeof fetchTips;
 }
 
-export const analysisApi: AnalysisApi = { climate: fetchClimate, crops: fetchCrops, summary: fetchSummary };
+export const analysisApi: AnalysisApi = { climate: fetchClimate, crops: fetchCrops, summary: fetchSummary, tips: fetchTips };
 
 const MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 

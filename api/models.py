@@ -31,3 +31,7 @@ class PlotRef(BaseModel):
 
 class CropsRequest(PlotRef):
     use_landsat: bool = Field(True, description="Read Landsat surface temperature (false = NASA POWER only)")
+
+
+class TipsRequest(PlotRef):
+    crop_id: str = Field(..., min_length=1, max_length=40)

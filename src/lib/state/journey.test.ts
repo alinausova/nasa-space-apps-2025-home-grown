@@ -37,6 +37,7 @@ function api(overrides: Partial<AnalysisApi> = {}) {
     climate: vi.fn(async () => (calls.push('climate'), CLIMATE)),
     crops: vi.fn(async () => (calls.push('crops'), CROPS)),
     summary: vi.fn(async () => (calls.push('summary'), { plot_id: 'p1', summary: 'Grow kale.' })),
+    tips: vi.fn(async (_plot: string, crop: string) => (calls.push(`tips:${crop}`), { plot_id: 'p1', crop_id: crop, tips: `Sow ${crop} early.` })),
     ...overrides,
   };
   return { impl, calls };
@@ -236,5 +237,35 @@ describe('Journey', () => {
     expect(journey.step).toBe('draw');
     expect(journey.plot).toBeNull();
     expect(journey.results).toBeNull();
+  });
+
+  it('asks for tips once per crop and keeps them until the plot changes', async () => {
+    const { impl, calls } = api();
+    const journey = new Journey(impl);
+    journey.setPlot(SMALL);
+    await journey.analyse();
+    await flush();
+
+    const pending = journey.loadTips('kale');
+    expect(journey.tips.kale).toEqual({ status: 'loading' });
+    await pending;
+    await journey.loadTips('kale');
+    expect(journey.tips.kale).toEqual({ status: 'done', text: 'Sow kale early.' });
+    expect(calls.filter((c) => c.startsWith('tips'))).toEqual(['tips:kale']);
+
+    journey.setPlot(SMALL.map(([lng, lat]) => [lng + 0.01, lat] as LngLat));
+    expect(journey.tips).toEqual({});
+  });
+
+  it('lets failed tips be asked again', async () => {
+    const tips = vi.fn().mockResolvedValueOnce({ plot_id: 'p1', crop_id: 'kale', tips: null, error: 'down' }).mockResolvedValueOnce({ plot_id: 'p1', crop_id: 'kale', tips: 'Water often.' });
+    const journey = new Journey(api({ tips }).impl);
+    journey.setPlot(SMALL);
+    await journey.analyse();
+
+    await journey.loadTips('kale');
+    expect(journey.tips.kale).toEqual({ status: 'failed' });
+    await journey.loadTips('kale');
+    expect(journey.tips.kale).toEqual({ status: 'done', text: 'Water often.' });
   });
 });

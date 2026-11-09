@@ -11,6 +11,7 @@ from collections import OrderedDict, defaultdict
 from typing import Any, Dict, List, Optional
 
 from crop_database import CROP_DATABASE
+from growing_calendar import calendars
 from scoring import calculate_crop_suitability, calculate_growing_season_sunshine, growing_season_climate
 
 USABLE_SCORE = 50.0
@@ -195,6 +196,7 @@ def miss_reason(crop_data: Dict, suitability: Optional[Dict], nasa_data: Dict, s
 
 def crops_block(nasa_data: Dict, analysis: Dict, sunshine_factor: float, area_m2: float) -> Dict:
     """Every crop, usable or not, sorted by score; sun-filtered crops get score 0."""
+    crop_calendars = calendars(nasa_data, CROP_DATABASE)
     crops = []
     for crop_id, crop_data in CROP_DATABASE.items():
         sun = calculate_growing_season_sunshine(nasa_data, crop_data["base_temp"], sunshine_factor)
@@ -204,7 +206,10 @@ def crops_block(nasa_data: Dict, analysis: Dict, sunshine_factor: float, area_m2
 
         suitability = calculate_crop_suitability(crop_data, analysis, nasa_data, sunshine_factor, area_m2)
         score = 0.0 if sun_filtered else suitability["overall_score"]
-        usable = sun_filtered is None and score >= USABLE_SCORE
+        calendar = crop_calendars[crop_id]
+        # A crop no sowing date can bring to harvest is not recommended, whatever its yearly score.
+        no_window = calendar is None and sun_filtered is None and score >= USABLE_SCORE
+        usable = sun_filtered is None and score >= USABLE_SCORE and not no_window
         entry = {
             "crop_id": crop_id,
             "crop_name": crop_data["name"],
@@ -212,9 +217,12 @@ def crops_block(nasa_data: Dict, analysis: Dict, sunshine_factor: float, area_m2
             "frost_tolerance": crop_data["frost_tolerance"],
             "drought_resistance": crop_data.get("drought_resistance", "unknown"),
             "usable": usable,
+            "calendar": calendar,
             "suitability": {**suitability, "overall_score": score, "category": suitability["category"] if not sun_filtered else "Poor"},
         }
-        if not usable:
+        if no_window:
+            entry["miss_reason"] = {"kind": "no_window"}
+        elif not usable:
             entry["miss_reason"] = miss_reason(crop_data, suitability, nasa_data, sun_filtered)
         crops.append(entry)
 
