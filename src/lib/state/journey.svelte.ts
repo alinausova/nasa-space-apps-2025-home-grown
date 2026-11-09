@@ -28,6 +28,8 @@ export type RequestState =
   | { status: 'landsat-failed' };
 
 export type SummaryState = { status: 'idle' | 'loading' | 'failed' } | { status: 'done'; text: string };
+/** Tips for one crop on this plot; same shape as the summary. */
+export type TipsState = SummaryState;
 
 export function plotFromRing(ring: LngLat[]): Plot {
   const closed =
@@ -43,6 +45,8 @@ export class Journey {
   climate = $state<ClimateResponse | null>(null);
   crops = $state<CropsResponse | null>(null);
   summary = $state<SummaryState>({ status: 'idle' });
+  /** Tips asked for on crop detail, by crop id. */
+  tips = $state<Record<string, TipsState>>({});
   /** Measured call durations, for "about N s left". */
   estimates = $state<Record<Phase, number>>(loadEstimates());
   filter = $state<CropFilter>('all');
@@ -105,6 +109,7 @@ export class Journey {
     this.climate = null;
     this.crops = null;
     this.summary = { status: 'idle' };
+    this.tips = {};
   }
 
   setPlaceName(name: string | null): void {
@@ -168,6 +173,23 @@ export class Journey {
     } finally {
       if (this.#controller === controller) this.#controller = null;
     }
+  }
+
+  /** Asks for tips for one crop. Kept per crop until the plot changes; a failed request can be asked again. */
+  async loadTips(cropId: string): Promise<void> {
+    const plotId = this.climate?.plot_id;
+    const current = this.tips[cropId]?.status;
+    if (!plotId || current === 'loading' || current === 'done') return;
+    this.tips = { ...this.tips, [cropId]: { status: 'loading' } };
+    let next: TipsState;
+    try {
+      const response = await this.#api.tips(plotId, cropId);
+      next = response.tips ? { status: 'done', text: response.tips } : { status: 'failed' };
+    } catch {
+      next = { status: 'failed' };
+    }
+    // Drop the answer if the plot changed while waiting.
+    if (this.climate?.plot_id === plotId) this.tips = { ...this.tips, [cropId]: next };
   }
 
   async #loadSummary(plotId: string): Promise<void> {

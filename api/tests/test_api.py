@@ -89,3 +89,50 @@ def test_rate_limit_per_client(stubs):
     assert statuses[-1] == 429
     # A different client is not affected.
     assert climate(headers={"X-Forwarded-For": "198.51.100.2"}).status_code == 200
+
+
+def tips(pid, crop_id="kale"):
+    return client.post("/analysis/tips", json={"plot_id": pid, "crop_id": crop_id})
+
+
+def test_tips_are_written_once_per_plot_and_crop(stubs):
+    pid = climate().json()["plot_id"]
+    client.post("/analysis/crops", json={"plot_id": pid})
+    first = tips(pid).json()
+    assert first == {"plot_id": pid, "crop_id": "kale", "tips": "Sow kale early."}
+    assert tips(pid).json() == first
+    assert stubs["tips"] == 1
+    tips(pid, "lettuce")
+    assert stubs["tips"] == 2
+
+
+def test_tips_get_the_crop_and_plot_facts(stubs):
+    pid = climate().json()["plot_id"]
+    client.post("/analysis/crops", json={"plot_id": pid})
+    tips(pid)
+    facts = stubs["tips_facts"]
+    assert facts["crop"]["name"] == "Kale"
+    assert facts["crop"]["frost_tolerance"] == CROP_DATABASE["kale"]["frost_tolerance"]
+    assert len(facts["climate"]["monthly"]) == 12
+    assert facts["climate"]["hemisphere"] == "north"
+    assert "calendar" in facts["at_this_plot"]
+
+
+def test_tips_need_scored_crops_and_a_known_crop(stubs):
+    pid = climate().json()["plot_id"]
+    assert tips(pid).status_code == 409
+    client.post("/analysis/crops", json={"plot_id": pid})
+    assert tips(pid, "dragonfruit").status_code == 404
+    assert tips("0123456789abcdef").status_code == 404
+
+
+def test_tips_failure_is_soft(stubs, monkeypatch):
+    def broken(facts):
+        raise RuntimeError("401")
+
+    monkeypatch.setattr(main, "generate_crop_tips", broken)
+    pid = climate().json()["plot_id"]
+    client.post("/analysis/crops", json={"plot_id": pid})
+    body = tips(pid).json()
+    assert body["tips"] is None
+    assert body["error"] == "Tips are not available right now."

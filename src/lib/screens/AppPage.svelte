@@ -254,7 +254,14 @@
             onContinue={() => journey.continueWithoutLandsat()}
         />
     {:else if crop && journey.results && journey.plot}
-        <CropDetail {crop} results={journey.results} plot={journey.plot} filter={journey.filter} />
+        <CropDetail
+            {crop}
+            results={journey.results}
+            plot={journey.plot}
+            filter={journey.filter}
+            tips={journey.tips[crop.crop_id]}
+            onAskTips={() => journey.loadTips(crop.crop_id)}
+        />
     {:else if journey.results && journey.climate && journey.crops && journey.plot}
         <ResultsPanel
             results={journey.results}

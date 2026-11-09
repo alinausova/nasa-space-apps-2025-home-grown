@@ -122,3 +122,51 @@ test.describe('grow calendar', () => {
     await expect(page.getByTestId('grow-calendar')).toContainText('We could not find a sowing date that lets rice ripen');
   });
 });
+
+test.describe('crop tips', () => {
+  test('asks once, shows the answer as plain text', async ({ page }, info) => {
+    const counter = await mockApi(page, 'munich', { tips: { delayMs: 600 } });
+    await page.goto('app');
+    await waitForMap(page);
+    await drawPlot(page, PLOTS.munich);
+    await page.getByRole('button', { name: /Analyse this plot/ }).click();
+    await page.getByTestId('crop-row').first().click();
+
+    const ask = page.getByRole('button', { name: `Any tips for ${TOP.crop_name.toLowerCase()} here?` });
+    await ask.click();
+    await expect(page.getByText(`Writing tips for ${TOP.crop_name.toLowerCase()} at your plot…`)).toBeVisible();
+    const tips = page.getByTestId('crop-tips');
+    await expect(tips).toContainText(`Sow ${TOP.crop_id} in spring.`);
+    // Model text is escaped, never rendered as HTML.
+    await expect(tips).toContainText('Keep <b>it</b> watered in July.');
+    await expect(tips.locator('b')).toHaveCount(0);
+    await expect(ask).toBeHidden();
+    await tips.scrollIntoViewIfNeeded();
+    await page.screenshot({ path: `e2e/.output/shots/${info.project.name}-tips.png` });
+
+    // Going to another crop and back keeps the answer without asking again.
+    await page.getByRole('link', { name: `Next crop: ${RECS[1].crop_name}` }).filter({ visible: true }).click();
+    await expect(page.getByRole('button', { name: `Any tips for ${RECS[1].crop_name.toLowerCase()} here?` })).toBeVisible();
+    await page.getByRole('link', { name: `Previous crop: ${TOP.crop_name}` }).filter({ visible: true }).click();
+    await expect(page.getByTestId('crop-tips')).toContainText(`Sow ${TOP.crop_id} in spring.`);
+    expect(counter.tips).toBe(1);
+  });
+
+  test('offers to ask again when tips are not available', async ({ page }) => {
+    await mockApi(page, 'munich', { tips: { body: { plot_id: 'x', crop_id: 'x', tips: null, error: 'Tips are not available right now.' } } });
+    await openResultsWithMock(page);
+    await page.getByTestId('crop-row').first().click();
+    await page.getByRole('button', { name: /Any tips for/ }).click();
+    await expect(page.getByText('Tips are not available right now.')).toBeVisible();
+    await expect(page.getByRole('button', { name: 'Ask again' })).toBeVisible();
+  });
+});
+
+async function openResultsWithMock(page: Page): Promise<void> {
+  await page.goto('app');
+  await waitForMap(page);
+  await drawPlot(page, PLOTS.munich);
+  await page.getByRole('button', { name: /Analyse this plot/ }).click();
+  await expect(page.getByTestId('crop-row').first()).toBeVisible();
+}
+

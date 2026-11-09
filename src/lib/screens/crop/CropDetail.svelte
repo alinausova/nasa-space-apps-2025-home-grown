@@ -2,10 +2,11 @@
     import Icon from "../../ui/Icon.svelte";
     import CropNav from "./CropNav.svelte";
     import GrowCalendar from "./GrowCalendar.svelte";
+    import CropTips from "./CropTips.svelte";
     import ScoreRing from "../../ui/ScoreRing.svelte";
     import Tag from "../../ui/Tag.svelte";
     import type { CropRecommendation, RecommendationsResponse } from "../../api/types";
-    import type { CropFilter, Plot } from "../../state/journey.svelte";
+    import type { CropFilter, Plot, TipsState } from "../../state/journey.svelte";
     import { FACTORS, FIT_LABEL, categoryOf } from "../../derive/score";
     import { FROST_LABEL, SEASON_LABEL, formatKg } from "../../derive/format";
     import { PLANTED_SHARE } from "../../derive/plan";
@@ -13,9 +14,21 @@
     import { alsoGood, factorReasons } from "../../derive/why";
     import { router } from "../../router/router.svelte";
 
-    // TODO(redesign v3): "Any tips for this crop here?".
-    let { crop, results, plot, filter }: { crop: CropRecommendation; results: RecommendationsResponse; plot: Plot; filter: CropFilter } =
-        $props();
+    let {
+        crop,
+        results,
+        plot,
+        filter,
+        tips,
+        onAskTips,
+    }: {
+        crop: CropRecommendation;
+        results: RecommendationsResponse;
+        plot: Plot;
+        filter: CropFilter;
+        tips?: TipsState;
+        onAskTips?: () => void;
+    } = $props();
 
     let all = $derived(results.recommendations);
     let rank = $derived(all.findIndex((c) => c.crop_id === crop.crop_id) + 1);
@@ -81,6 +94,8 @@
     </section>
 
     {#if crop.calendar !== undefined}<GrowCalendar calendar={crop.calendar} cropName={crop.crop_name} year={results.year} />{/if}
+
+    {#if onAskTips}<CropTips cropName={crop.crop_name} {tips} onask={onAskTips} />{/if}
 
     {#if suggestions.length > 0}
         <section class="flex flex-col gap-3 border-t border-line pt-6" aria-labelledby="also-good">
