@@ -16,6 +16,8 @@ test('favicon, touch icon and manifest are linked and served', async ({ page }) 
 
   const manifestUrl = hrefs.at(-1)!;
   const manifest = await (await page.request.get(manifestUrl)).json();
+  // Installed app opens at the site's base path, not the domain root.
+  expect(new URL(manifest.start_url, manifestUrl).pathname).toBe('/nasa-space-apps-2025-home-grown/');
   for (const icon of manifest.icons) {
     const response = await page.request.get(new URL(icon.src, manifestUrl).href);
     expect(response.status(), icon.src).toBe(200);
