@@ -22,3 +22,12 @@ class PolygonInput(BaseModel):
             if not (-90 <= lat <= 90) or not (-180 <= lon <= 180):
                 raise ValueError("Coordinates must be (latitude, longitude) with latitude in [-90, 90] and longitude in [-180, 180]")
         return value
+
+
+class PlotRef(BaseModel):
+    """A plot analysed by POST /analysis/climate, referenced by its id."""
+    plot_id: str = Field(..., min_length=8, max_length=64)
+
+
+class CropsRequest(PlotRef):
+    use_landsat: bool = Field(True, description="Read Landsat surface temperature (false = NASA POWER only)")

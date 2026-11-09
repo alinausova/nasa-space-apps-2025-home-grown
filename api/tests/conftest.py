@@ -49,5 +49,6 @@ def stubs(monkeypatch):
     monkeypatch.setattr(climate, "fetch_nasa_power_data", fake_nasa)
     monkeypatch.setattr(main, "fetch_landsat", fake_landsat)
     monkeypatch.setattr(main, "generate_crop_summary", fake_summary)
+    monkeypatch.setattr(main, "plot_cache", main.PlotCache())
     main.limiter.reset()
     return calls
