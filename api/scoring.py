@@ -1,7 +1,7 @@
 """Crop scoring: growing-season sunshine, growing degree days, suitability, yield, ranking."""
 import logging
 import statistics
-from typing import Dict
+from typing import Dict, Optional, Set, Tuple
 
 from crop_database import CROP_DATABASE
 
@@ -221,18 +221,62 @@ def growing_season_climate(nasa_raw_data: Dict, crop_base_temp: float) -> Dict:
     }
 
 
-def temperature_score(mean_temp, optimal_min: float, optimal_max: float) -> float:
-    """Full marks within 3 °C of the middle of the crop's ideal range, stepping down beyond that."""
-    if mean_temp is None:
+# Overall score: the weakest of the factors a gardener cannot change (heat, sun, temperature) limits it,
+# so plenty of rain cannot make up for a crop being too cold. Water is left out: watering fixes it.
+WEAKEST_FACTOR_MARGIN = 12
+# Heat: "just enough" heat units score 80; full marks need this much to spare (our choice, so one cool
+# year does not lose a crop that only just makes it).
+HEAT_MARGIN = 1.25
+
+
+def temperature_response(t: float, t_base: float, opt_min: float, opt_max: float, t_upper: float) -> float:
+    """
+    How well a crop grows at a daily mean of t, 0–1: 1 inside its optimal range, falling linearly to 0 at its
+    base and upper temperature (the response used by the FAO EcoCrop model).
+    """
+    if t <= t_base or t >= t_upper:
         return 0.0
-    temp_diff = abs(mean_temp - (optimal_min + optimal_max) / 2)
-    if temp_diff <= 3:
+    if t < opt_min:
+        return (t - t_base) / (opt_min - t_base)
+    if t > opt_max:
+        return (t_upper - t) / (t_upper - opt_max)
+    return 1.0
+
+
+def temperature_score(nasa_raw_data: Dict, crop_data: Dict, grow_months: Optional[Set[int]] = None) -> Tuple[float, int, Optional[float]]:
+    """
+    Average daily temperature response over the crop's growing days (0–100), how many days counted, and
+    their mean temperature.
+    Growing days: warm enough to grow (above base) and, when the calendar knows them, inside its growing
+    months; dormant winter days of hardy crops do not count against them.
+    """
+    base, upper = crop_data["base_temp"], crop_data["upper_temp"]
+    opt_min = max(crop_data["optimal_temp_min"], base + 0.5)
+    opt_max = min(crop_data["optimal_temp_max"], upper - 0.5)
+    parameters = nasa_raw_data.get("properties", {}).get("parameter", {})
+    t_max, t_min = parameters.get("T2M_MAX", {}), parameters.get("T2M_MIN", {})
+    responses, means = [], []
+    for key, hi in t_max.items():
+        lo = t_min.get(key)
+        if lo is None:
+            continue
+        mean = (hi + lo) / 2
+        if mean <= base or (grow_months and int(key[4:6]) not in grow_months):
+            continue
+        responses.append(temperature_response(mean, base, opt_min, opt_max, upper))
+        means.append(mean)
+    if not responses:
+        return 0.0, 0, None
+    return 100 * sum(responses) / len(responses), len(responses), sum(means) / len(means)
+
+
+def heat_score(gdd_ratio: float) -> float:
+    """Heat units available ÷ needed: 80 at exactly enough, 100 from HEAT_MARGIN up, proportionally less below."""
+    if gdd_ratio >= HEAT_MARGIN:
         return 100.0
-    if temp_diff <= 6:
-        return 80.0
-    if temp_diff <= 10:
-        return 60.0
-    return max(0.0, 60 - (temp_diff - 10) * 5)
+    if gdd_ratio >= 1.0:
+        return 80 + (gdd_ratio - 1.0) / (HEAT_MARGIN - 1.0) * 20
+    return gdd_ratio * 80
 
 
 def water_score(season_precip: float, required_water: float) -> float:
@@ -261,7 +305,7 @@ def water_score(season_precip: float, required_water: float) -> float:
 
 def calculate_crop_suitability(crop_data: Dict, climate_analysis: Dict,
                                nasa_raw_data: Dict, sunshine_factor: float = 1.0,
-                               area_m2: float = None) -> Dict:
+                               area_m2: float = None, grow_months: Optional[Set[int]] = None) -> Dict:
     """
     Calculate suitability score for a specific crop based on climate data.
 
@@ -271,6 +315,7 @@ def calculate_crop_suitability(crop_data: Dict, climate_analysis: Dict,
         nasa_raw_data: Raw NASA POWER data (for GDD calculation and growing-season sunshine)
         sunshine_factor: Factor to adjust available sunshine (0-1) for shade/obstructions
         area_m2: Area in square meters (optional, for yield estimation)
+        grow_months: Months the crop's calendar grows through (temperature is judged over those days)
 
     Returns:
         Dictionary with suitability scores, metrics, and optional yield estimate
@@ -308,20 +353,15 @@ def calculate_crop_suitability(crop_data: Dict, climate_analysis: Dict,
 
     # GDD Score
     gdd_ratio = total_gdd / crop_data["gdd_required"]
-    if gdd_ratio >= 1.0:
-        scores["gdd"] = 100
-    elif gdd_ratio >= 0.8:
-        scores["gdd"] = 80 + (gdd_ratio - 0.8) * 100
-    else:
-        scores["gdd"] = gdd_ratio * 100
+    scores["gdd"] = heat_score(gdd_ratio)
 
     # Sun Hours Score - using adjusted sun hours from growing season
     # Use optimal_sun_hours for scoring (what the crop ideally wants)
     sun_ratio = adjusted_sun_hours / crop_data["optimal_sun_hours"]
     scores["sunlight"] = min(100, sun_ratio * 100)
 
-    # Temperature: mean over the crop's growing days against its ideal range (not the year-round mean).
-    scores["temperature"] = temperature_score(season["mean_temp"], crop_data["optimal_temp_min"], crop_data["optimal_temp_max"])
+    # Temperature: daily response over the crop's own growing days.
+    scores["temperature"], temperature_days, temperature_mean = temperature_score(nasa_raw_data, crop_data, grow_months)
 
     # Water: rain over the growing days against the seasonal need; surplus costs less than shortfall.
     required_water = crop_data.get("seasonal_water_mm", 500)
@@ -335,13 +375,18 @@ def calculate_crop_suitability(crop_data: Dict, climate_analysis: Dict,
     elif drought_resistance in ["sensitive"] and irrigation_needed > 100:
         scores["water"] = scores["water"] * 0.9
 
-    # Overall suitability (weighted average)
-    overall_score = (
+    # Overall suitability: weighted average, limited by the weakest factor a gardener cannot change.
+    weighted = (
             scores["gdd"] * 0.35 +
             scores["sunlight"] * 0.25 +
             scores["temperature"] * 0.25 +
             scores["water"] * 0.15
     )
+    fixed = {"heat": scores["gdd"], "sun": scores["sunlight"], "temperature": scores["temperature"]}
+    weakest = min(fixed, key=fixed.get)
+    limit = fixed[weakest] + WEAKEST_FACTOR_MARGIN
+    limited_by = weakest if weighted > limit else None
+    overall_score = min(weighted, limit)
 
     # A crop that cannot collect enough heat to mature cannot rank above its heat score,
     # however mild or sunny the short season it does get.
@@ -375,11 +420,15 @@ def calculate_crop_suitability(crop_data: Dict, climate_analysis: Dict,
             "season_precipitation_mm": round(season["precipitation_mm"], 1),
             "season_mean_temp": round(season["mean_temp"], 1) if season["mean_temp"] is not None else None,
             "heat_capped": heat_capped,
+            "limited_by": limited_by,
+            "temperature_days": temperature_days,
+            "temperature_mean": round(temperature_mean, 1) if temperature_mean is not None else None,
             "required_water_mm": required_water,
             "irrigation_needed_mm": round(irrigation_needed, 1),
             "optimal_temp_min": crop_data["optimal_temp_min"],
             "optimal_temp_max": crop_data["optimal_temp_max"],
             "base_temp": crop_data["base_temp"],
+            "upper_temp": crop_data["upper_temp"],
         }
     }
 
@@ -414,6 +463,8 @@ def process_crop_recommendations(climate_data: Dict, sunshine_factor: float,
 
     recommendations = []
     filtered_crops = []
+    from growing_calendar import calendars  # local import: growing_calendar imports scoring
+    crop_calendars = calendars(nasa_raw_data, CROP_DATABASE)
 
     for crop_id, crop_data in CROP_DATABASE.items():
         # Calculate growing-season sunshine for this specific crop
@@ -441,8 +492,10 @@ def process_crop_recommendations(climate_data: Dict, sunshine_factor: float,
             continue
 
         # Calculate suitability
+        calendar = crop_calendars[crop_id]
         suitability = calculate_crop_suitability(
-            crop_data, climate_analysis, nasa_raw_data, sunshine_factor, area_m2
+            crop_data, climate_analysis, nasa_raw_data, sunshine_factor, area_m2,
+            grow_months=set(calendar["grow"]) if calendar else None,
         )
 
         if suitability["overall_score"] >= min_score:

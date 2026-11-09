@@ -2,10 +2,19 @@ from datetime import date
 
 import pytest
 
-from climate import FILL_VALUE, drop_fill_values, latest_complete_year
+from climate import FILL_VALUE, analyze_climate_data, drop_fill_values, latest_complete_year
 from geometry import calculate_polygon_centroid
 from crop_database import CROP_DATABASE
-from scoring import calculate_crop_suitability, growing_season_climate, temperature_score, water_score
+from scoring import (
+    HEAT_MARGIN,
+    WEAKEST_FACTOR_MARGIN,
+    calculate_crop_suitability,
+    growing_season_climate,
+    heat_score,
+    temperature_response,
+    temperature_score,
+    water_score,
+)
 from tests.golden import nasa as nasa_fixture
 
 
@@ -35,10 +44,58 @@ class TestGrowingSeasonClimate:
         assert season == {"days": 0, "mean_temp": None, "precipitation_mm": 0.0}
 
 
+class TestTemperatureResponse:
+    # base 10, optimal 20–30, upper 40
+    @pytest.mark.parametrize(("t", "r"), [(10, 0), (15, 0.5), (20, 1), (25, 1), (30, 1), (35, 0.5), (40, 0), (5, 0), (45, 0)])
+    def test_trapezoid(self, t, r):
+        assert temperature_response(t, 10, 20, 30, 40) == pytest.approx(r)
+
+
 class TestTemperatureScore:
-    @pytest.mark.parametrize(("mean", "score"), [(18, 100), (21, 100), (23, 80), (26, 60), (30, 50), (32, 40), (None, 0)])
-    def test_bands_around_ideal_middle(self, mean, score):
-        assert temperature_score(mean, 15, 21) == score  # middle 18
+    crop = {"base_temp": 10, "upper_temp": 40, "optimal_temp_min": 20, "optimal_temp_max": 30}
+
+    def test_averages_over_growing_days_only(self):
+        # Two days at 25 (ideal), one at 15 (half), one at 5 (below base: not a growing day).
+        score, days, mean = temperature_score(nasa([(28, 22, 0), (28, 22, 0), (18, 12, 0), (8, 2, 0)]), self.crop)
+        assert days == 3
+        assert score == pytest.approx(100 * (1 + 1 + 0.5) / 3)
+        assert mean == pytest.approx((25 + 25 + 15) / 3)
+
+    def test_only_the_calendar_months_count(self):
+        # Days 0–27 are January (cool, 15), days 28–55 February (ideal, 25); the crop grows in February only.
+        data = nasa([(18, 12, 0)] * 28 + [(28, 22, 0)] * 28)
+        assert temperature_score(data, self.crop, {2})[:2] == (100.0, 28)
+        assert temperature_score(data, self.crop)[0] == pytest.approx(75)
+
+    def test_no_growing_days(self):
+        assert temperature_score(nasa([(4, -4, 0)]), self.crop) == (0.0, 0, None)
+
+
+class TestHeatScore:
+    def test_margin(self):
+        assert heat_score(HEAT_MARGIN) == 100
+        assert heat_score(2.0) == 100
+        assert heat_score(1.0) == 80
+        assert heat_score(0.5) == 40
+        assert 80 < heat_score(1.1) < 100
+
+
+class TestWeakestFactor:
+    def test_too_cold_cannot_be_outvoted(self):
+        # Okra in Munich: plenty of heat units, sun and rain, but too cold while growing.
+        data = nasa_fixture("munich")
+        okra = calculate_crop_suitability(CROP_DATABASE["okra"], analyze_climate_data(data), data, 0.7, 1_000)
+        s = okra["scores"]
+        assert okra["overall_score"] <= min(s["gdd"], s["sunlight"], s["temperature"]) + WEAKEST_FACTOR_MARGIN + 0.05
+        assert okra["metrics"]["limited_by"] == "temperature"
+        assert okra["overall_score"] < 80
+
+    def test_water_is_not_a_limit(self):
+        # Cairo's dry climate: crops that need watering are not dragged down to their water score.
+        data = nasa_fixture("cairo")
+        okra = calculate_crop_suitability(CROP_DATABASE["okra"], analyze_climate_data(data), data, 0.7, 1_000)
+        assert okra["metrics"]["limited_by"] != "water"
+        assert okra["overall_score"] > okra["scores"]["water"] + WEAKEST_FACTOR_MARGIN
 
 
 class TestWaterScore:

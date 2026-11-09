@@ -204,9 +204,10 @@ def crops_block(nasa_data: Dict, analysis: Dict, sunshine_factor: float, area_m2
         if sun["adjusted_sun_hours"] < crop_data["min_sun_hours"]:
             sun_filtered = {"available_sun_hours": round(sun["adjusted_sun_hours"], 1)}
 
-        suitability = calculate_crop_suitability(crop_data, analysis, nasa_data, sunshine_factor, area_m2)
-        score = 0.0 if sun_filtered else suitability["overall_score"]
         calendar = crop_calendars[crop_id]
+        grow_months = set(calendar["grow"]) if calendar else None
+        suitability = calculate_crop_suitability(crop_data, analysis, nasa_data, sunshine_factor, area_m2, grow_months)
+        score = 0.0 if sun_filtered else suitability["overall_score"]
         # A crop no sowing date can bring to harvest is not recommended, whatever its yearly score.
         no_window = calendar is None and sun_filtered is None and score >= USABLE_SCORE
         usable = sun_filtered is None and score >= USABLE_SCORE and not no_window

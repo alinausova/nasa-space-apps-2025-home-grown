@@ -23,6 +23,11 @@ export interface SuitabilityMetrics {
   season_mean_temp?: number | null;
   season_precipitation_mm?: number;
   heat_capped?: boolean;
+  /** Scoring pass: which factor a gardener cannot change held the score back, and the temperature it was judged on. */
+  limited_by?: 'heat' | 'sun' | 'temperature' | null;
+  temperature_days?: number;
+  temperature_mean?: number | null;
+  upper_temp?: number;
 }
 
 export interface YieldEstimate {
