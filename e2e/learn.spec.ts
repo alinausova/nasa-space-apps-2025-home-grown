@@ -90,4 +90,31 @@ test.describe('learn more', () => {
     await page.getByRole('link', { name: 'Open the map' }).click();
     await expect(page).toHaveURL(/\/app$/);
   });
+
+  test('wide screens: lines and textures run edge to edge, content stays in the column', async ({ browser }) => {
+    const context = await browser.newContext({ viewport: { width: 1920, height: 1080 } });
+    const page = await context.newPage();
+    await mockApi(page);
+    await page.goto('learn/about');
+
+    const geometry = await page.evaluate(() => {
+      const section = document.querySelector('main section') as HTMLElement;
+      const texture = section.querySelector('[aria-hidden="true"].bg-furrows-stone') as HTMLElement;
+      const content = section.querySelector('h2')!.closest('.grid') as HTMLElement;
+      const r = (el: Element) => el.getBoundingClientRect();
+      return {
+        width: window.innerWidth,
+        section: { left: r(section).left, right: r(section).right },
+        texture: { right: r(texture).right },
+        content: { left: r(content).left, width: r(content).width },
+      };
+    });
+    expect(geometry.section).toEqual({ left: 0, right: geometry.width });
+    expect(geometry.texture.right).toBe(geometry.width);
+    expect(geometry.content.width).toBeLessThanOrEqual(1156);
+    expect(geometry.content.left).toBeCloseTo((geometry.width - 1156) / 2, 0);
+
+    await page.screenshot({ path: 'e2e/.output/shots/wide-learn-about.png' });
+    await context.close();
+  });
 });
