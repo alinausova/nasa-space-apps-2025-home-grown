@@ -7,6 +7,7 @@ import pytest
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+import climate  # noqa: E402
 import main  # noqa: E402
 
 
@@ -42,7 +43,8 @@ def stubs(monkeypatch):
         calls["summary"] += 1
         return "Cool summers suit leafy greens."
 
-    monkeypatch.setattr(main, "fetch_nasa_power_data", fake_nasa)
+    # fetch_all_climate_data lives in climate.py and looks the fetcher up there.
+    monkeypatch.setattr(climate, "fetch_nasa_power_data", fake_nasa)
     monkeypatch.setattr(main, "query_planetary_stac_async", fake_stac)
     monkeypatch.setattr(main, "generate_crop_summary", fake_summary)
     main.limiter.reset()

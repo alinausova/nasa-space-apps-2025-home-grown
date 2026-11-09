@@ -61,7 +61,7 @@ src/
     ui/                   design-system primitives (Button, Chip, FactorBar, ScoreRing, …)
     derive/               pure, unit-tested logic (scores, area, climate, plan, reasons, …)
     screens/              landing, place, draw, analysing, results, crop, learn
-api/                      FastAPI back end (main.py, crop_database.py, summary_gen.py, tests/)
+api/                      FastAPI back end: main.py (routes), climate.py, landsat.py, scoring.py, geometry.py, models.py, crop_database.py, summary_gen.py, tests/
 e2e/                      Playwright tests and fixtures
 ```
 
