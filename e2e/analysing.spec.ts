@@ -83,7 +83,7 @@ test.describe('analysing', () => {
     await waitForMap(page);
     await drawPlot(page, PLOTS.munich);
     await page.getByRole('button', { name: /Analyse this plot/ }).click();
-    await page.getByRole('button', { name: 'Back to drawing' }).click();
+    await page.getByRole('button', { name: 'Back to drawing', exact: true }).click();
 
     await expect(page.getByRole('button', { name: /Analyse this plot/ })).toBeEnabled();
     await expect(page.getByText(/5 corners/).filter({ visible: true })).toBeVisible();

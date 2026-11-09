@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { Plan } from "../../derive/plan";
+    import { spreadLabels, type Plan } from "../../derive/plan";
     import { bedCount, formatKg, listJoin } from "../../derive/format";
 
     let { plan, totalUsable }: { plan: Plan; totalUsable: number } = $props();
@@ -13,13 +13,13 @@
 
     let pts = (shape: { x: number; y: number }[]) => shape.map((p) => `${p.x + OFFSET.x},${p.y + OFFSET.y}`).join(" ");
     let outline = $derived(pts(plan.outline));
-    let centers = $derived(
-        plan.beds.map((b) => {
-            const ys = b.shape.map((p) => p.y);
-            const xs = b.shape.map((p) => p.x);
-            return { y: (Math.min(...ys) + Math.max(...ys)) / 2 + OFFSET.y, right: Math.max(...xs) + OFFSET.x };
-        }),
-    );
+    // Label rows: as close to their bed as possible, never overlapping (thin plots put beds close together).
+    const LABEL_GAP = 42;
+    let centers = $derived(plan.beds.map((b) => ({ x: b.center.x + OFFSET.x, y: b.center.y + OFFSET.y })));
+    let labelYs = $derived(spreadLabels(centers.map((c) => c.y), LABEL_GAP, 34, 262));
+    let numbered = $derived(plan.axis === "vertical");
+    let elbowX = $derived(Math.max(...plan.outline.map((p) => p.x)) + OFFSET.x + 14);
+
     let names = $derived(plan.beds.map((b) => b.crop.crop_name));
     let ariaLabel = $derived(
         `Example planting plan for your plot: ${bedCount(plan.beds.length).toLowerCase()} of ${listJoin(names.map((n) => n.toLowerCase()))}, with paths between them.`,
@@ -48,12 +48,28 @@
         <g font-family="var(--hg-font)" fill="#1B6A24">
             {#each plan.beds as bed, i (bed.crop.crop_id)}
                 {@const c = centers[i]}
-                <path d="M{c.right - 8} {c.y} H{LABEL_X - 8}" stroke="#1B6A24" stroke-opacity="0.5" stroke-dasharray="3 3" />
-                <text x={LABEL_X} y={c.y - 3} font-size="15">
+                {@const ly = labelYs[i]}
+                {#if numbered}
+                    <!-- Side-by-side strips: lines would cross other beds, so beds and labels share a number. -->
+                    <circle cx={c.x} cy={c.y} r="7.5" fill="#F2FEF0" stroke="#1B6A24" stroke-width="1" />
+                    <text x={c.x} y={c.y + 3.5} text-anchor="middle" font-family="var(--hg-font-mono)" font-size="10">{i + 1}</text>
+                    <circle cx={LABEL_X - 14} cy={ly - 8} r="7.5" fill="none" stroke="#1B6A24" stroke-width="1" />
+                    <text x={LABEL_X - 14} y={ly - 4.5} text-anchor="middle" font-family="var(--hg-font-mono)" font-size="10">{i + 1}</text>
+                {:else}
+                    <circle cx={c.x} cy={c.y} r="2.5" fill="#1B6A24" />
+                    <path
+                        d="M{c.x} {c.y} H{elbowX} L{Math.min(elbowX + 12, LABEL_X - 12)} {ly} H{LABEL_X - 8}"
+                        fill="none"
+                        stroke="#1B6A24"
+                        stroke-opacity="0.5"
+                        stroke-dasharray="3 3"
+                    />
+                {/if}
+                <text x={LABEL_X} y={ly - 3} font-size="15">
                     {bed.crop.crop_name}
                     <tspan font-family="var(--hg-font-mono)" font-size="12">{Math.round(bed.crop.suitability.overall_score)}</tspan>
                 </text>
-                <text x={LABEL_X} y={c.y + 14} font-family="var(--hg-font-mono)" font-size="11" fill="#256F2D">
+                <text x={LABEL_X} y={ly + 14} font-family="var(--hg-font-mono)" font-size="11" fill="#256F2D">
                     {Math.round(bed.areaM2).toLocaleString("en-US")} m² · {formatKg(bed.yieldKg, { approx: true })}
                 </text>
             {/each}

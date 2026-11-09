@@ -121,6 +121,23 @@ test.describe('results', () => {
     expect(await page.evaluate(() => (window as any).__xss)).toBeUndefined();
   });
 
+  test('thin plots: plan labels never overlap', async ({ page, isMobile }) => {
+    test.skip(isMobile, 'desktop plan drawing');
+    await mockApi(page, 'munich');
+    await page.goto('app');
+    await waitForMap(page);
+    // ~300 m wide, ~25 m tall.
+    await drawPlot(page, [[11.56, 48.146], [11.564, 48.146], [11.564, 48.14622], [11.56, 48.14622]]);
+    await page.getByRole('button', { name: /Analyse this plot/ }).click();
+    const plan = page.getByRole('img', { name: /Example planting plan/ });
+    await expect(plan).toBeVisible();
+
+    const boxes = await plan.locator('text[font-size="15"]').evaluateAll((els) => els.map((e) => e.getBoundingClientRect()).map((r) => ({ top: r.top, bottom: r.bottom })));
+    expect(boxes).toHaveLength(4);
+    const sorted = [...boxes].sort((a, b) => a.top - b.top);
+    for (let i = 1; i < sorted.length; i++) expect(sorted[i].top).toBeGreaterThanOrEqual(sorted[i - 1].bottom);
+  });
+
   test('new plot returns to drawing', async ({ page, isMobile }) => {
     test.skip(isMobile, 'desktop header action');
     await openResults(page, 'munich');

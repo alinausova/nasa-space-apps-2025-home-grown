@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { CropRecommendation } from '../api/types';
-import { equalAreaCuts, planFor, polygonArea, projectRing, sliceBetween, type Point } from './plan';
+import { equalAreaCuts, planFor, polygonArea, projectRing, sliceBetween, spreadLabels, type Point } from './plan';
 
 const SQUARE: Point[] = [
   { x: 0, y: 0 },
@@ -85,5 +85,61 @@ describe('planFor', () => {
 
   it('is null without crops', () => {
     expect(planFor(ring, 1_000, [])).toBeNull();
+  });
+});
+
+describe('thin plots', () => {
+  // ~300 m wide, ~25 m tall.
+  const wide: [number, number][] = [
+    [11.56, 48.146],
+    [11.564, 48.146],
+    [11.564, 48.14622],
+    [11.56, 48.14622],
+    [11.56, 48.146],
+  ];
+  const crops = [crop('a', 4), crop('b', 3), crop('c', 2), crop('d', 1)];
+
+  it('cuts wide plots into side-by-side strips of equal area', () => {
+    const plan = planFor(wide, 7_000, crops)!;
+    expect(plan.axis).toBe('vertical');
+    const areas = plan.beds.map((b) => polygonArea(b.shape));
+    for (const a of areas) expect(a).toBeCloseTo(areas[0], 3);
+    const centersX = plan.beds.map((b) => b.center.x);
+    expect([...centersX].sort((x, y) => x - y)).toEqual(centersX);
+  });
+
+  it('keeps tall plots in stacked bands', () => {
+    // ~22 m wide, ~300 m tall.
+    const tall: [number, number][] = [
+      [11.56, 48.146],
+      [11.5603, 48.146],
+      [11.5603, 48.1487],
+      [11.56, 48.1487],
+      [11.56, 48.146],
+    ];
+    expect(planFor(tall, 7_000, crops)!.axis).toBe('horizontal');
+  });
+});
+
+describe('spreadLabels', () => {
+  it('keeps labels apart when their beds are close together', () => {
+    const ys = spreadLabels([150, 151, 152, 153], 40, 20, 270);
+    for (let i = 1; i < ys.length; i++) expect(ys[i] - ys[i - 1]).toBeGreaterThanOrEqual(40);
+    expect(Math.min(...ys)).toBeGreaterThanOrEqual(20);
+    expect(Math.max(...ys)).toBeLessThanOrEqual(270);
+  });
+
+  it('leaves well-spaced labels where they are', () => {
+    expect(spreadLabels([40, 100, 160, 220], 40, 20, 270)).toEqual([40, 100, 160, 220]);
+  });
+
+  it('stays inside the bottom edge', () => {
+    const ys = spreadLabels([260, 265, 268, 270], 40, 20, 270);
+    expect(Math.max(...ys)).toBeLessThanOrEqual(270);
+    expect(ys).toEqual([150, 190, 230, 270]);
+  });
+
+  it('keeps the input order', () => {
+    expect(spreadLabels([200, 50], 40, 20, 270)).toEqual([200, 50]);
   });
 });
