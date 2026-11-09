@@ -46,21 +46,22 @@
   --radius-panel: var(--hg-radius-panel);
 }
 
-/* Text selection colour, per theme (set below). */
-:root {
-  --hg-selection-bg: var(--hg-selected);
-  --hg-selection-ink: var(--hg-ink);
+/* Text selection: ink and paper swap places, so it is as readable as the page itself.
+   The dark landing and dark cards (.on-ink) use bright green, which stays visible on dark. */
+::selection {
+  background-color: var(--hg-ink);
+  color: var(--hg-paper);
 }
 
-::selection {
-  background-color: var(--hg-selection-bg);
-  color: var(--hg-selection-ink);
+.theme-night ::selection,
+.theme-night::selection,
+.on-ink ::selection {
+  background-color: var(--hg-bright);
+  color: var(--hg-on-bright);
 }
 
 /* Themes: one per area of the app. Components only use the semantic tokens. */
 .theme-night {
-  --hg-selection-bg: var(--hg-bright);
-  --hg-selection-ink: var(--hg-on-bright);
   --hg-paper: var(--hg-night);
   --hg-surface: #123320;
   --hg-ink: var(--hg-night-ink);
@@ -70,8 +71,6 @@
 }
 
 .theme-stone {
-  --hg-selection-bg: rgba(34, 197, 94, 0.28);
-  --hg-selection-ink: var(--hg-stone-ink);
   --hg-paper: var(--hg-stone-paper);
   --hg-surface: var(--hg-stone-surface);
   --hg-ink: var(--hg-stone-ink);

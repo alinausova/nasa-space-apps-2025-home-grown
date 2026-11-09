@@ -17,16 +17,26 @@ test.describe('text selection colour', () => {
     expect(await selectionOf(page)).toEqual({ bg: 'rgb(34, 197, 94)', ink: 'rgb(11, 61, 24)' });
   });
 
-  test('app (leaf): selection green with leaf ink', async ({ page }) => {
+  test('app (leaf): ink and paper swapped', async ({ page }) => {
     await mockApi(page);
     await page.goto('app');
     await expect(page.getByRole('heading', { name: 'Where do you want to grow?' })).toBeVisible();
-    expect(await selectionOf(page)).toEqual({ bg: 'rgb(178, 240, 190)', ink: 'rgb(27, 106, 36)' });
+    expect(await selectionOf(page)).toEqual({ bg: 'rgb(27, 106, 36)', ink: 'rgb(217, 252, 212)' });
   });
 
-  test('learn more (stone): green tint with stone ink', async ({ page }) => {
+  test('learn more (stone): ink and paper swapped', async ({ page }) => {
     await mockApi(page);
     await page.goto('learn/about');
-    expect(await selectionOf(page)).toEqual({ bg: 'rgba(34, 197, 94, 0.28)', ink: 'rgb(47, 51, 54)' });
+    expect(await selectionOf(page)).toEqual({ bg: 'rgb(47, 51, 54)', ink: 'rgb(232, 230, 224)' });
   });
+});
+
+test('dark cards on light pages keep a visible highlight', async ({ page }) => {
+  await mockApi(page);
+  await page.goto('learn/about#recognition');
+  const style = await page.locator('.on-ink').evaluate((card) => {
+    const s = getComputedStyle(card.querySelector('span span')!, '::selection');
+    return { bg: s.backgroundColor, ink: s.color };
+  });
+  expect(style).toEqual({ bg: 'rgb(34, 197, 94)', ink: 'rgb(11, 61, 24)' });
 });
