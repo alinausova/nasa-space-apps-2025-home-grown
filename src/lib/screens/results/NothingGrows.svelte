@@ -1,6 +1,6 @@
 <script lang="ts">
     import type { ClimateResponse, CropsResponse } from "../../api/analysis";
-    import { MONTH_SHORT } from "../../derive/climate";
+    import { monthShort } from "../../i18n/format";
     import { closestCalls, missSentence } from "../../derive/miss";
 
     // Shown when no crop is usable (score below 50 or not enough sun).
@@ -47,7 +47,7 @@
 
     <dl class="m-0 grid grid-cols-3 gap-3 rounded-card border border-line-strong bg-surface px-[18px] py-4">
         <div class="flex flex-col gap-1">
-            <dt class="order-2 text-[13px] text-ink-muted">{warmest ? `warmest month (${MONTH_SHORT[warmest.month - 1]})` : "warmest month"}</dt>
+            <dt class="order-2 text-[13px] text-ink-muted">{warmest ? `warmest month (${monthShort(warmest.month - 1)})` : "warmest month"}</dt>
             <dd class="order-1 m-0 font-mono text-xl tabular md:text-2xl">{warmest ? `${warmest.temp_avg.toFixed(1)}°C` : "–"}</dd>
         </div>
         <div class="flex flex-col gap-1">

@@ -13,6 +13,7 @@
     import { alsoGood, factorReasons, heldBack } from "../../derive/why";
     import { router } from "../../router/router.svelte";
     import { cropIcon } from "../../derive/cropIcons";
+    import { formatNumber } from "../../i18n/format";
 
     let {
         crop,
@@ -69,7 +70,7 @@
         <span class="text-[15px] text-ink-muted">Expected harvest per season</span>
         <span class="font-mono text-[40px] leading-none tracking-[-0.02em] tabular md:text-[44px]">{formatKg(yieldEstimate.total_yield_kg)}</span>
         <span class="font-mono text-[13px] text-ink-muted">
-            {yieldEstimate.yield_per_m2_kg.toFixed(1)} kg/m² · {Math.round(plantedM2).toLocaleString("en-US")} m² planted
+            {yieldEstimate.yield_per_m2_kg.toFixed(1)} kg/m² · {formatNumber(Math.round(plantedM2))} m² planted
         </span>
     </section>
 

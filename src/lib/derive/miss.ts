@@ -1,6 +1,7 @@
 import type { AnalysedCrop, MissReason } from '../api/analysis';
+import { formatNumber } from '../i18n/format';
 
-const n = (value: number) => Math.round(value).toLocaleString('en-US');
+const n = (value: number) => formatNumber(Math.round(value));
 
 /** One plain line on why a crop does not make the list (from the back end's miss_reason). */
 export function missSentence(reason: MissReason | undefined): string {

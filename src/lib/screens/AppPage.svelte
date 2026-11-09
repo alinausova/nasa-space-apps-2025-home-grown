@@ -16,6 +16,7 @@
     import CropDetail from "./crop/CropDetail.svelte";
     import CropNav from "./crop/CropNav.svelte";
     import { formatKg } from "../derive/format";
+    import { formatNumber, lower } from "../i18n/format";
     import { ANALYSIS_STEPS, failedStep, phaseTimeline } from "../derive/progress";
     import EarlyClimateCard from "./analysing/EarlyClimateCard.svelte";
     import { formatArea } from "../derive/area";
@@ -314,13 +315,13 @@
             <ScanOverlay ring={journey.plot.ring} active={journey.request.status === "loading"} />
             {#if journey.climate}<EarlyClimateCard climate={journey.climate} />{/if}
             <MapChip only="desktop" live>
-                {#if journey.request.status === "landsat-failed"}<span class="size-2 rounded-full bg-harvest" aria-hidden="true"></span>Landsat did not respond · climate data saved{:else if failedAt !== null}Stopped at: {ANALYSIS_STEPS[failedAt].short.toLowerCase()}{:else}<span class="size-2 rounded-full bg-bright" aria-hidden="true"></span>{ANALYSIS_STEPS[progress.current].short}{/if}
+                {#if journey.request.status === "landsat-failed"}<span class="size-2 rounded-full bg-harvest" aria-hidden="true"></span>Landsat did not respond · climate data saved{:else if failedAt !== null}Stopped at: {lower(ANALYSIS_STEPS[failedAt].short)}{:else}<span class="size-2 rounded-full bg-bright" aria-hidden="true"></span>{ANALYSIS_STEPS[progress.current].short}{/if}
             </MapChip>
             <MapChip only="mobile" tone="bright">{formatArea(journey.plot.areaM2)}</MapChip>
         {:else if crop && journey.plot}
             <MapBack label="Back to all crops" href={router.href({ name: "app" })} />
             <div class="absolute right-5 bottom-14 z-10 hidden rounded-[14px] border border-ink bg-surface px-[18px] py-3 text-[17px] md:block">
-                {crop.crop_name} on {Math.round(journey.plot.areaM2 * 0.7).toLocaleString("en-US")} m² of your plot
+                {crop.crop_name} on {formatNumber(Math.round(journey.plot.areaM2 * 0.7))} m² of your plot
             </div>
         {:else if journey.step === "results" && journey.plot}
             <MapBack label="Back to your plot" onclick={() => journey.editPlot()} />

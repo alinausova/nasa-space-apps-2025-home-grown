@@ -2,6 +2,7 @@
 import { apiFetch } from './client';
 import { toApiCoordinates, type LngLat } from './recommendations';
 import type { CropRecommendation, RecommendationsResponse } from './types';
+import { monthLong } from '../i18n/format';
 
 export interface MonthlyClimate {
   month: number;
@@ -97,7 +98,6 @@ export interface AnalysisApi {
 
 export const analysisApi: AnalysisApi = { climate: fetchClimate, crops: fetchCrops, summary: fetchSummary, tips: fetchTips };
 
-const MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
 /**
  * The result shape the v1 screens read, built from the v2 calls. Usable crops become `recommendations`.
@@ -126,7 +126,7 @@ export function toResults(climate: ClimateResponse, crops: CropsResponse, summar
     monthly_temperature_averages: {
       monthly_averages: climate.monthly.map((m) => ({
         month: m.month,
-        month_name: MONTH_NAMES[m.month - 1],
+        month_name: monthLong(m.month - 1),
         avg_temp_max: m.temp_max,
         avg_temp_min: m.temp_min,
         avg_temp: m.temp_avg,

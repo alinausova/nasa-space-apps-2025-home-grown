@@ -1,6 +1,7 @@
 <script lang="ts">
     import { spreadLabels, type Plan } from "../../derive/plan";
     import { bedCount, formatKg, listJoin } from "../../derive/format";
+    import { formatNumber, lower } from "../../i18n/format";
 
     let { plan, totalUsable }: { plan: Plan; totalUsable: number } = $props();
 
@@ -22,7 +23,7 @@
 
     let names = $derived(plan.beds.map((b) => b.crop.crop_name));
     let ariaLabel = $derived(
-        `Example planting plan for your plot: ${bedCount(plan.beds.length).toLowerCase()} of ${listJoin(names.map((n) => n.toLowerCase()))}, with paths between them.`,
+        `Example planting plan for your plot: ${lower(bedCount(plan.beds.length))} of ${listJoin(names.map((n) => lower(n)))}, with paths between them.`,
     );
 </script>
 
@@ -70,7 +71,7 @@
                     <tspan font-family="var(--hg-font-mono)" font-size="12">{Math.round(bed.crop.suitability.overall_score)}</tspan>
                 </text>
                 <text x={LABEL_X} y={ly + 14} font-family="var(--hg-font-mono)" font-size="11" fill="#256F2D">
-                    {Math.round(bed.areaM2).toLocaleString("en-US")} m² · {formatKg(bed.yieldKg, { approx: true })}
+                    {formatNumber(Math.round(bed.areaM2))} m² · {formatKg(bed.yieldKg, { approx: true })}
                 </text>
             {/each}
             <text x={OFFSET.x + 18} y="296" font-size="11" fill="#256F2D">Example plan · 70% planted, the rest left for paths</text>
@@ -90,7 +91,7 @@
         <polygon points={plan.outline.map((p) => `${p.x},${p.y}`).join(" ")} fill="none" stroke="#1B6A24" stroke-width="5" />
     </svg>
     <p class="m-0 flex flex-col gap-1 text-[15px] leading-snug">
-        <span class="font-semibold">{listJoin(names.map((n, i) => (i === 0 ? n : n.toLowerCase())))}</span>
+        <span class="font-semibold">{listJoin(names.map((n, i) => (i === 0 ? n : lower(n))))}</span>
         <span>
             {bedCount(plan.beds.length)} fill your plot, about {formatKg(plan.totalYieldKg)} a season.
             {totalUsable} {totalUsable === 1 ? "crop fits" : "crops fit"} in total.

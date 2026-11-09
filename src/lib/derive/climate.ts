@@ -1,7 +1,6 @@
 import type { MonthlyTemperature } from '../api/types';
+import { monthShort } from '../i18n/format';
 
-export const MONTH_SHORT = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-export const MONTH_INITIAL = ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'];
 
 export interface GrowingSeason {
   /** Month indexes 0–11, in season order (may wrap past December). */
@@ -25,7 +24,7 @@ export function describeClimate(monthly: MonthlyTemperature[], season: GrowingSe
   const hiMin = monthly[highs.indexOf(Math.min(...highs))];
   const r = (n: number) => Math.round(n);
   const parts = [
-    `Monthly climate. Daily highs from ${r(hiMin.avg_temp_max)} degrees in ${MONTH_SHORT[hiMin.month - 1]} to ${r(hiMax.avg_temp_max)} in ${MONTH_SHORT[hiMax.month - 1]}`,
+    `Monthly climate. Daily highs from ${r(hiMin.avg_temp_max)} degrees in ${monthShort(hiMin.month - 1)} to ${r(hiMax.avg_temp_max)} in ${monthShort(hiMax.month - 1)}`,
     `lows from ${r(Math.min(...lows))} to ${r(Math.max(...lows))}.`,
   ];
   const seasonText = season ? `Growing season ${season.label === 'All year' ? 'all year' : season.label.replace('–', ' to ')}.` : 'No month is warm enough to grow outdoors.';
@@ -46,7 +45,7 @@ export function seasonFromServer(season: ServerSeason): GrowingSeason | null {
     if (m === last) break;
   }
   const runs: [number, number][] = first <= last ? [[first, last]] : [[first, 11], [0, last]];
-  const label = first === last ? MONTH_SHORT[first] : `${MONTH_SHORT[first]}–${MONTH_SHORT[last]}`;
+  const label = first === last ? monthShort(first) : `${monthShort(first)}–${monthShort(last)}`;
   return { months, runs, label, days: season.days };
 }
 
