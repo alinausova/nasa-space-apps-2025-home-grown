@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { flushSync, onMount, untrack } from "svelte";
+    import { onMount, untrack } from "svelte";
     import AppShell, { type SheetSize } from "../layout/AppShell.svelte";
     import Button from "../ui/Button.svelte";
     import Icon from "../ui/Icon.svelte";
@@ -15,7 +15,6 @@
     import ResultsPanel from "./results/ResultsPanel.svelte";
     import CropDetail from "./crop/CropDetail.svelte";
     import CropNav from "./crop/CropNav.svelte";
-    import PrintReport from "./results/PrintReport.svelte";
     import { formatKg } from "../derive/format";
     import { ANALYSIS_STEPS, failedStep, phaseTimeline } from "../derive/progress";
     import EarlyClimateCard from "./analysing/EarlyClimateCard.svelte";
@@ -43,25 +42,6 @@
 
     let cropId = $derived(router.route.name === "crop" ? router.route.id : null);
     let crop = $derived(cropId ? (journey.results?.recommendations.find((c) => c.crop_id === cropId) ?? null) : null);
-    /** The printed report exists only while printing, with a map picture taken just before. */
-    let printing = $state<{ mapImage: string | null } | null>(null);
-
-    onMount(() => {
-        // Covers Export PDF and the browser's own print command.
-        const before = () => flushSync(() => (printing = { mapImage: mapController.snapshot() }));
-        const after = () => (printing = null);
-        window.addEventListener("beforeprint", before);
-        window.addEventListener("afterprint", after);
-        return () => {
-            window.removeEventListener("beforeprint", before);
-            window.removeEventListener("afterprint", after);
-        };
-    });
-
-    function exportPdf(): void {
-        window.print();
-    }
-
     /** Searched place or the user's position; shown as a pin while picking a place. */
     let pin = $state<LngLat | null>(null);
     let zoomedIn = $derived(mapController.view.zoom >= DRAW_ZOOM);
@@ -292,7 +272,6 @@
             summaryStatus={journey.summary.status}
             onNewPlot={startNewPlot}
             onCompare={() => journey.goToPlace()}
-            onExport={exportPdf}
         />
     {/if}
 
@@ -345,15 +324,6 @@
             </div>
         {:else if journey.step === "results" && journey.plot}
             <MapBack label="Back to your plot" onclick={() => journey.editPlot()} />
-            {#if journey.results?.recommendations.length}
-                <button
-                    type="button"
-                    onclick={exportPdf}
-                    class="absolute top-5 right-5 z-10 hidden min-h-11 items-center gap-2 rounded-full border border-ink bg-surface px-[18px] text-[15px] text-ink hover:bg-selected focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink md:inline-flex"
-                >
-                    <Icon name="download" size={18} /> Export PDF
-                </button>
-            {/if}
             <MapChip only="mobile" tone="bright">{formatArea(journey.plot.areaM2)}</MapChip>
             {@const top = journey.results?.recommendations[0]}
             {#if top}
@@ -365,16 +335,3 @@
         {/if}
     {/snippet}
 </AppShell>
-
-{#if printing && journey.step === "results" && journey.results && journey.climate && journey.crops && journey.plot && journey.results.recommendations.length > 0}
-    <div class="hidden print:block">
-        <PrintReport
-            results={journey.results}
-            climate={journey.climate}
-            crops={journey.crops}
-            plot={journey.plot}
-            summary={journey.summary.status === "done" ? journey.summary.text : null}
-            mapImage={printing.mapImage}
-        />
-    </div>
-{/if}

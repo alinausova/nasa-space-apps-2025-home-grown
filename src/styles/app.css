@@ -139,21 +139,3 @@
     transform: translate(-50%, -50%);
   }
 }
-
-/* Export PDF: only the report prints, on white, with its colours kept. */
-@media print {
-  @page {
-    size: A4;
-    margin: 14mm;
-  }
-  html,
-  body {
-    height: auto !important;
-    overflow: visible !important;
-    background: #fff !important;
-  }
-  .print-report {
-    print-color-adjust: exact;
-    -webkit-print-color-adjust: exact;
-  }
-}

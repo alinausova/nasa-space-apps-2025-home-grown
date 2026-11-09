@@ -82,7 +82,7 @@
     }
 </script>
 
-<div class="theme-leaf relative h-dvh w-full overflow-hidden md:flex print:hidden">
+<div class="theme-leaf relative h-dvh w-full overflow-hidden md:flex">
     <section class="absolute inset-0 md:relative md:order-2 md:flex md:min-w-0 md:flex-1 md:bg-furrows md:p-5" aria-label="Map">
         <div class="relative h-full w-full overflow-hidden bg-surface md:rounded-panel md:border md:border-ink">
             <MapView />
