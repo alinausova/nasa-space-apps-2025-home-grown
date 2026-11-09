@@ -3,6 +3,8 @@ import logging
 import math
 from typing import List, Tuple
 
+from shapely import Polygon
+
 logger = logging.getLogger(__name__)
 
 
@@ -16,10 +18,16 @@ def calculate_polygon_centroid(coordinates: List[Tuple[float, float]]) -> Tuple[
     Returns:
         Tuple of (latitude, longitude) for the centroid
     """
-    lat_sum = sum(lat for lat, lon in coordinates)
-    lon_sum = sum(lon for lat, lon in coordinates)
-    count = len(coordinates)
-    return (lat_sum / count, lon_sum / count)
+    # Area-weighted centroid of the shape (the corner average is pulled towards edges with many corners).
+    points = list(coordinates)
+    if len(points) > 1 and points[0] == points[-1]:
+        points = points[:-1]
+    if len(points) < 3:
+        return (sum(p[0] for p in points) / len(points), sum(p[1] for p in points) / len(points))
+    shape = Polygon([(lon, lat) for lat, lon in points])
+    if not shape.is_valid or shape.area == 0:
+        return (sum(p[0] for p in points) / len(points), sum(p[1] for p in points) / len(points))
+    return (shape.centroid.y, shape.centroid.x)
 
 def calculate_polygon_area_m2(coordinates: List[Tuple[float, float]]) -> float:
     """

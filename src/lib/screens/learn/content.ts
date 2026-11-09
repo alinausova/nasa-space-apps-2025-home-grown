@@ -82,8 +82,8 @@ export const CONTACT = [
 export const SCORE_PARTS = [
   { weight: 35, title: 'Heat', body: 'Growing degree days against what the crop needs.' },
   { weight: 25, title: 'Sunlight', body: 'Sun hours after shade against the optimum.' },
-  { weight: 25, title: 'Temperature', body: 'Full marks when the year’s average is within 3°C of the crop’s ideal.' },
-  { weight: 15, title: 'Water', body: 'Rainfall against seasonal need.' },
+  { weight: 25, title: 'Temperature', body: 'Full marks when the average over its growing days is within 3°C of its ideal.' },
+  { weight: 15, title: 'Water', body: 'Rain while it grows against its seasonal need. A shortfall costs more than a surplus.' },
 ];
 
 export const FORMULAS = [

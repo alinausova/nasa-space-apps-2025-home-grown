@@ -57,6 +57,30 @@ describe('factorReasons', () => {
   });
 });
 
+describe('factorReasons with v2 growing-season fields', () => {
+  const v2 = (extra: object) => crop({ season_mean_temp: 18, season_precipitation_mm: 420, ...extra });
+
+  it('talks about the growing season, not the year', () => {
+    expect(factorReasons(v2({}), COOL).temperature).toBe('Growing-season average inside the ideal 15–23°C');
+    expect(factorReasons(v2({ season_mean_temp: 11 }), MILD).temperature).toBe('Growing-season average 11°C, ideal 15–23°C');
+  });
+
+  it('counts rain while the crop grows', () => {
+    expect(factorReasons(v2({ season_precipitation_mm: 900 }), MILD).water).toBe('900 mm of rain while it grows, more than its 380 mm need');
+    expect(factorReasons(v2({}), MILD).water).toBe('Rain covers its 380 mm need');
+  });
+
+  it('explains a score capped by missing heat', () => {
+    expect(factorReasons(v2({ total_gdd: 180, required_gdd: 650, heat_capped: true }), MILD).gdd).toBe(
+      'Only 180 of the 650 heat units it needs to mature',
+    );
+  });
+
+  it('handles a crop with no growing days', () => {
+    expect(factorReasons(v2({ season_mean_temp: null }), MILD).temperature).toBe('Too cold to grow on any day');
+  });
+});
+
 describe('ranking helpers', () => {
   const list = ['a', 'b', 'c', 'd', 'e'].map((crop_id) => ({ crop_id }));
 

@@ -2,12 +2,29 @@
 import logging
 import statistics
 from collections import defaultdict
+from datetime import date
 from typing import Dict, List
 
 import httpx
 from fastapi import HTTPException
 
 logger = logging.getLogger(__name__)
+
+# NASA POWER marks missing days with this value (header "fill_value").
+FILL_VALUE = -999.0
+
+
+def latest_complete_year(today: date | None = None) -> int:
+    """The most recent calendar year NASA POWER has complete daily data for."""
+    return (today or date.today()).year - 1
+
+
+def drop_fill_values(data: Dict) -> Dict:
+    """Removes days marked as missing (-999), so they never enter averages or sums."""
+    parameters = data.get("properties", {}).get("parameter", {})
+    for name, values in parameters.items():
+        parameters[name] = {day: v for day, v in values.items() if v is not None and v != FILL_VALUE}
+    return data
 
 
 async def fetch_nasa_power_data(latitude: float, longitude: float, year: int = 2023) -> Dict:
@@ -49,7 +66,7 @@ async def fetch_nasa_power_data(latitude: float, longitude: float, year: int = 2
         try:
             response = await client.get(url, params=params)
             response.raise_for_status()
-            return response.json()
+            return drop_fill_values(response.json())
         except httpx.HTTPStatusError as e:
             raise HTTPException(
                 status_code=502,

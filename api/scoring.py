@@ -193,6 +193,72 @@ def calculate_yield_estimate(crop_data: Dict, suitability_score: float, area_m2:
         }
     }
 
+def growing_season_climate(nasa_raw_data: Dict, crop_base_temp: float) -> Dict:
+    """
+    Mean temperature and rainfall over the crop's growing days (daily mean above its base temperature),
+    the same window the sunshine score uses.
+    """
+    parameters = nasa_raw_data.get("properties", {}).get("parameter", {})
+    temp_max_data = parameters.get("T2M_MAX", {})
+    temp_min_data = parameters.get("T2M_MIN", {})
+    precip_data = parameters.get("PRECTOTCORR", {})
+
+    temps = []
+    precip = 0.0
+    for date_key, t_max in temp_max_data.items():
+        t_min = temp_min_data.get(date_key)
+        if t_min is None:
+            continue
+        avg = (t_max + t_min) / 2
+        if avg > crop_base_temp:
+            temps.append(avg)
+            precip += precip_data.get(date_key, 0.0)
+
+    return {
+        "days": len(temps),
+        "mean_temp": statistics.mean(temps) if temps else None,
+        "precipitation_mm": precip,
+    }
+
+
+def temperature_score(mean_temp, optimal_min: float, optimal_max: float) -> float:
+    """Full marks within 3 °C of the middle of the crop's ideal range, stepping down beyond that."""
+    if mean_temp is None:
+        return 0.0
+    temp_diff = abs(mean_temp - (optimal_min + optimal_max) / 2)
+    if temp_diff <= 3:
+        return 100.0
+    if temp_diff <= 6:
+        return 80.0
+    if temp_diff <= 10:
+        return 60.0
+    return max(0.0, 60 - (temp_diff - 10) * 5)
+
+
+def water_score(season_precip: float, required_water: float) -> float:
+    """
+    Rain over the growing days against the crop's seasonal need.
+    A shortfall is scored as before; a surplus costs far less, because rain beyond the need
+    only becomes a problem when it is extreme.
+    """
+    shortfall = required_water - season_precip
+    if shortfall > 0:
+        if shortfall <= 50:
+            return 100.0
+        if shortfall <= 150:
+            return 90 - ((shortfall - 50) / 100) * 20
+        if shortfall <= 300:
+            return 70 - ((shortfall - 150) / 150) * 30
+        return max(20.0, 40 - ((shortfall - 300) / 100) * 5)
+
+    surplus = -shortfall
+    if surplus <= 150:
+        return 100.0
+    if surplus <= 400:
+        return 100 - ((surplus - 150) / 250) * 20
+    return max(60.0, 80 - ((surplus - 400) / 100) * 5)
+
+
 def calculate_crop_suitability(crop_data: Dict, climate_analysis: Dict,
                                nasa_raw_data: Dict, sunshine_factor: float = 1.0,
                                area_m2: float = None) -> Dict:
@@ -210,9 +276,8 @@ def calculate_crop_suitability(crop_data: Dict, climate_analysis: Dict,
         Dictionary with suitability scores, metrics, and optional yield estimate
     """
     # Extract climate metrics
-    avg_temp_max = climate_analysis["temperature_max"]["mean"]
-    avg_temp_min = climate_analysis["temperature_min"]["mean"]
     annual_precip = climate_analysis["precipitation"]["total_annual"]
+    season = growing_season_climate(nasa_raw_data, crop_data["base_temp"])
 
     # Calculate sunshine during growing season only (when crop can actually grow)
     sunshine_data = calculate_growing_season_sunshine(
@@ -255,33 +320,13 @@ def calculate_crop_suitability(crop_data: Dict, climate_analysis: Dict,
     sun_ratio = adjusted_sun_hours / crop_data["optimal_sun_hours"]
     scores["sunlight"] = min(100, sun_ratio * 100)
 
-    # Temperature Range Score
-    avg_temp = (avg_temp_max + avg_temp_min) / 2
-    optimal_mid = (crop_data["optimal_temp_min"] + crop_data["optimal_temp_max"]) / 2
-    temp_diff = abs(avg_temp - optimal_mid)
+    # Temperature: mean over the crop's growing days against its ideal range (not the year-round mean).
+    scores["temperature"] = temperature_score(season["mean_temp"], crop_data["optimal_temp_min"], crop_data["optimal_temp_max"])
 
-    if temp_diff <= 3:
-        scores["temperature"] = 100
-    elif temp_diff <= 6:
-        scores["temperature"] = 80
-    elif temp_diff <= 10:
-        scores["temperature"] = 60
-    else:
-        scores["temperature"] = max(0, 60 - (temp_diff - 10) * 5)
-
-    # Water availability score using actual crop requirements
+    # Water: rain over the growing days against the seasonal need; surplus costs less than shortfall.
     required_water = crop_data.get("seasonal_water_mm", 500)
-    water_diff = abs(annual_precip - required_water)
-    irrigation_needed = max(0, required_water - annual_precip)
-
-    if water_diff <= 50:
-        scores["water"] = 100
-    elif water_diff <= 150:
-        scores["water"] = 90 - ((water_diff - 50) / 100) * 20
-    elif water_diff <= 300:
-        scores["water"] = 70 - ((water_diff - 150) / 150) * 30
-    else:
-        scores["water"] = max(20, 40 - ((water_diff - 300) / 100) * 5)
+    irrigation_needed = max(0, required_water - season["precipitation_mm"])
+    scores["water"] = water_score(season["precipitation_mm"], required_water)
 
     # Drought resistance adjustment
     drought_resistance = crop_data.get("drought_resistance", "moderate")
@@ -297,6 +342,11 @@ def calculate_crop_suitability(crop_data: Dict, climate_analysis: Dict,
             scores["temperature"] * 0.25 +
             scores["water"] * 0.15
     )
+
+    # A crop that cannot collect enough heat to mature cannot rank above its heat score,
+    # however mild or sunny the short season it does get.
+    heat_capped = overall_score > scores["gdd"]
+    overall_score = min(overall_score, scores["gdd"])
 
     # Determine suitability category
     if overall_score >= 80:
@@ -322,6 +372,9 @@ def calculate_crop_suitability(crop_data: Dict, climate_analysis: Dict,
             "min_sun_hours": crop_data["min_sun_hours"],
             "optimal_sun_hours": crop_data["optimal_sun_hours"],
             "annual_precipitation_mm": round(annual_precip, 1),
+            "season_precipitation_mm": round(season["precipitation_mm"], 1),
+            "season_mean_temp": round(season["mean_temp"], 1) if season["mean_temp"] is not None else None,
+            "heat_capped": heat_capped,
             "required_water_mm": required_water,
             "irrigation_needed_mm": round(irrigation_needed, 1),
             "optimal_temp_min": crop_data["optimal_temp_min"],
