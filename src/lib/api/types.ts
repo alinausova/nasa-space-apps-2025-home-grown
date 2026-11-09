@@ -19,6 +19,10 @@ export interface SuitabilityMetrics {
   optimal_temp_min?: number;
   optimal_temp_max?: number;
   base_temp?: number;
+  /** v2 back end: growing-season figures and whether the score was capped by missing heat. */
+  season_mean_temp?: number | null;
+  season_precipitation_mm?: number;
+  heat_capped?: boolean;
 }
 
 export interface YieldEstimate {

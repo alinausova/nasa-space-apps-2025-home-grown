@@ -11,7 +11,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
 
-from climate import fetch_all_climate_data, analyze_climate_data
+from climate import analyze_climate_data, fetch_all_climate_data, latest_complete_year
 from crop_database import CROP_DATABASE
 from geometry import calculate_polygon_area_m2, calculate_polygon_centroid
 from landsat import (
@@ -92,7 +92,7 @@ async def list_crops():
 async def get_polygon_crop_recommendations(
         request: Request,
         polygon: PolygonInput,
-        year: int = Query(2023, ge=1984, le=datetime.now().year - 1),
+        year: int | None = Query(None, ge=1984, le=datetime.now().year - 1, description="Defaults to the latest complete year"),
         min_score: float = Query(50.0, ge=0, le=100),
         limit: int = Query(10, ge=1, le=50),
         include_monthly_temps: bool = True
@@ -102,11 +102,13 @@ async def get_polygon_crop_recommendations(
 
     Parameters:
     - polygon: Polygon coordinates defining the field area
-    - year: Year to analyze (default: 2023)
+    - year: Year to analyse (default: the latest complete year)
     - min_score: Minimum suitability score (0-100, default: 50)
     - limit: Maximum number of recommendations to return
     - include_monthly_temps: Include monthly average temperatures for the analysed year (default: True)
     """
+
+    year = year or latest_complete_year()
 
     # ========== GEOMETRY CALCULATIONS ==========
     center_lat, center_lon = calculate_polygon_centroid(polygon.coordinates)
