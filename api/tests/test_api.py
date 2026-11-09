@@ -27,6 +27,23 @@ def test_recommendations_fetch_nasa_once(stubs):
     assert stubs["summary"] == 1
 
 
+def test_landsat_is_reported_as_surface_heat(stubs):
+    body = post().json()
+    assert body["landsat"]["status"] == "ok"
+    heat = body["landsat"]["surface_heat"]
+    # Synthetic NASA year peaks around 25 °C in mid July; the stub scene reads 41.2 °C at the surface.
+    assert heat["scenes"] == 1
+    assert heat["offset_c"] == round(41.2 - heat["mean_air_temp_max_c"], 1)
+    assert body["data_sources"]["landsat_surface_temp"] is True
+
+
+def test_use_landsat_false_skips_it(stubs):
+    body = post(params="?use_landsat=false").json()
+    assert stubs["landsat_enabled"] is False
+    assert body["landsat"] == {"status": "disabled", "scenes": [], "surface_heat": None}
+    assert body["recommendations"]
+
+
 def test_recommendations_include_crop_temperatures(stubs):
     body = post(params="?limit=50").json()
     assert body["recommendations"], "expected at least one recommendation for a temperate year"
