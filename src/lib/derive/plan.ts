@@ -128,7 +128,7 @@ export function spreadLabels(ideal: number[], gap: number, min: number, max: num
 
 /**
  * Example planting plan: the top usable crops (up to four) in beds of equal area, 70% of the plot planted.
- * TODO(redesign v2): the back end returns the plan.
+ * Kept in the front end: it only depends on the plot shape and the ranked crops the API returns.
  */
 export function planFor(
   ring: LngLat[],
