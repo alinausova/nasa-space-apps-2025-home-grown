@@ -12,6 +12,18 @@
         return stop;
     });
 
+    // The page behind overscroll ("rubber band") and the mobile browser bar follow the area's theme.
+    const THEME_COLOR = { night: "#0C2414", stone: "#E8E6E0", leaf: "#D9FCD4" } as const;
+
+    $effect(() => {
+        const name = router.route.name;
+        const theme = name === "learn" || name === "legacy-learn" ? "stone" : name === "landing" ? "night" : "leaf";
+        const root = document.documentElement;
+        root.classList.remove("theme-night", "theme-stone", "theme-leaf");
+        root.classList.add(`theme-${theme}`);
+        document.querySelector('meta[name="theme-color"]')?.setAttribute("content", THEME_COLOR[theme]);
+    });
+
     $effect(() => {
         const route = router.route;
         if (route.name === "not-found") router.navigate({ name: "landing" }, { replace: true });
