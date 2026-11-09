@@ -67,7 +67,7 @@
         <span class="font-mono text-xs tracking-[0.12em] text-bright uppercase">Seen from space, grown at home</span>
         <h1 class="m-0 text-[clamp(76px,6.6vw,96px)] leading-[0.98] font-normal tracking-[-0.035em]">What could your city grow?</h1>
         <p class="m-0 max-w-[520px] text-[19px] leading-[1.55] text-ink-muted">
-            Home Grown turns NASA climate data into a planting list for any roof, yard or empty lot.
+            Home Grown turns NASA climate data and the latest crop research into a planting list for any roof, yard or empty lot.
         </p>
         <div class="flex gap-3">
             <Button href={router.href({ name: "app" })} size="lg" class="h-[52px]!">Pick a spot on Earth <span aria-hidden="true">→</span></Button>
@@ -90,7 +90,7 @@
         <div class="flex flex-col gap-3.5">
             <span class="font-mono text-[11px] tracking-[0.12em] text-ink-muted uppercase">Seen from space, grown at home</span>
             <h1 class="m-0 text-[44px] leading-[1.04] font-normal tracking-[-0.025em]">What could your city grow?</h1>
-            <p class="m-0 text-[15px] leading-normal text-ink-muted">Home Grown turns NASA climate data into a planting list for any roof, yard or empty lot.</p>
+            <p class="m-0 text-[15px] leading-normal text-ink-muted">Home Grown turns NASA climate data and the latest crop research into a planting list for any roof, yard or empty lot.</p>
             <ol class="m-0 flex list-none flex-col p-0 pt-1">
                 {#each steps as step (step.n)}
                     <li class="grid grid-cols-[26px_minmax(0,1fr)] gap-2.5 border-t border-line py-2.5">

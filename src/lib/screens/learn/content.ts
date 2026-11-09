@@ -13,13 +13,13 @@ export const TAB_INFO: Record<LearnTab, { n: string; label: string; title: strin
     n: '02',
     label: 'How scoring works',
     title: 'How a crop gets its score',
-    intro: 'Four weighted parts, checked against each crop’s own needs. Here is every formula we use.',
+    intro: 'Four weighted parts, checked against each crop’s own needs from published crop research. Here is every formula we use.',
   },
   data: {
     n: '03',
     label: 'Data sources',
     title: 'Where the data comes from',
-    intro: 'What your results are built on today, and the other variables we researched for later.',
+    intro: 'What your results are built on: NASA climate data, and the published crop studies behind every number we use.',
   },
   architecture: {
     n: '04',
@@ -39,9 +39,9 @@ export const TAB_ORDER: LearnTab[] = ['about', 'scoring', 'data', 'architecture'
 
 // About -----------------------------------------------------------------------
 
-// TODO(redesign v3): add "When should you plant it?" once the planting calendar ships.
 export const QUESTIONS = [
   'Which crop suits it best?',
+  'When should you plant it?',
   'How much should it yield?',
   'Does it need irrigation?',
   'How should the planting be laid out?',

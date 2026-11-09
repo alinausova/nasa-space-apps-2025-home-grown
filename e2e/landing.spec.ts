@@ -96,3 +96,10 @@ test.describe('landing', () => {
     }
   });
 });
+
+test('the tagline and the page description mention the crop research', async ({ page }) => {
+  await page.goto('');
+  const line = 'Home Grown turns NASA climate data and the latest crop research into a planting list for any roof, yard or empty lot.';
+  await expect(page.getByText(line).filter({ visible: true })).toBeVisible();
+  await expect(page.locator('meta[name="description"]')).toHaveAttribute('content', line);
+});
