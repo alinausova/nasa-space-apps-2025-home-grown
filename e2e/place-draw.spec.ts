@@ -13,7 +13,7 @@ test.describe('pick a place', () => {
     await waitForMap(page);
 
     await expect(page.getByRole('heading', { name: 'Where do you want to grow?' })).toBeVisible();
-    for (const city of ['Munich', 'Cairo', 'Belém', 'Reykjavík']) {
+    for (const city of ['Munich', 'Cairo', 'Belém', 'Reykjavík', 'Antalya', 'Omsk', 'Nairobi', 'Cape Town']) {
       await expect(page.getByRole('button', { name: new RegExp(city) })).toBeVisible();
     }
     await shot(page, 'place', info.project.name);
@@ -22,6 +22,10 @@ test.describe('pick a place', () => {
     await expect(page.getByRole('button', { name: /Cairo/ })).toHaveAttribute('aria-pressed', 'true');
     await page.waitForFunction(() => Math.abs((window as any).__hg.map.view.lat - 30.04) < 0.05, null, { timeout: 15_000 });
     await expect(page.getByText(/Cairo · (ready|zoom in) to draw/)).toBeVisible();
+
+    await page.getByRole('button', { name: /Cape Town/ }).click();
+    await page.waitForFunction(() => Math.abs((window as any).__hg.map.view.lat + 33.92) < 0.05, null, { timeout: 15_000 });
+    await expect(page.getByText(/Cape Town · (ready|zoom in) to draw/)).toBeVisible();
   });
 
   test('draw button opens the draw step', async ({ page }) => {
