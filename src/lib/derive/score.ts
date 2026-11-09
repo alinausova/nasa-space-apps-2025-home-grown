@@ -1,3 +1,4 @@
+import { i18n } from '../i18n/locale.svelte';
 // Mirrors the back end's scoring (api/main.py calculate_crop_suitability).
 // Keep thresholds and weights in sync with it.
 
@@ -15,11 +16,24 @@ export interface Factor {
   color: string;
 }
 
+const factor = (key: FactorKey, weight: number, color: string): Factor => ({
+  key,
+  weight,
+  color,
+  // Labels follow the active language.
+  get label() {
+    return i18n.m.score.factor[key].label;
+  },
+  get short() {
+    return i18n.m.score.factor[key].short;
+  },
+});
+
 export const FACTORS: readonly Factor[] = [
-  { key: 'gdd', label: 'Heat', short: 'Heat', weight: 0.35, color: 'var(--hg-factor-heat)' },
-  { key: 'sunlight', label: 'Sunlight', short: 'Sun', weight: 0.25, color: 'var(--hg-factor-sun)' },
-  { key: 'temperature', label: 'Temperature', short: 'Temp', weight: 0.25, color: 'var(--hg-factor-temp)' },
-  { key: 'water', label: 'Water', short: 'Water', weight: 0.15, color: 'var(--hg-factor-water)' },
+  factor('gdd', 0.35, 'var(--hg-factor-heat)'),
+  factor('sunlight', 0.25, 'var(--hg-factor-sun)'),
+  factor('temperature', 0.25, 'var(--hg-factor-temp)'),
+  factor('water', 0.15, 'var(--hg-factor-water)'),
 ];
 
 /** A crop is usable (shown as a recommendation) from this score up. */
@@ -43,11 +57,20 @@ export function dotOpacity(score: number): number {
   return DOT_OPACITY[categoryOf(score)];
 }
 
-export const FIT_LABEL: Record<Category, string> = {
-  Excellent: 'Excellent fit',
-  Good: 'Good fit',
-  Moderate: 'Moderate fit',
-  Poor: 'Poor fit',
+/** "Excellent fit" etc. in the active language. */
+export const FIT_LABEL: Readonly<Record<Category, string>> = {
+  get Excellent() {
+    return i18n.m.score.fit.Excellent;
+  },
+  get Good() {
+    return i18n.m.score.fit.Good;
+  },
+  get Moderate() {
+    return i18n.m.score.fit.Moderate;
+  },
+  get Poor() {
+    return i18n.m.score.fit.Poor;
+  },
 };
 
 function clampScore(value: number): number {

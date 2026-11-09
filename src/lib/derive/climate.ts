@@ -1,5 +1,6 @@
 import type { MonthlyTemperature } from '../api/types';
 import { monthShort } from '../i18n/format';
+import { i18n } from '../i18n/locale.svelte';
 
 
 export interface GrowingSeason {
@@ -17,18 +18,22 @@ export function warmestMonth(monthly: MonthlyTemperature[]): MonthlyTemperature 
 
 /** Text alternative for the climate chart. */
 export function describeClimate(monthly: MonthlyTemperature[], season: GrowingSeason | null): string {
-  if (monthly.length === 0) return 'Monthly climate: no data.';
+  const t = i18n.m.chart;
+  if (monthly.length === 0) return t.noData;
   const highs = monthly.map((m) => m.avg_temp_max);
   const lows = monthly.map((m) => m.avg_temp_min);
   const hiMax = monthly[highs.indexOf(Math.max(...highs))];
   const hiMin = monthly[highs.indexOf(Math.min(...highs))];
   const r = (n: number) => Math.round(n);
-  const parts = [
-    `Monthly climate. Daily highs from ${r(hiMin.avg_temp_max)} degrees in ${monthShort(hiMin.month - 1)} to ${r(hiMax.avg_temp_max)} in ${monthShort(hiMax.month - 1)}`,
-    `lows from ${r(Math.min(...lows))} to ${r(Math.max(...lows))}.`,
-  ];
-  const seasonText = season ? `Growing season ${season.label === 'All year' ? 'all year' : season.label.replace('–', ' to ')}.` : 'No month is warm enough to grow outdoors.';
-  return `${parts.join(', ')} ${seasonText}`;
+  const text = t.highsLows(r(hiMin.avg_temp_max), monthShort(hiMin.month - 1), r(hiMax.avg_temp_max), monthShort(hiMax.month - 1), r(Math.min(...lows)), r(Math.max(...lows)));
+  let seasonText = t.noSeason;
+  if (season && season.months.length === 12) seasonText = t.seasonAllYear;
+  else if (season) {
+    const first = season.months[0];
+    const last = season.months[season.months.length - 1];
+    seasonText = t.season(monthShort(first), first === last ? null : monthShort(last));
+  }
+  return `${text} ${seasonText}`;
 }
 
 type ServerSeason = { start_month: number; end_month: number; days: number; all_year: boolean } | null;
@@ -36,7 +41,7 @@ type ServerSeason = { start_month: number; end_month: number; days: number; all_
 /** The back end's growing season (v2 /analysis/climate) in the shape the chart and cards use. */
 export function seasonFromServer(season: ServerSeason): GrowingSeason | null {
   if (!season) return null;
-  if (season.all_year) return { months: [...Array(12).keys()], runs: [[0, 11]], label: 'All year', days: season.days };
+  if (season.all_year) return { months: [...Array(12).keys()], runs: [[0, 11]], label: i18n.m.season.allYear, days: season.days };
   const first = season.start_month - 1;
   const last = season.end_month - 1;
   const months: number[] = [];

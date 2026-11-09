@@ -1,3 +1,5 @@
+import { en, type Messages } from './messages/en';
+
 /** Languages Home Grown is being translated into. English is the source. */
 export const LOCALES = ['en', 'de', 'es', 'fr', 'tr', 'ru'] as const;
 export type Locale = (typeof LOCALES)[number];
@@ -6,6 +8,9 @@ export type Locale = (typeof LOCALES)[number];
 export const AVAILABLE: readonly Locale[] = ['en'];
 
 const STORAGE_KEY = 'hg-locale';
+
+/** Catalogs per locale. Untranslated locales point at English; AVAILABLE keeps them from being selected. */
+const CATALOGS: Record<Locale, Messages> = { en, de: en, es: en, fr: en, tr: en, ru: en };
 
 /**
  * Intl tags per locale and purpose. English mixes two on purpose, to keep today's copy exactly:
@@ -48,6 +53,11 @@ function readStored(): string | null {
 
 class I18n {
   locale = $state<Locale>('en');
+
+  /** Messages for the active locale. Reading it in a template or $derived re-renders on a language change. */
+  get m(): Messages {
+    return CATALOGS[this.locale];
+  }
 
   /** The Intl tag for a purpose, for the active locale. */
   intl(purpose: keyof (typeof INTL)['en']): string {
