@@ -143,6 +143,15 @@ export class MapController {
     this.map?.flyTo({ center, zoom, essential: true });
   }
 
+  /** The map as a PNG data URL (the canvas keeps its drawing buffer for this). Null without a map. */
+  snapshot(): string | null {
+    try {
+      return this.map?.getCanvas().toDataURL('image/png') ?? null;
+    } catch {
+      return null;
+    }
+  }
+
   /** Marks a searched place or the user's position. `null` removes the pin. */
   setPin(center: LngLat | null): void {
     if (!center || !this.map) {
