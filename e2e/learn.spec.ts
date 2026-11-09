@@ -58,11 +58,11 @@ test.describe('learn more', () => {
     await expect(section).toContainText('Where it started: NASA International Space Apps Challenge');
   });
 
-  test('get in touch: contact the team via LinkedIn, report a bug on GitHub', async ({ page }) => {
+  test('get in touch: contact the team via LinkedIn, report an issue on GitHub', async ({ page }) => {
     await mockApi(page);
     await page.goto('learn/about');
     await expect(page.getByRole('link', { name: /Contact the team/ })).toHaveAttribute('href', 'https://www.linkedin.com/in/vishnu-sunil/');
-    await expect(page.getByRole('link', { name: /Report a bug/ })).toHaveAttribute('href', /github\.com\/alinausova\/nasa-space-apps-2025-home-grown\/issues$/);
+    await expect(page.getByRole('link', { name: /Report an issue/ })).toHaveAttribute('href', /github\.com\/alinausova\/nasa-space-apps-2025-home-grown\/issues$/);
     await expect(page.getByRole('link', { name: /Press release/ })).toHaveCount(0);
   });
 

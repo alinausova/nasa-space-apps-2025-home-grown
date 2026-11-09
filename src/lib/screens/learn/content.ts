@@ -73,8 +73,8 @@ export const RECOGNITION = [
 ];
 
 export const CONTACT = [
-  { title: 'Contact the team', body: 'Message Vishnu Sunil Kumar on LinkedIn', href: 'https://www.linkedin.com/in/vishnu-sunil/' },
-  { title: 'Report a bug', body: 'or suggest a feature on GitHub', href: 'https://github.com/alinausova/nasa-space-apps-2025-home-grown/issues' },
+  { title: 'Contact the team', body: 'Vishnu Sunil Kumar on LinkedIn', href: 'https://www.linkedin.com/in/vishnu-sunil/' },
+  { title: 'Report an issue', body: 'Bugs and feature requests on GitHub', href: 'https://github.com/alinausova/nasa-space-apps-2025-home-grown/issues' },
 ];
 
 // Scoring ---------------------------------------------------------------------

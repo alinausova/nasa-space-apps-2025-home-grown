@@ -63,7 +63,7 @@
     {/snippet}
 </LearnSection>
 
-<LearnSection label="04" title="Get in touch" body="Planning a garden project, writing about urban food, or want to try Home Grown in your city?">
+<LearnSection label="04" title="Get in touch" body="For questions about Home Grown, collaborations or using it in your city, contact the team.">
     {#snippet aside()}
         <div class="grid gap-2.5 sm:grid-cols-2">
             {#each CONTACT as item (item.title)}
