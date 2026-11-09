@@ -21,6 +21,7 @@ CROP_DATABASE = {
         "yield_kg_m2_average": 5.0,
         "yield_kg_m2_upper": 8.0,
         "sources": {
+            "temperature_thresholds": "Paredes et al. 2025, Agric. Water Manag. 319:109755, Table 3: median of full-cycle studies 8/30 °C",
             "water": "FAO Land & Water - Tomato crop information",
             "germination": "UC Davis, J.F. Harrington - Vegetable Seed Germination",
             "drought": "Agronomy 2019, 9(8):447 - Physiological Responses of Vegetable Crops to Water Stress",
@@ -49,6 +50,7 @@ CROP_DATABASE = {
         "yield_kg_m2_average": 2.5,
         "yield_kg_m2_upper": 4.0,
         "sources": {
+            "temperature_thresholds": "Paredes et al. 2025, Agric. Water Manag. 319:109755, Table 2: median of full-cycle studies 4/28 °C",
             "water": "FAO Irrigation and Drainage Paper 56",
             "germination": "UC Davis, J.F. Harrington - Vegetable Seed Germination",
             "drought": "Estimated from crop coefficients",
@@ -77,6 +79,7 @@ CROP_DATABASE = {
         "yield_kg_m2_average": 2.0,
         "yield_kg_m2_upper": 3.0,
         "sources": {
+            "temperature_thresholds": "Paredes et al. 2025, Agric. Water Manag. 319:109755, Table 2: median of full-cycle studies 4.2/24.5 °C",
             "water": "FAO Irrigation and Drainage Paper 56",
             "germination": "UC Davis - Vegetable Seed Germination",
             "drought": "Estimated from crop type",
@@ -105,6 +108,7 @@ CROP_DATABASE = {
         "yield_kg_m2_average": 3.0,
         "yield_kg_m2_upper": 5.0,
         "sources": {
+            "temperature_thresholds": "Paredes et al. 2025, Agric. Water Manag. 319:109755, Table 3: median of full-cycle studies 10/35 °C",
             "water": "FAO Irrigation and Drainage Paper 56",
             "germination": "UC Davis, J.F. Harrington",
             "drought": "Estimated from solanaceae family characteristics",
@@ -133,6 +137,7 @@ CROP_DATABASE = {
         "yield_kg_m2_average": 5.0,
         "yield_kg_m2_upper": 8.0,
         "sources": {
+            "temperature_thresholds": "Paredes et al. 2025, Agric. Water Manag. 319:109755, Table 1: median of full-cycle studies 5/29 °C",
             "water": "FAO Irrigation and Drainage Paper 56",
             "germination": "UC Davis - Vegetable Seed Germination",
             "drought": "Estimated from root crop characteristics",
@@ -161,6 +166,7 @@ CROP_DATABASE = {
         "yield_kg_m2_average": 2.5,
         "yield_kg_m2_upper": 4.0,
         "sources": {
+            "temperature_thresholds": "Paredes et al. 2025, Agric. Water Manag. 319:109755, Table 5: median of full-cycle studies 10/32.5 °C",
             "water": "FAO Irrigation and Drainage Paper 24",
             "germination": "UC Davis, J.F. Harrington",
             "drought": "Agronomy 2019, 9(8):447 - beans moderately sensitive to water stress",
@@ -189,6 +195,7 @@ CROP_DATABASE = {
         "yield_kg_m2_average": 3.0,
         "yield_kg_m2_upper": 4.5,
         "sources": {
+            "temperature_thresholds": "No entry in Paredes et al. 2025, Agric. Water Manag. 319:109755; set close to the cabbage family (cabbage 4.2/27 °C there)",
             "water": "FAO Paper 56 - Brassica group",
             "germination": "UC Davis - similar to cabbage",
             "drought": "Estimated from brassica family",
@@ -217,6 +224,7 @@ CROP_DATABASE = {
         "yield_kg_m2_average": 3.5,
         "yield_kg_m2_upper": 6.0,
         "sources": {
+            "temperature_thresholds": "Paredes et al. 2025, Agric. Water Manag. 319:109755, Table 3: median of full-cycle studies 10/35 °C",
             "water": "FAO Irrigation and Drainage Paper 56",
             "germination": "UC Davis, J.F. Harrington",
             "drought": "Cucurbits generally drought sensitive",
@@ -245,6 +253,7 @@ CROP_DATABASE = {
         "yield_kg_m2_average": 0.5,
         "yield_kg_m2_upper": 1.0,
         "sources": {
+            "temperature_thresholds": "Paredes et al. 2025, Agric. Water Manag. 319:109755, Table 1: median of full-cycle studies 4/32.5 °C",
             "water": "FAO Paper 33 - short season vegetables",
             "germination": "UC Davis - Vegetable Seed Germination",
             "drought": "Root crops generally moderate tolerance",
@@ -273,6 +282,7 @@ CROP_DATABASE = {
         "yield_kg_m2_average": 1.5,
         "yield_kg_m2_upper": 2.5,
         "sources": {
+            "temperature_thresholds": "No entry in Paredes et al. 2025, Agric. Water Manag. 319:109755; set close to the cabbage family (cabbage 4.2/27 °C there)",
             "water": "Estimated from leafy greens group",
             "germination": "Similar to other brassicas",
             "drought": "Leafy greens moderate tolerance",
@@ -301,6 +311,7 @@ CROP_DATABASE = {
         "yield_kg_m2_average": 5.0,
         "yield_kg_m2_upper": 8.0,
         "sources": {
+            "temperature_thresholds": "Paredes et al. 2025, Agric. Water Manag. 319:109755, Table 3: median of full-cycle studies 10.5/35 °C",
             "water": "FAO Paper 56 - Solanaceae",
             "germination": "UC Davis, J.F. Harrington",
             "drought": "Similar to tomato family",
@@ -329,6 +340,7 @@ CROP_DATABASE = {
         "yield_kg_m2_average": 1.0,
         "yield_kg_m2_upper": 1.5,
         "sources": {
+            "temperature_thresholds": "Paredes et al. 2025, Agric. Water Manag. 319:109755, Table 2: median of full-cycle studies 4.7/27 °C",
             "water": "FAO Paper 56 - Cole crops",
             "germination": "UC Davis - Vegetable Seed Germination",
             "drought": "Brassicas moderate tolerance",
@@ -357,6 +369,7 @@ CROP_DATABASE = {
         "yield_kg_m2_average": 3.5,
         "yield_kg_m2_upper": 6.0,
         "sources": {
+            "temperature_thresholds": "Paredes et al. 2025, Agric. Water Manag. 319:109755, Table 2: median of full-cycle studies 4.2/27 °C",
             "water": "FAO Paper 56 Table 12",
             "germination": "UC Davis, J.F. Harrington",
             "drought": "Sustainability 2020, 12(10):3945",
@@ -385,6 +398,7 @@ CROP_DATABASE = {
         "yield_kg_m2_average": 1.8,
         "yield_kg_m2_upper": 3.0,
         "sources": {
+            "temperature_thresholds": "Paredes et al. 2025, Agric. Water Manag. 319:109755, Table 2: median of full-cycle studies 4/30 °C",
             "water": "FAO Paper 56",
             "germination": "UC Davis",
             "drought": "Similar to cabbage",
@@ -413,6 +427,7 @@ CROP_DATABASE = {
         "yield_kg_m2_average": 4.5,
         "yield_kg_m2_upper": 7.0,
         "sources": {
+            "temperature_thresholds": "Not sourced. Paredes et al. 2025, Agric. Water Manag. 319:109755, Table 1 gives 2/35 °C (median of full-cycle studies); ours differs",
             "water": "FAO Paper 56 - bulb vegetables",
             "germination": "UC Davis",
             "drought": "Shallow roots, moderate tolerance",
@@ -441,6 +456,7 @@ CROP_DATABASE = {
         "yield_kg_m2_average": 1.2,
         "yield_kg_m2_upper": 2.0,
         "sources": {
+            "temperature_thresholds": "Paredes et al. 2025, Agric. Water Manag. 319:109755, Table 1: median of full-cycle studies 3/29 °C",
             "water": "FAO Paper 56",
             "germination": "Similar to onions",
             "drought": "Similar to onions",
@@ -469,6 +485,7 @@ CROP_DATABASE = {
         "yield_kg_m2_average": 3.5,
         "yield_kg_m2_upper": 5.0,
         "sources": {
+            "temperature_thresholds": "Not sourced. Paredes et al. 2025, Agric. Water Manag. 319:109755, Table 1 gives 2/34 °C (median of full-cycle studies); ours differs",
             "water": "FAO Paper 56 Table 12",
             "germination": "UC Davis, J.F. Harrington",
             "drought": "Moderate sensitivity, critical during tuber initiation",
@@ -497,6 +514,7 @@ CROP_DATABASE = {
         "yield_kg_m2_average": 2.5,
         "yield_kg_m2_upper": 4.0,
         "sources": {
+            "temperature_thresholds": "Paredes et al. 2025, Agric. Water Manag. 319:109755, Table 1: median of full-cycle studies 8.1/34 °C",
             "water": "FAO Paper 56",
             "germination": "UC Davis",
             "drought": "International Journal of AgriScience 2021 - orange fleshed sweet potato drought tolerance",
@@ -525,6 +543,7 @@ CROP_DATABASE = {
         "yield_kg_m2_average": 5.0,
         "yield_kg_m2_upper": 8.0,
         "sources": {
+            "temperature_thresholds": "Paredes et al. 2025, Agric. Water Manag. 319:109755, Table 3: median of full-cycle studies 9/35 °C",
             "water": "FAO Paper 56 - cucurbits",
             "germination": "UC Davis",
             "drought": "Cucurbits moderate sensitivity",
@@ -553,6 +572,7 @@ CROP_DATABASE = {
         "yield_kg_m2_average": 3.5,
         "yield_kg_m2_upper": 6.0,
         "sources": {
+            "temperature_thresholds": "Paredes et al. 2025, Agric. Water Manag. 319:109755, Table 3: median of full-cycle studies 8.6/35 °C",
             "water": "FAO Paper 56",
             "germination": "UC Davis",
             "drought": "Similar to squash",
@@ -581,6 +601,7 @@ CROP_DATABASE = {
         "yield_kg_m2_average": 2.0,
         "yield_kg_m2_upper": 3.5,
         "sources": {
+            "temperature_thresholds": "Not sourced. Paredes et al. 2025, Agric. Water Manag. 319:109755, Table 3 gives 10/41.5 °C (median of full-cycle studies); ours differs",
             "water": "FAO Paper 56 - melon, cantaloupe",
             "germination": "UC Davis",
             "drought": "Cucurbits moderate",
@@ -609,6 +630,7 @@ CROP_DATABASE = {
         "yield_kg_m2_average": 3.0,
         "yield_kg_m2_upper": 5.0,
         "sources": {
+            "temperature_thresholds": "Paredes et al. 2025, Agric. Water Manag. 319:109755, Table 3: median of full-cycle studies 11.3/37 °C",
             "water": "FAO Paper 56",
             "germination": "UC Davis, J.F. Harrington",
             "drought": "Deep roots, moderate tolerance",
@@ -637,6 +659,7 @@ CROP_DATABASE = {
         "yield_kg_m2_average": 3.0,
         "yield_kg_m2_upper": 5.0,
         "sources": {
+            "temperature_thresholds": "Paredes et al. 2025, Agric. Water Manag. 319:109755, Table 3: median of full-cycle studies 3/30 °C",
             "water": "FAO Paper 56 - berries",
             "germination": "UC Davis",
             "drought": "Shallow-rooted, sensitive",
@@ -665,6 +688,7 @@ CROP_DATABASE = {
         "yield_kg_m2_average": 1.2,
         "yield_kg_m2_upper": 2.0,
         "sources": {
+            "temperature_thresholds": "Paredes et al. 2025, Agric. Water Manag. 319:109755, Table 5: median of full-cycle studies 4.8/27 °C",
             "water": "FAO Paper 56 - legumes",
             "germination": "UC Davis",
             "drought": "Agronomy 2019 - peas moderately sensitive",
@@ -693,6 +717,7 @@ CROP_DATABASE = {
         "yield_kg_m2_average": 0.7,
         "yield_kg_m2_upper": 1.2,
         "sources": {
+            "temperature_thresholds": "Not sourced. Paredes et al. 2025, Agric. Water Manag. 319:109755, Table 8 gives 9.5/30 °C (median of full-cycle studies); ours differs",
             "water": "FAO Paper 56 Table 12 - maize",
             "germination": "UC Davis, J.F. Harrington",
             "drought": "Agronomy 2019 - moderately sensitive, critical at tasseling",
@@ -721,6 +746,7 @@ CROP_DATABASE = {
         "yield_kg_m2_average": 1.0,
         "yield_kg_m2_upper": 2.0,
         "sources": {
+            "temperature_thresholds": "Paredes et al. 2025, Agric. Water Manag. 319:109755, Table 4: median of full-cycle studies 10.9/35 °C",
             "water": "Estimated from herb requirements",
             "germination": "UC Davis",
             "drought": "Aromatic herbs moderate tolerance",
@@ -749,6 +775,7 @@ CROP_DATABASE = {
         "yield_kg_m2_average": 1.0,
         "yield_kg_m2_upper": 1.8,
         "sources": {
+            "temperature_thresholds": "Paredes et al. 2025, Agric. Water Manag. 319:109755, Table 4: median of full-cycle studies 4/27 °C",
             "water": "Estimated from herb crops",
             "germination": "UC Davis",
             "drought": "Moderate tolerance",
@@ -777,6 +804,7 @@ CROP_DATABASE = {
         "yield_kg_m2_average": 0.45,
         "yield_kg_m2_upper": 0.7,
         "sources": {
+            "temperature_thresholds": "Paredes et al. 2025, Agric. Water Manag. 319:109755, Table 7: median of full-cycle studies 0/32.5 °C",
             "water": "FAO Paper 56 Table 12 - wheat",
             "germination": "UC Davis",
             "drought": "Frontiers Plant Science 2023 - some varieties drought tolerant",
@@ -805,6 +833,7 @@ CROP_DATABASE = {
         "yield_kg_m2_average": 0.5,
         "yield_kg_m2_upper": 0.8,
         "sources": {
+            "temperature_thresholds": "Paredes et al. 2025, Agric. Water Manag. 319:109755, Table 8: median of full-cycle studies 10/40 °C",
             "water": "FAO Paper 56 Table 12 - paddy rice",
             "germination": "UC Davis",
             "drought": "Plant Cell Physiol. 2016 - most rice sensitive, breeding efforts ongoing",
@@ -833,6 +862,7 @@ CROP_DATABASE = {
         "yield_kg_m2_average": 0.35,
         "yield_kg_m2_upper": 0.5,
         "sources": {
+            "temperature_thresholds": "Paredes et al. 2025, Agric. Water Manag. 319:109755, Table 5: median of full-cycle studies 9.2/30 °C",
             "water": "FAO Paper 56 - soybeans",
             "germination": "UC Davis",
             "drought": "Moderately sensitive to water stress",
@@ -861,6 +891,7 @@ CROP_DATABASE = {
         "yield_kg_m2_average": 0.25,
         "yield_kg_m2_upper": 0.4,
         "sources": {
+            "temperature_thresholds": "Not sourced. Paredes et al. 2025, Agric. Water Manag. 319:109755, Table 6 gives 8/30 °C (median of full-cycle studies); ours differs",
             "water": "FAO Paper 56 - sunflower",
             "germination": "UC Davis",
             "drought": "Deep rooting system, relatively drought tolerant",

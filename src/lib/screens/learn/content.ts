@@ -126,7 +126,8 @@ export const DATA_USED = [
 
 /** Where each crop number comes from (api/crop_database.py) and what it drives. Refs point into BIBLIOGRAPHY. */
 export const CROP_DATA = [
-  { variable: 'Heat units, base and upper temperature', source: 'Team estimates, being checked against Oregon State’s Croptime field models and FAO ECOCROP. The method follows the FAO56 revision.', why: 'Heat score, the cap on every score, and the sowing calendar.', refs: '[20][26][27]' },
+  { variable: 'Base and upper temperature', source: 'Studies compiled in the Paredes et al. review. Our values match their median for 24 of the 29 crops it covers; kale and arugula use cabbage-family values.', why: 'Which days count towards growth, in the heat score and the calendar.', refs: '[20]' },
+  { variable: 'Heat units needed', source: 'Team estimates, being checked against Oregon State’s Croptime field models and FAO ECOCROP', why: 'Heat score, the cap on every score, and when a sowing is ready.', refs: '[26][27]' },
   { variable: 'Ideal temperature range', source: 'Team estimates, being checked against FAO ECOCROP', why: 'Temperature score over the growing season.', refs: '[26]' },
   { variable: 'Frost tolerance', source: 'Team estimates', why: 'Which frosts end a sowing in the calendar.', refs: '' },
   { variable: 'Water need per season', source: 'FAO Irrigation and Drainage Paper 56', why: 'Water score: growing-season rain against this need.', refs: '[19]' },

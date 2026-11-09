@@ -94,7 +94,8 @@ test.describe('learn more', () => {
     await expect(page.getByRole('table', { name: 'Variables used in your results' })).toContainText('NASA POWER (MERRA-2)');
     await expect(page.getByRole('table', { name: 'Variables researched but not used yet' })).toContainText('Copernicus Sentinel-3');
     const crops = page.getByRole('table', { name: 'Where the crop numbers come from' });
-    await expect(crops.getByRole('rowheader')).toHaveCount(8);
+    await expect(crops.getByRole('rowheader')).toHaveCount(9);
+    await expect(crops).toContainText('Our values match their median for 24 of the 29 crops it covers');
     await expect(crops).toContainText('FAO Irrigation and Drainage Paper 56');
     await expect(crops).toContainText('Team estimates, being checked against Oregon State’s Croptime field models and FAO ECOCROP');
 
