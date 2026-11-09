@@ -1,0 +1,115 @@
+{
+ "plot_id": "668c114bb46bf487",
+ "location": {
+  "center_latitude": 48.147057,
+  "center_longitude": 11.564621,
+  "area_m2": 13694.57,
+  "area_hectares": 1.3695
+ },
+ "year": 2025,
+ "climate": {
+  "avg_temp_max": 14.1,
+  "avg_temp_min": 5.3,
+  "annual_precipitation_mm": 992.6,
+  "sun_hours_daily": 8.46,
+  "sunshine_factor": 0.7,
+  "growing_season": {
+   "start_month": 3,
+   "end_month": 10,
+   "days": 245,
+   "all_year": false
+  },
+  "warmest_month": {
+   "month": 6,
+   "temp_avg": 19.0
+  },
+  "days_above_5c": 257,
+  "winter_sun_hours": 3.4
+ },
+ "monthly": [
+  {
+   "month": 1,
+   "temp_max": 4.0,
+   "temp_min": -2.8,
+   "temp_avg": 0.6,
+   "precip_mm": 57.8
+  },
+  {
+   "month": 2,
+   "temp_max": 6.1,
+   "temp_min": -1.7,
+   "temp_avg": 2.2,
+   "precip_mm": 20.4
+  },
+  {
+   "month": 3,
+   "temp_max": 10.8,
+   "temp_min": 1.1,
+   "temp_avg": 5.9,
+   "precip_mm": 73.0
+  },
+  {
+   "month": 4,
+   "temp_max": 15.6,
+   "temp_min": 4.7,
+   "temp_avg": 10.2,
+   "precip_mm": 28.9
+  },
+  {
+   "month": 5,
+   "temp_max": 16.5,
+   "temp_min": 6.9,
+   "temp_avg": 11.7,
+   "precip_mm": 97.8
+  },
+  {
+   "month": 6,
+   "temp_max": 24.1,
+   "temp_min": 13.8,
+   "temp_avg": 19.0,
+   "precip_mm": 116.3
+  },
+  {
+   "month": 7,
+   "temp_max": 22.2,
+   "temp_min": 13.3,
+   "temp_avg": 17.7,
+   "precip_mm": 206.0
+  },
+  {
+   "month": 8,
+   "temp_max": 23.4,
+   "temp_min": 13.6,
+   "temp_avg": 18.5,
+   "precip_mm": 120.0
+  },
+  {
+   "month": 9,
+   "temp_max": 19.5,
+   "temp_min": 10.3,
+   "temp_avg": 14.9,
+   "precip_mm": 109.6
+  },
+  {
+   "month": 10,
+   "temp_max": 13.2,
+   "temp_min": 4.9,
+   "temp_avg": 9.1,
+   "precip_mm": 68.3
+  },
+  {
+   "month": 11,
+   "temp_max": 7.8,
+   "temp_min": 0.1,
+   "temp_avg": 4.0,
+   "precip_mm": 72.8
+  },
+  {
+   "month": 12,
+   "temp_max": 5.5,
+   "temp_min": -1.3,
+   "temp_avg": 2.1,
+   "precip_mm": 21.6
+  }
+ ]
+}

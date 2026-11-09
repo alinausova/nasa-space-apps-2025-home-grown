@@ -1,4 +1,4 @@
-// Response of POST /recommendations/polygon (api/main.py).
+// Result shape the screens read; built from the v2 analysis responses by toResults() in analysis.ts.
 
 export type Season = 'warm' | 'cool' | string;
 export type FrostTolerance = 'tender' | 'half_hardy' | 'hardy' | 'very_hardy' | string;
@@ -19,6 +19,10 @@ export interface SuitabilityMetrics {
   optimal_temp_min?: number;
   optimal_temp_max?: number;
   base_temp?: number;
+  /** v2 back end: growing-season figures and whether the score was capped by missing heat. */
+  season_mean_temp?: number | null;
+  season_precipitation_mm?: number;
+  heat_capped?: boolean;
 }
 
 export interface YieldEstimate {

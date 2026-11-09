@@ -10,7 +10,7 @@
 <LearnSection
     label="Overview"
     title="What makes up the score"
-    body="Crops without enough sun are removed first. Every other crop gets a score from 0 to 100, built from four weighted parts."
+    body="Crops without enough sun are removed first. Every other crop gets a score from 0 to 100, built from four weighted parts. A crop that cannot collect the heat it needs to mature cannot score higher than its heat part."
 >
     {#snippet aside()}
         <div class="flex h-2.5 gap-0.5 overflow-hidden rounded-[5px]" role="img" aria-label="Weights: heat 35%, sunlight 25%, temperature 25%, water 15%">

@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import type { LngLat } from '../api/recommendations';
-import type { RecommendationsResponse } from '../api/types';
+import type { AnalysisApi, ClimateResponse, CropsResponse } from '../api/analysis';
 import { Journey, MAX_AREA_M2, plotFromRing } from './journey.svelte';
 
 // ~100 m × 100 m square in Munich.
@@ -21,7 +21,28 @@ const LARGE: LngLat[] = [
   [11.5, 48.1],
 ];
 
-const RESULTS = { recommendations: [] } as unknown as RecommendationsResponse;
+const CLIMATE = {
+  plot_id: 'p1',
+  location: { center_latitude: 48.14, center_longitude: 11.56, area_m2: 10_000, area_hectares: 1 },
+  year: 2025,
+  climate: { avg_temp_max: 14, avg_temp_min: 5, annual_precipitation_mm: 900, sun_hours_daily: 6, sunshine_factor: 0.7, growing_season: null, warmest_month: null, days_above_5c: 250, winter_sun_hours: 2 },
+  monthly: [],
+} as ClimateResponse;
+const CROPS = { plot_id: 'p1', landsat: { status: 'ok', scenes: [], surface_heat: null }, crops: [], total_usable: 0 } as CropsResponse;
+
+/** Fake API with call log; each method resolves immediately unless overridden. */
+function api(overrides: Partial<AnalysisApi> = {}) {
+  const calls: string[] = [];
+  const impl: AnalysisApi = {
+    climate: vi.fn(async () => (calls.push('climate'), CLIMATE)),
+    crops: vi.fn(async () => (calls.push('crops'), CROPS)),
+    summary: vi.fn(async () => (calls.push('summary'), { plot_id: 'p1', summary: 'Grow kale.' })),
+    ...overrides,
+  };
+  return { impl, calls };
+}
+
+const flush = () => new Promise((r) => setTimeout(r, 0));
 
 describe('plotFromRing', () => {
   it('measures area and counts corners once', () => {
@@ -40,7 +61,7 @@ describe('plotFromRing', () => {
 
 describe('Journey', () => {
   it('moves from place to draw when a plot appears', () => {
-    const journey = new Journey(vi.fn());
+    const journey = new Journey(api().impl);
     journey.setPlot(SMALL);
 
     expect(journey.step).toBe('draw');
@@ -48,7 +69,7 @@ describe('Journey', () => {
   });
 
   it('blocks plots over the limit', () => {
-    const journey = new Journey(vi.fn());
+    const journey = new Journey(api().impl);
     journey.setPlot(LARGE);
 
     expect(journey.plot!.areaM2).toBeGreaterThan(MAX_AREA_M2);
@@ -57,7 +78,7 @@ describe('Journey', () => {
   });
 
   it('keeps the place name when the plot is redrawn', () => {
-    const journey = new Journey(vi.fn());
+    const journey = new Journey(api().impl);
     journey.setPlot(SMALL);
     journey.setPlaceName('Maxvorstadt, Munich');
     journey.setPlot(SMALL.slice(0, 4));
@@ -66,7 +87,7 @@ describe('Journey', () => {
   });
 
   it('undo walks back through edits, including a delete', () => {
-    const journey = new Journey(vi.fn());
+    const journey = new Journey(api().impl);
     const smaller = SMALL.slice(0, 3).concat([SMALL[0]]);
     journey.setPlot(SMALL);
     journey.setPlot(smaller);
@@ -80,39 +101,83 @@ describe('Journey', () => {
     expect(journey.canUndo).toBe(false);
   });
 
-  it('analyses and shows results', async () => {
-    const fetcher = vi.fn().mockResolvedValue(RESULTS);
-    const journey = new Journey(fetcher);
+  it('climate, then crops, then results; the summary arrives after', async () => {
+    const { impl, calls } = api();
+    const journey = new Journey(impl);
     journey.setPlot(SMALL);
 
     const pending = journey.analyse();
     expect(journey.step).toBe('analysing');
-    expect(journey.request.status).toBe('loading');
+    expect(journey.request).toMatchObject({ status: 'loading', phase: 'climate' });
 
     await pending;
-    expect(fetcher).toHaveBeenCalledWith(journey.plot!.ring, expect.objectContaining({ signal: expect.any(AbortSignal) }));
+    expect(calls.slice(0, 2)).toEqual(['climate', 'crops']);
     expect(journey.step).toBe('results');
-    expect(journey.results).toBe(RESULTS);
+    expect(journey.results).not.toBeNull();
+    await flush();
+    expect(journey.summary).toEqual({ status: 'done', text: 'Grow kale.' });
+    expect(journey.results!.llm_summary).toBe('Grow kale.');
   });
 
-  it('keeps the error on the analysing step', async () => {
-    const journey = new Journey(vi.fn().mockRejectedValue(new Error('NASA POWER API returned 502')));
+  it('reports which call failed', async () => {
+    const journey = new Journey(api({ crops: vi.fn().mockRejectedValue(new Error('Landsat did not answer')) }).impl);
     journey.setPlot(SMALL);
     await journey.analyse();
 
     expect(journey.step).toBe('analysing');
-    expect(journey.request).toEqual({ status: 'error', message: 'NASA POWER API returned 502' });
+    expect(journey.request).toEqual({ status: 'error', phase: 'crops', message: 'Landsat did not answer' });
+    expect(journey.climate).not.toBeNull();
+  });
+
+  it('retry keeps the climate and starts from the crops', async () => {
+    let fail = true;
+    const { impl, calls } = api({
+      crops: vi.fn(async () => {
+        calls.push('crops');
+        if (fail) throw new Error('timeout');
+        return CROPS;
+      }),
+    });
+    const journey = new Journey(impl);
+    journey.setPlot(SMALL);
+    await journey.analyse();
+    fail = false;
+    await journey.analyse({ retry: true, useLandsat: false });
+
+    expect(calls.filter((c) => c === 'climate')).toHaveLength(1);
+    expect(impl.crops).toHaveBeenLastCalledWith('p1', expect.objectContaining({ useLandsat: false }));
+    expect(journey.step).toBe('results');
+  });
+
+  it('a failed summary leaves the results standing', async () => {
+    const journey = new Journey(api({ summary: vi.fn().mockRejectedValue(new Error('401')) }).impl);
+    journey.setPlot(SMALL);
+    await journey.analyse();
+    await flush();
+
+    expect(journey.step).toBe('results');
+    expect(journey.summary.status).toBe('failed');
+  });
+
+  it('changing the plot drops the old analysis', async () => {
+    const journey = new Journey(api().impl);
+    journey.setPlot(SMALL);
+    await journey.analyse();
+    journey.setPlot(SMALL.slice(0, 4));
+
+    expect(journey.climate).toBeNull();
+    expect(journey.results).toBeNull();
   });
 
   it('cancel aborts and returns to draw with the plot kept', async () => {
     let signal: AbortSignal | undefined;
-    const fetcher = vi.fn((_ring, opts) => {
+    const climate = vi.fn((_ring: unknown, opts: { signal?: AbortSignal }) => {
       signal = opts.signal;
-      return new Promise<RecommendationsResponse>((_resolve, reject) => {
-        opts.signal.addEventListener('abort', () => reject(new DOMException('aborted', 'AbortError')));
+      return new Promise<ClimateResponse>((_resolve, reject) => {
+        opts.signal!.addEventListener('abort', () => reject(new DOMException('aborted', 'AbortError')));
       });
     });
-    const journey = new Journey(fetcher as never);
+    const journey = new Journey(api({ climate: climate as never }).impl);
     journey.setPlot(SMALL);
 
     const pending = journey.analyse();
@@ -125,8 +190,45 @@ describe('Journey', () => {
     expect(journey.request.status).toBe('idle');
   });
 
+  it('Landsat timeout: stays on analysing with the crops ready; continue shows them without Landsat', async () => {
+    const timedOut = { ...CROPS, landsat: { status: 'timeout', scenes: [], surface_heat: null } } as CropsResponse;
+    const { impl, calls } = api({ crops: vi.fn(async () => (calls.push('crops'), timedOut)) });
+    const journey = new Journey(impl);
+    journey.setPlot(SMALL);
+    await journey.analyse();
+
+    expect(journey.step).toBe('analysing');
+    expect(journey.request).toEqual({ status: 'landsat-failed' });
+    expect(journey.crops).not.toBeNull();
+
+    journey.continueWithoutLandsat();
+    expect(journey.step).toBe('results');
+    expect(journey.crops!.landsat.status).toBe('disabled');
+    expect(calls.filter((c) => c === 'crops')).toHaveLength(1);
+  });
+
+  it('Landsat timeout: try again reruns only the crops call', async () => {
+    let first = true;
+    const { impl, calls } = api({
+      crops: vi.fn(async () => {
+        calls.push('crops');
+        const status = first ? 'timeout' : 'ok';
+        first = false;
+        return { ...CROPS, landsat: { status, scenes: [], surface_heat: null } } as CropsResponse;
+      }),
+    });
+    const journey = new Journey(impl);
+    journey.setPlot(SMALL);
+    await journey.analyse();
+    await journey.analyse({ retry: true });
+
+    expect(journey.step).toBe('results');
+    expect(calls.filter((c) => c === 'climate')).toHaveLength(1);
+    expect(calls.filter((c) => c === 'crops')).toHaveLength(2);
+  });
+
   it('new plot clears plot and results but stays in the app', async () => {
-    const journey = new Journey(vi.fn().mockResolvedValue(RESULTS));
+    const journey = new Journey(api().impl);
     journey.setPlot(SMALL);
     await journey.analyse();
     journey.newPlot();

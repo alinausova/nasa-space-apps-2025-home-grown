@@ -82,8 +82,8 @@ export const CONTACT = [
 export const SCORE_PARTS = [
   { weight: 35, title: 'Heat', body: 'Growing degree days against what the crop needs.' },
   { weight: 25, title: 'Sunlight', body: 'Sun hours after shade against the optimum.' },
-  { weight: 25, title: 'Temperature', body: 'Full marks when the year’s average is within 3°C of the crop’s ideal.' },
-  { weight: 15, title: 'Water', body: 'Rainfall against seasonal need.' },
+  { weight: 25, title: 'Temperature', body: 'Full marks when the average over its growing days is within 3°C of its ideal.' },
+  { weight: 15, title: 'Water', body: 'Rain while it grows against its seasonal need. A shortfall costs more than a surplus.' },
 ];
 
 export const FORMULAS = [
@@ -119,7 +119,7 @@ export const FORMULAS = [
 export const DATA_USED = [
   { variable: 'Irradiance', source: 'NASA POWER (CERES)', why: 'Sunlight powers photosynthesis and transpiration.', refs: '[2]' },
   { variable: 'Air temperature', source: 'NASA POWER (MERRA-2)', why: 'Growth speeds up to a crop’s optimum, then heat stress sets in.', refs: '[1][11]' },
-  { variable: 'Surface temperature', source: 'Landsat, via Microsoft Planetary Computer', why: 'Sharper local readings on the days a clear scene exists.', refs: '' },
+  { variable: 'Surface temperature', source: 'Landsat 8/9, via Microsoft Planetary Computer', why: 'Shows how much warmer the plot’s surface runs than the air, at 30 m detail. Reported alongside the scores, not used in them.', refs: '' },
   { variable: 'Precipitation', source: 'NASA POWER (MERRA-2)', why: 'Sets soil moisture. In mild climates it matters more than temperature.', refs: '[5][9][14]' },
   { variable: 'Shade', source: 'Assumed: 30% of sunlight lost to buildings', why: 'Constant shade can cut growth by about 94%.', refs: '[6][16][18]' },
 ];
@@ -156,10 +156,10 @@ export const BIBLIOGRAPHY = [
 
 export const PIPELINE = [
   { title: 'Measure the plot', body: 'Centre point and area in square metres.' },
-  { title: 'Fetch data in parallel', body: 'NASA POWER for a year of daily climate, Landsat for surface temperature.' },
-  { title: 'Combine the two', body: 'Where clear Landsat scenes exist, their sharper readings fill in the 50 km NASA grid.' },
+  { title: 'Fetch the climate', body: 'NASA POWER: a year of daily heat, sun and rain. Shown as soon as it arrives.' },
+  { title: 'Read Landsat', body: 'Landsat 8/9 surface readings at 30 m show how much warmer the plot runs than the air. The scores use NASA’s air temperatures.' },
   { title: 'Score every crop', body: 'Heat, sun, temperature and water for each crop.' },
-  { title: 'Rank and reply', body: 'Sorted by score, with yield, irrigation and a short summary from Mistral AI.' },
+  { title: 'Rank and reply', body: 'Sorted by score, with yield and irrigation. A short summary from Mistral AI follows.' },
 ];
 
 export const STACK = [

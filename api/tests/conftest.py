@@ -7,7 +7,9 @@ import pytest
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+import climate  # noqa: E402
 import main  # noqa: E402
+from landsat import LandsatResult, SceneReading  # noqa: E402
 
 
 def synthetic_nasa_year(year: int = 2023) -> dict:
@@ -34,16 +36,19 @@ def stubs(monkeypatch):
         calls["nasa"] += 1
         return synthetic_nasa_year(year)
 
-    async def fake_stac(*args, **kwargs):
+    async def fake_landsat(polygon, year, enabled=True):
         calls["landsat"] += 1
-        return None
+        calls["landsat_enabled"] = enabled
+        return LandsatResult("ok" if enabled else "disabled", [SceneReading(f"{year}0715", "landsat-9", 41.2)] if enabled else [])
 
     def fake_summary(response):
         calls["summary"] += 1
         return "Cool summers suit leafy greens."
 
-    monkeypatch.setattr(main, "fetch_nasa_power_data", fake_nasa)
-    monkeypatch.setattr(main, "query_planetary_stac_async", fake_stac)
+    # fetch_all_climate_data lives in climate.py and looks the fetcher up there.
+    monkeypatch.setattr(climate, "fetch_nasa_power_data", fake_nasa)
+    monkeypatch.setattr(main, "fetch_landsat", fake_landsat)
     monkeypatch.setattr(main, "generate_crop_summary", fake_summary)
+    monkeypatch.setattr(main, "plot_cache", main.PlotCache())
     main.limiter.reset()
     return calls

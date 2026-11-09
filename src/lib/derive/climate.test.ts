@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { MonthlyTemperature } from '../api/types';
-import { describeClimate, growingSeason, warmestMonth } from './climate';
+import { describeClimate, growingSeason, rainiestMonth, seasonFromServer, warmestMonth } from './climate';
 
 function months(avgs: number[]): MonthlyTemperature[] {
   return avgs.map((avg, i) => ({ month: i + 1, month_name: '', avg_temp: avg, avg_temp_max: avg + 5, avg_temp_min: avg - 5 }));
@@ -58,5 +58,32 @@ describe('describeClimate', () => {
     const text = describeClimate(MUNICH, growingSeason(MUNICH));
     expect(text).toContain('Daily highs from 7 degrees in Jan to 25 in Aug');
     expect(text).toContain('Growing season Mar to Oct.');
+  });
+});
+
+describe('seasonFromServer', () => {
+  it('matches the front-end derivation for the same months', () => {
+    expect(seasonFromServer({ start_month: 3, end_month: 10, days: 245, all_year: false })).toEqual(growingSeason(MUNICH));
+  });
+
+  it('wraps past December', () => {
+    expect(seasonFromServer({ start_month: 10, end_month: 4, days: 212, all_year: false })).toMatchObject({
+      label: 'Oct–Apr',
+      runs: [
+        [9, 11],
+        [0, 3],
+      ],
+    });
+  });
+
+  it('all year and none', () => {
+    expect(seasonFromServer({ start_month: 1, end_month: 12, days: 365, all_year: true })!.label).toBe('All year');
+    expect(seasonFromServer(null)).toBeNull();
+  });
+});
+
+describe('rainiestMonth', () => {
+  it('finds the wettest month', () => {
+    expect(rainiestMonth([{ month: 6, precip_mm: 116 }, { month: 7, precip_mm: 206 }, { month: 8, precip_mm: 120 }])!.month).toBe(7);
   });
 });

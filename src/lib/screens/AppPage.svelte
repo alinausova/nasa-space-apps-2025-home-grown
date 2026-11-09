@@ -16,7 +16,8 @@
     import CropDetail from "./crop/CropDetail.svelte";
     import CropNav from "./crop/CropNav.svelte";
     import { formatKg } from "../derive/format";
-    import { ANALYSIS_STEPS, failedStep, timeline } from "../derive/progress";
+    import { ANALYSIS_STEPS, failedStep, phaseTimeline } from "../derive/progress";
+    import EarlyClimateCard from "./analysing/EarlyClimateCard.svelte";
     import { formatArea } from "../derive/area";
     import { journey } from "../state/journey.svelte";
     import { mapController } from "../map/controller.svelte";
@@ -42,14 +43,27 @@
     let cityName = $derived(SAMPLE_CITIES.find((c) => c.id === journey.city)?.name ?? null);
     let zoomedIn = $derived(mapController.view.zoom >= DRAW_ZOOM);
 
-    // Analysing clock: ticks while the request runs, freezes on error so the failed step stays marked.
+    // Analysing clock: total time (for the slow-server note) and time on the current call (for progress).
+    // Steps follow the real calls; on error the clock freezes so the failed step stays marked.
     let elapsedMs = $state(0);
-    let progress = $derived(timeline(elapsedMs));
+    let stepElapsedMs = $state(0);
+    let progress = $derived.by(() => {
+        const request = journey.request;
+        if (request.status === "loading") return phaseTimeline(request.phase, stepElapsedMs, journey.estimates);
+        if (request.status === "error") return phaseTimeline(request.phase, 0, journey.estimates);
+        return phaseTimeline(request.status === "landsat-failed" ? "crops" : "climate", 0, journey.estimates);
+    });
+    let failedAt = $derived(
+        journey.request.status === "error" ? failedStep(journey.request.phase) : journey.request.status === "landsat-failed" ? 2 : null,
+    );
 
     $effect(() => {
         const request = journey.request;
         if (request.status !== "loading") return;
-        const tick = () => (elapsedMs = Date.now() - request.startedAt);
+        const tick = () => {
+            elapsedMs = Date.now() - request.startedAt;
+            stepElapsedMs = Date.now() - request.stepStartedAt;
+        };
         tick();
         const timer = setInterval(tick, 250);
         return () => clearInterval(timer);
@@ -149,8 +163,18 @@
         </Button>
         <Button variant="outline" size="lg" onclick={beginDrawing}>Redraw</Button>
     {:else if journey.step === "analysing"}
-        {#if journey.request.status === "error"}
-            <Button size="lg" block onclick={() => journey.analyse()}>Try again</Button>
+        {#if journey.request.status === "landsat-failed"}
+            <div class="flex w-full items-center justify-between gap-4">
+                <Button variant="outline" onclick={() => journey.cancel()}>Cancel</Button>
+                <a
+                    href="https://github.com/alinausova/nasa-space-apps-2025-home-grown/issues"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="text-sm text-ink underline underline-offset-4"
+                >Report a problem</a>
+            </div>
+        {:else if journey.request.status === "error"}
+            <Button size="lg" block onclick={() => journey.analyse({ retry: true })}>Try again</Button>
             <Button variant="outline" size="lg" onclick={() => journey.cancel()}>Back to drawing</Button>
         {:else}
             <Button variant="outline" onclick={() => journey.cancel()}>Cancel</Button>
@@ -182,14 +206,26 @@
     {:else if journey.step === "draw"}
         <DrawPanel plot={journey.plot} tooLarge={journey.isTooLarge} selectedCity={journey.city} onpick={pickCity} />
     {:else if journey.step === "analysing"}
-        <AnalysingPanel plot={journey.plot} request={journey.request} {progress} {elapsedMs} />
+        <AnalysingPanel
+            plot={journey.plot}
+            request={journey.request}
+            {progress}
+            {failedAt}
+            {elapsedMs}
+            climate={journey.climate}
+            onRetry={() => journey.analyse({ retry: true })}
+            onContinue={() => journey.continueWithoutLandsat()}
+        />
     {:else if crop && journey.results && journey.plot}
         <CropDetail {crop} results={journey.results} plot={journey.plot} filter={journey.filter} />
-    {:else if journey.results && journey.plot}
+    {:else if journey.results && journey.climate && journey.crops && journey.plot}
         <ResultsPanel
             results={journey.results}
+            climate={journey.climate}
+            crops={journey.crops}
             plot={journey.plot}
             bind:filter={journey.filter}
+            summaryStatus={journey.summary.status}
             onNewPlot={startNewPlot}
             onCompare={() => journey.goToPlace()}
         />
@@ -232,8 +268,9 @@
         {:else if journey.step === "analysing" && journey.plot}
             <MapBack label="Cancel and go back to drawing" onclick={() => journey.cancel()} />
             <ScanOverlay ring={journey.plot.ring} active={journey.request.status === "loading"} />
+            {#if journey.climate}<EarlyClimateCard climate={journey.climate} />{/if}
             <MapChip only="desktop" live>
-                {#if journey.request.status === "error"}Stopped at: {ANALYSIS_STEPS[failedStep(progress.current)].short.toLowerCase()}{:else}<span class="size-2 rounded-full bg-bright" aria-hidden="true"></span>{ANALYSIS_STEPS[progress.current].short}{/if}
+                {#if journey.request.status === "landsat-failed"}<span class="size-2 rounded-full bg-harvest" aria-hidden="true"></span>Landsat did not respond · climate data saved{:else if failedAt !== null}Stopped at: {ANALYSIS_STEPS[failedAt].short.toLowerCase()}{:else}<span class="size-2 rounded-full bg-bright" aria-hidden="true"></span>{ANALYSIS_STEPS[progress.current].short}{/if}
             </MapChip>
             <MapChip only="mobile" tone="bright">{formatArea(journey.plot.areaM2)}</MapChip>
         {:else if crop && journey.plot}
