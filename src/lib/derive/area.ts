@@ -1,3 +1,5 @@
+import { formatNumber } from '../i18n/format';
+
 export const LIMIT_M2 = 1_000_000;
 
 const PARKING_SPACE_M2 = 12.5; // 5 m × 2.5 m
@@ -7,7 +9,7 @@ const FOOTBALL_PITCH_M2 = 7_140; // 105 m × 68 m
 const WORDS = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve'];
 
 function countWord(n: number): string {
-  return n < WORDS.length ? WORDS[n] : n.toLocaleString('en-US');
+  return n < WORDS.length ? WORDS[n] : formatNumber(n);
 }
 
 function plural(n: number, singular: string, pluralForm = `${singular}s`): string {
@@ -30,7 +32,7 @@ export function areaComparison(areaM2: number): string {
 /** "2,140 m²" below 0.1 km², "1.42 km²" above. */
 export function formatArea(areaM2: number): string {
   if (areaM2 >= 100_000) return `${(areaM2 / 1_000_000).toFixed(2)} km²`;
-  return `${Math.round(areaM2).toLocaleString('en-US')} m²`;
+  return `${formatNumber(Math.round(areaM2))} m²`;
 }
 
 /** Share of the 1 km² limit used, 0–1. */

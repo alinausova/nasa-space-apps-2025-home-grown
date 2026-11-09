@@ -1,6 +1,8 @@
 <script lang="ts">
+    import { monthInitial, monthShort } from "../../i18n/format";
+    const MONTH_INDEXES = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
     import type { MonthlyClimate } from "../../api/analysis";
-    import { MONTH_INITIAL, MONTH_SHORT, describeClimate, rainiestMonth, type GrowingSeason } from "../../derive/climate";
+    import { describeClimate, rainiestMonth, type GrowingSeason } from "../../derive/climate";
 
     let { monthly, season }: { monthly: MonthlyClimate[]; season: GrowingSeason | null } = $props();
 
@@ -22,7 +24,7 @@
         describeClimate(
             sorted.map((m) => ({ month: m.month, month_name: "", avg_temp_max: m.temp_max, avg_temp_min: m.temp_min, avg_temp: m.temp_avg })),
             season,
-        ) + (wettest ? ` Rain peaks at ${Math.round(wettest.precip_mm)} millimetres in ${MONTH_SHORT[wettest.month - 1]}.` : ""),
+        ) + (wettest ? ` Rain peaks at ${Math.round(wettest.precip_mm)} millimetres in ${monthShort(wettest.month - 1)}.` : ""),
     );
     let ticks = $derived.by(() => {
         const out: number[] = [];
@@ -81,7 +83,7 @@
         {#each ticks as t (t)}
             <text x={X0 - 6} y={y(t) + 3} text-anchor="end">{t}°</text>
         {/each}
-        {#each MONTH_INITIAL as initial, i (i)}
+        {#each MONTH_INDEXES.map(monthInitial) as initial, i (i)}
             <text x={x(i)} y={Y1 + 18} text-anchor="middle">{initial}</text>
         {/each}
     </g>

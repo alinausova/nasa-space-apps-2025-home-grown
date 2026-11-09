@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { lower } from "../../i18n/format";
     import LeafLabel from "../../ui/LeafLabel.svelte";
     import type { TipsState } from "../../state/journey.svelte";
     import { paragraphs } from "../../derive/text";
@@ -16,14 +17,14 @@
             onclick={onask}
             class="self-end rounded-full border border-ink bg-surface px-5 py-2.5 text-[17px] text-ink hover:bg-selected focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
         >
-            {status === "failed" ? "Ask again" : `Any tips for ${cropName.toLowerCase()} here?`}
+            {status === "failed" ? "Ask again" : `Any tips for ${lower(cropName)} here?`}
         </button>
     {/if}
 
     <div class="flex flex-col gap-2" role="status" aria-live="polite">
         {#if status === "loading"}
             <LeafLabel />
-            <p class="m-0 text-[15px] text-ink-muted">Writing tips for {cropName.toLowerCase()} at your plot…</p>
+            <p class="m-0 text-[15px] text-ink-muted">Writing tips for {lower(cropName)} at your plot…</p>
             <span class="block h-3 w-11/12 animate-pulse rounded bg-ink/8 motion-reduce:animate-none" aria-hidden="true"></span>
             <span class="block h-3 w-3/4 animate-pulse rounded bg-ink/8 motion-reduce:animate-none" aria-hidden="true"></span>
         {:else if status === "failed"}

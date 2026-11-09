@@ -53,7 +53,7 @@
   --hg-stone-line: rgba(47, 51, 54, 0.18);
 
   /* Type */
-  --hg-font: 'Figtree', system-ui, sans-serif;            /* 400 headings, 500/600 labels */
+  --hg-font: 'Figtree', 'Onest Cyrillic', system-ui, sans-serif; /* 400 headings, 500/600 labels; Onest only for Cyrillic */
   --hg-font-mono: 'IBM Plex Mono', ui-monospace, monospace; /* numbers, step labels, units */
 
   /* Shape */

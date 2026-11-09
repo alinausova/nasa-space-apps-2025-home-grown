@@ -1,6 +1,6 @@
 import type { CropCalendar } from '../api/types';
+import { joinList, monthLong } from '../i18n/format';
 
-const MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
 const FIRST_ROW: Record<CropCalendar['mode'], string> = { sow: 'Sow', plant_out: 'Plant out', plant: 'Plant' };
 
@@ -31,8 +31,8 @@ export function monthRanges(months: number[]): string {
     while (set.has((end % 12) + 1) && (end % 12) + 1 !== m) end = (end % 12) + 1;
     runs.push([m, end]);
   }
-  const words = runs.map(([a, b]) => (a === b ? MONTH_NAMES[a - 1] : `${MONTH_NAMES[a - 1]} to ${MONTH_NAMES[b - 1]}`));
-  return words.length <= 1 ? words.join('') : `${words.slice(0, -1).join(', ')} and ${words.at(-1)}`;
+  const words = runs.map(([a, b]) => (a === b ? monthLong(a - 1) : `${monthLong(a - 1)} to ${monthLong(b - 1)}`));
+  return joinList(words);
 }
 
 /** One sentence for screen readers, e.g. "Sow March to May. Grows March to October. Harvest June to November." */

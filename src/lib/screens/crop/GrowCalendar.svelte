@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { lower } from "../../i18n/format";
     import type { CropCalendar } from "../../api/types";
     import { calendarRows, calendarSentence } from "../../derive/calendar";
 
@@ -42,7 +43,7 @@
         </p>
     {:else}
         <p class="m-0 text-[15px] leading-relaxed text-ink-muted">
-            We could not find a sowing date that lets {cropName.toLowerCase()} ripen before frost or heat in this plot's weather in {year}.
+            We could not find a sowing date that lets {lower(cropName)} ripen before frost or heat in this plot's weather in {year}.
         </p>
     {/if}
 </section>

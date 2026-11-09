@@ -1,7 +1,8 @@
 import type { CropRecommendation, RecommendationsResponse } from '../api/types';
 import type { FactorKey } from './score';
+import { formatNumber } from '../i18n/format';
 
-const n = (value: number) => Math.round(value).toLocaleString('en-US');
+const n = (value: number) => formatNumber(Math.round(value));
 
 /** v1 back end: beyond this much surplus rain the water score dropped sharply (water_diff > 300). */
 const WET_SURPLUS_MM_V1 = 300;

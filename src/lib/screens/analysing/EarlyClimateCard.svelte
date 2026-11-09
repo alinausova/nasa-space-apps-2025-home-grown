@@ -1,6 +1,6 @@
 <script lang="ts">
     import type { ClimateResponse } from "../../api/analysis";
-    import { MONTH_SHORT } from "../../derive/climate";
+    import { monthShort } from "../../i18n/format";
     import { formatMm } from "../../derive/format";
 
     // Shown as soon as NASA POWER answers, while Landsat and scoring are still running.
@@ -8,7 +8,7 @@
 
     let season = $derived(climate.climate.growing_season);
     let seasonLabel = $derived(
-        !season ? "None" : season.all_year ? "All year" : season.start_month === season.end_month ? MONTH_SHORT[season.start_month - 1] : `${MONTH_SHORT[season.start_month - 1]}–${MONTH_SHORT[season.end_month - 1]}`,
+        !season ? "None" : season.all_year ? "All year" : season.start_month === season.end_month ? monthShort(season.start_month - 1) : `${monthShort(season.start_month - 1)}–${monthShort(season.end_month - 1)}`,
     );
     let figures = $derived([
         { value: `${climate.climate.sun_hours_daily.toFixed(1)} h`, label: "sun a day" },
