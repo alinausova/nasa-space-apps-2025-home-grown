@@ -3,6 +3,7 @@
 </script>
 
 <script lang="ts">
+    import { i18n } from "../i18n/locale.svelte";
     import type { Snippet } from "svelte";
     import Logo from "./Logo.svelte";
     import MapView from "../map/MapView.svelte";
@@ -83,7 +84,7 @@
 </script>
 
 <div class="theme-leaf relative h-dvh w-full overflow-hidden md:flex">
-    <section class="absolute inset-0 md:relative md:order-2 md:flex md:min-w-0 md:flex-1 md:bg-furrows md:p-5" aria-label="Map">
+    <section class="absolute inset-0 md:relative md:order-2 md:flex md:min-w-0 md:flex-1 md:bg-furrows md:p-5" aria-label={i18n.m.shell.map}>
         <div class="relative h-full w-full overflow-hidden bg-surface md:rounded-panel md:border md:border-ink">
             <MapView />
             {#if mapOverlay}{@render mapOverlay()}{/if}
@@ -101,7 +102,7 @@
         <button
             type="button"
             class="flex h-7 w-full shrink-0 touch-none items-center justify-center md:hidden"
-            aria-label={size === "high" ? "Collapse panel" : "Expand panel"}
+            aria-label={size === "high" ? i18n.m.shell.collapsePanel : i18n.m.shell.expandPanel}
             onpointerdown={onPointerDown}
             onpointermove={onPointerMove}
             onpointerup={onPointerUp}

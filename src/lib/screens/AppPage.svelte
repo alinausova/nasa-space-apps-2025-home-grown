@@ -17,6 +17,8 @@
     import CropNav from "./crop/CropNav.svelte";
     import { formatKg } from "../derive/format";
     import { formatNumber, lower } from "../i18n/format";
+    import { i18n } from "../i18n/locale.svelte";
+    import { cropName } from "../i18n/crops";
     import { ANALYSIS_STEPS, failedStep, phaseTimeline } from "../derive/progress";
     import EarlyClimateCard from "./analysing/EarlyClimateCard.svelte";
     import { formatArea } from "../derive/area";
@@ -41,6 +43,7 @@
 
     const SHEET: Record<typeof journey.step, SheetSize> = { place: "mid", draw: "low", analysing: "mid", results: "mid" };
 
+    let t = $derived(i18n.m.app);
     let cropId = $derived(router.route.name === "crop" ? router.route.id : null);
     let crop = $derived(cropId ? (journey.results?.recommendations.find((c) => c.crop_id === cropId) ?? null) : null);
     /** Searched place or the user's position; shown as a pin while picking a place. */
@@ -94,7 +97,7 @@
         mapController.flyTo(place.center, place.zoom);
     }
 
-    const YOUR_LOCATION = "Your location";
+    let YOUR_LOCATION = $derived(i18n.m.app.yourLocation);
 
     async function useMyLocation(): Promise<LocateResult["status"]> {
         const result = await locate();
@@ -186,30 +189,30 @@
 {#snippet stepFooter()}
     {#if journey.step === "place"}
         <div class="flex w-full flex-col items-center gap-3">
-            <Button size="lg" block onclick={beginDrawing}>Draw your plot here <span aria-hidden="true">→</span></Button>
-            <span class="hidden text-sm text-ink-muted md:block">Tip: zoom in until you can see buildings.</span>
+            <Button size="lg" block onclick={beginDrawing}>{t.drawHere} <span aria-hidden="true">→</span></Button>
+            <span class="hidden text-sm text-ink-muted md:block">{t.zoomTip}</span>
         </div>
     {:else if journey.step === "draw"}
         <Button size="lg" block disabled={!journey.canAnalyse} onclick={() => journey.analyse()}>
-            Analyse this plot <span aria-hidden="true">→</span>
+            {t.analyse} <span aria-hidden="true">→</span>
         </Button>
-        <Button variant="outline" size="lg" onclick={beginDrawing}>Redraw</Button>
+        <Button variant="outline" size="lg" onclick={beginDrawing}>{t.redraw}</Button>
     {:else if journey.step === "analysing"}
         {#if journey.request.status === "landsat-failed"}
             <div class="flex w-full items-center justify-between gap-4">
-                <Button variant="outline" onclick={() => journey.cancel()}>Cancel</Button>
+                <Button variant="outline" onclick={() => journey.cancel()}>{t.cancel}</Button>
                 <a
                     href="https://github.com/alinausova/nasa-space-apps-2025-home-grown/issues"
                     target="_blank"
                     rel="noopener noreferrer"
                     class="text-sm text-ink underline underline-offset-4"
-                >Report a problem</a>
+                >{t.reportProblem}</a>
             </div>
         {:else if journey.request.status === "error"}
-            <Button size="lg" block onclick={() => journey.analyse({ retry: true })}>Try again</Button>
-            <Button variant="outline" size="lg" onclick={() => journey.cancel()}>Back to drawing</Button>
+            <Button size="lg" block onclick={() => journey.analyse({ retry: true })}>{t.tryAgain}</Button>
+            <Button variant="outline" size="lg" onclick={() => journey.cancel()}>{t.backToDrawing}</Button>
         {:else}
-            <Button variant="outline" onclick={() => journey.cancel()}>Cancel</Button>
+            <Button variant="outline" onclick={() => journey.cancel()}>{t.cancel}</Button>
         {/if}
     {/if}
 {/snippet}
@@ -227,9 +230,9 @@
 >
     {#snippet headerAction()}
         {#if journey.step === "results"}
-            <Button variant="outline" size="sm" onclick={startNewPlot}>New plot</Button>
+            <Button variant="outline" size="sm" onclick={startNewPlot}>{t.newPlot}</Button>
         {:else}
-            <a href={router.href({ name: "learn", tab: "scoring" })} class="text-sm text-ink no-underline hover:underline">How it works</a>
+            <a href={router.href({ name: "learn", tab: "scoring" })} class="text-sm text-ink no-underline hover:underline">{t.howItWorks}</a>
         {/if}
     {/snippet}
 
@@ -280,57 +283,57 @@
 
     {#snippet mapOverlay()}
         {#if journey.step === "place"}
-            <MapBack label="Back to start" href={router.href({ name: "landing" })} />
+            <MapBack label={t.back.start} href={router.href({ name: "landing" })} />
             <MapChip>
-                {#if journey.placeLabel}{journey.placeLabel} · {zoomedIn ? "ready to draw" : "zoom in to draw"}{:else}{zoomedIn ? "Ready to draw" : "Zoom in to draw"}{/if}
+                {#if journey.placeLabel}{zoomedIn ? t.chip.readyAt(journey.placeLabel) : t.chip.zoomAt(journey.placeLabel)}{:else}{zoomedIn ? t.chip.ready : t.chip.zoom}{/if}
             </MapChip>
             <MapTools>
-                <ToolButton label="Zoom in" onclick={() => mapController.zoomBy(1)}><Icon name="plus" /></ToolButton>
-                <ToolButton label="Zoom out" onclick={() => mapController.zoomBy(-1)}><Icon name="minus" /></ToolButton>
-                <ToolButton label="Draw your plot" active onclick={beginDrawing}><Icon name="polygon" /></ToolButton>
+                <ToolButton label={t.tools.zoomIn} onclick={() => mapController.zoomBy(1)}><Icon name="plus" /></ToolButton>
+                <ToolButton label={t.tools.zoomOut} onclick={() => mapController.zoomBy(-1)}><Icon name="minus" /></ToolButton>
+                <ToolButton label={t.tools.draw} active onclick={beginDrawing}><Icon name="polygon" /></ToolButton>
             </MapTools>
             <MapCoords showZoom />
         {:else if journey.step === "draw"}
-            <MapBack label="Back to pick a place" onclick={backToPlace} />
+            <MapBack label={t.back.place} onclick={backToPlace} />
             <MapChip live>
                 {#if mapController.isDrawing}
-                    <span class="hidden md:inline">Click each corner · double-click to finish</span>
-                    <span class="md:hidden">Tap the first corner to finish</span>
+                    <span class="hidden md:inline">{t.chip.drawingDesktop}</span>
+                    <span class="md:hidden">{t.chip.drawingMobile}</span>
                 {:else if journey.isTooLarge}
-                    Too large · drag a corner inwards
+                    {t.chip.tooLarge}
                 {:else if journey.plot}
-                    Drag a corner to adjust
+                    {t.chip.adjust}
                 {:else}
-                    Press the shape button to start
+                    {t.chip.start}
                 {/if}
             </MapChip>
             <MapTools>
-                <ToolButton label="Draw a new shape" active={mapController.isDrawing} onclick={beginDrawing}><Icon name="polygon" /></ToolButton>
-                <ToolButton label="Undo" disabled={!journey.canUndo && !mapController.isDrawing} onclick={undo}><Icon name="undo" /></ToolButton>
-                <ToolButton label="Delete plot" disabled={!journey.plot && !mapController.isDrawing} onclick={deletePlot}><Icon name="trash" /></ToolButton>
+                <ToolButton label={t.tools.newShape} active={mapController.isDrawing} onclick={beginDrawing}><Icon name="polygon" /></ToolButton>
+                <ToolButton label={t.tools.undo} disabled={!journey.canUndo && !mapController.isDrawing} onclick={undo}><Icon name="undo" /></ToolButton>
+                <ToolButton label={t.tools.deletePlot} disabled={!journey.plot && !mapController.isDrawing} onclick={deletePlot}><Icon name="trash" /></ToolButton>
             </MapTools>
             <MapCoords />
         {:else if journey.step === "analysing" && journey.plot}
-            <MapBack label="Cancel and go back to drawing" onclick={() => journey.cancel()} />
+            <MapBack label={t.back.cancel} onclick={() => journey.cancel()} />
             <ScanOverlay ring={journey.plot.ring} active={journey.request.status === "loading"} />
             {#if journey.climate}<EarlyClimateCard climate={journey.climate} />{/if}
             <MapChip only="desktop" live>
-                {#if journey.request.status === "landsat-failed"}<span class="size-2 rounded-full bg-harvest" aria-hidden="true"></span>Landsat did not respond · climate data saved{:else if failedAt !== null}Stopped at: {lower(ANALYSIS_STEPS[failedAt].short)}{:else}<span class="size-2 rounded-full bg-bright" aria-hidden="true"></span>{ANALYSIS_STEPS[progress.current].short}{/if}
+                {#if journey.request.status === "landsat-failed"}<span class="size-2 rounded-full bg-harvest" aria-hidden="true"></span>{t.chip.landsatFailed}{:else if failedAt !== null}{t.chip.stoppedAt(lower(ANALYSIS_STEPS[failedAt].short))}{:else}<span class="size-2 rounded-full bg-bright" aria-hidden="true"></span>{ANALYSIS_STEPS[progress.current].short}{/if}
             </MapChip>
             <MapChip only="mobile" tone="bright">{formatArea(journey.plot.areaM2)}</MapChip>
         {:else if crop && journey.plot}
-            <MapBack label="Back to all crops" href={router.href({ name: "app" })} />
+            <MapBack label={t.back.allCrops} href={router.href({ name: "app" })} />
             <div class="absolute right-5 bottom-14 z-10 hidden rounded-[14px] border border-ink bg-surface px-[18px] py-3 text-[17px] md:block">
-                {crop.crop_name} on {formatNumber(Math.round(journey.plot.areaM2 * 0.7))} m² of your plot
+                {t.cropOnPlot(cropName(crop), formatNumber(Math.round(journey.plot.areaM2 * 0.7)))}
             </div>
         {:else if journey.step === "results" && journey.plot}
-            <MapBack label="Back to your plot" onclick={() => journey.editPlot()} />
+            <MapBack label={t.back.plot} onclick={() => journey.editPlot()} />
             <MapChip only="mobile" tone="bright">{formatArea(journey.plot.areaM2)}</MapChip>
             {@const top = journey.results?.recommendations[0]}
             {#if top}
                 <div class="absolute right-5 bottom-14 z-10 hidden flex-col gap-0.5 rounded-[14px] border border-ink bg-surface px-[18px] py-3.5 md:flex">
-                    <span class="text-xs text-ink-muted">Top pick</span>
-                    <span class="text-xl">{top.crop_name} · <span class="font-mono">{formatKg(top.suitability.yield_estimate.total_yield_kg)}</span> a season</span>
+                    <span class="text-xs text-ink-muted">{t.topPick}</span>
+                    <span class="text-xl">{cropName(top)} · <span class="font-mono">{formatKg(top.suitability.yield_estimate.total_yield_kg)}</span> {t.aSeason}</span>
                 </div>
             {/if}
         {/if}

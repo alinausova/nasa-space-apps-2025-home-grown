@@ -1,3 +1,4 @@
+import { i18n } from '../i18n/locale.svelte';
 import { formatNumber, joinList } from '../i18n/format';
 
 /** "6,740 kg", or "28.3 t" from 10 t up. `approx` adds "~". */
@@ -16,24 +17,18 @@ export function formatHours(hours: number): string {
   return `${hours.toFixed(1)} h`;
 }
 
-const NUMBER_WORDS = ['No', 'One', 'Two', 'Three', 'Four'];
-
 /** "Four beds", "One bed". */
 export function bedCount(n: number): string {
-  return `${NUMBER_WORDS[n] ?? n} ${n === 1 ? 'bed' : 'beds'}`;
+  return i18n.m.beds(n);
 }
 
 /** "kale, cabbage and lettuce", in the active language. */
 export const listJoin = joinList;
 
-export const SEASON_LABEL: Record<string, string> = {
-  cool: 'Cool season',
-  warm: 'Warm season',
-};
+/** Labels follow the active language (read on access). */
+const live = (section: 'season' | 'frost'): Record<string, string> =>
+  new Proxy({}, { get: (_, key) => (typeof key === 'string' ? i18n.m[section][key] : undefined) });
 
-export const FROST_LABEL: Record<string, string> = {
-  very_hardy: 'Survives hard frost',
-  hardy: 'Survives freezing',
-  half_hardy: 'Takes light frost',
-  tender: 'No frost',
-};
+export const SEASON_LABEL: Record<string, string> = live('season');
+
+export const FROST_LABEL: Record<string, string> = live('frost');

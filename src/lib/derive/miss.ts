@@ -1,29 +1,29 @@
 import type { AnalysedCrop, MissReason } from '../api/analysis';
 import { formatNumber } from '../i18n/format';
+import { i18n } from '../i18n/locale.svelte';
 
 const n = (value: number) => formatNumber(Math.round(value));
 
 /** One plain line on why a crop does not make the list (from the back end's miss_reason). */
 export function missSentence(reason: MissReason | undefined): string {
-  if (!reason) return 'Does not reach a good score here';
+  const m = i18n.m.miss;
+  if (!reason) return m.none;
   switch (reason.kind) {
     case 'heat':
-      if (reason.approx_warm_days !== null && !reason.beyond_a_year) {
-        return `Needs about ${n(reason.approx_warm_days)} more warm ${reason.approx_warm_days === 1 ? 'day' : 'days'}`;
-      }
-      return 'Not enough warmth in a year here to mature';
+      if (reason.approx_warm_days !== null && !reason.beyond_a_year) return m.warmDays(reason.approx_warm_days, n(reason.approx_warm_days));
+      return m.beyondYear;
     case 'too_cold':
-      return 'Never warm enough to start growing';
+      return m.tooCold;
     case 'sun':
-      return `Needs ${reason.needed_hours} h of sun a day, gets ${reason.available_hours.toFixed(1)} h`;
+      return m.sun(reason.needed_hours, formatNumber(reason.available_hours, { minimumFractionDigits: 1, maximumFractionDigits: 1 }));
     case 'temperature':
       return reason.season_mean_temp === null
-        ? `Days rarely reach ${reason.ideal_min}°C`
-        : `Growing season averages ${Math.round(reason.season_mean_temp)}°C, it wants ${reason.ideal_min}–${reason.ideal_max}°C`;
+        ? m.rarelyWarm(reason.ideal_min)
+        : m.temperature(Math.round(reason.season_mean_temp), reason.ideal_min, reason.ideal_max);
     case 'water':
-      return `Would need about ${n(reason.irrigation_mm)} mm of watering`;
+      return m.water(n(reason.irrigation_mm));
     case 'no_window':
-      return 'No sowing date ripens before frost or heat here';
+      return m.noWindow;
   }
 }
 

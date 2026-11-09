@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { i18n } from "../../i18n/locale.svelte";
     import { tick } from "svelte";
     import StepLabel from "../../ui/StepLabel.svelte";
     import SampleCities from "./SampleCities.svelte";
@@ -50,10 +51,10 @@
 </script>
 
 <div class="flex flex-col gap-6">
-    <StepLabel step={1} label="Pick a place">
-        <h1 class="m-0 text-[34px] leading-[1.1] font-normal tracking-[-0.02em] md:text-[38px]">Where do you want to grow?</h1>
+    <StepLabel step={1} label={i18n.m.place.step}>
+        <h1 class="m-0 text-[34px] leading-[1.1] font-normal tracking-[-0.02em] md:text-[38px]">{i18n.m.place.title}</h1>
         <p class="m-0 hidden text-[15px] leading-relaxed text-ink-muted md:block">
-            Search any address, park or rooftop in the world, or start from a sample city.
+            {i18n.m.place.intro}
         </p>
     </StepLabel>
 
@@ -63,7 +64,7 @@
     </div>
 
     <section class="flex flex-col gap-2.5" aria-labelledby="sample-climates">
-        <span id="sample-climates" class="text-[13px] text-ink-muted">Or try a sample climate</span>
+        <span id="sample-climates" class="text-[13px] text-ink-muted">{i18n.m.place.samples}</span>
         <SampleCities {selected} onpick={city} />
     </section>
 </div>

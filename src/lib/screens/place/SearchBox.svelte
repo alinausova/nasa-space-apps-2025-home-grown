@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { i18n } from "../../i18n/locale.svelte";
     import Icon from "../../ui/Icon.svelte";
     import type { LngLat } from "../../derive/geo";
     import type { PlaceSuggestion } from "../../derive/search";
@@ -22,6 +23,7 @@
     } = $props();
 
     const id = $props.id();
+    let t = $derived(i18n.m.place.search);
     const MIN_QUERY = 2;
 
     let query = $state("");
@@ -38,11 +40,11 @@
         !searching
             ? ""
             : status === "loading" && results.length === 0
-              ? "Searching…"
+              ? t.searching
               : status === "error"
-                ? "Search is not available right now. Try a sample climate below."
+                ? t.unavailable
                 : status === "idle" && results.length === 0
-                  ? "No places found. Try another spelling."
+                  ? t.noResults
                   : "",
     );
 
@@ -122,12 +124,12 @@
             role="combobox"
             autocomplete="off"
             spellcheck="false"
-            aria-label="Search for an address or place"
+            aria-label={t.label}
             aria-expanded={open}
             aria-controls="{id}-list"
             aria-autocomplete="list"
             aria-activedescendant={open && active >= 0 ? `${id}-option-${active}` : undefined}
-            placeholder="Search an address or place"
+            placeholder={t.placeholder}
             class="min-w-0 flex-1 bg-transparent py-3 text-[17px] text-ink outline-none placeholder:text-ink-muted/70 [&::-webkit-search-cancel-button]:hidden"
             onfocus={() => (open = true)}
             onclick={() => (open = true)}
@@ -141,7 +143,7 @@
             {#if message}
                 <p class="m-0 border-b border-line px-5 py-3 text-[13px] text-ink-muted" role="status">{message}</p>
             {/if}
-            <ul id="{id}-list" role="listbox" aria-label="Places" class="m-0 list-none p-0">
+            <ul id="{id}-list" role="listbox" aria-label={t.places} class="m-0 list-none p-0">
                 {#each results as place, i (place.id)}
                     <!-- svelte-ignore a11y_click_events_have_key_events (keyboard is handled on the combobox input) -->
                     <li
@@ -168,8 +170,8 @@
                     onclick={() => choose(locateIndex)}
                 >
                     <span class="flex flex-col">
-                        <span class="text-[17px] {active === locateIndex ? 'font-semibold' : ''}">Use my location</span>
-                        <span class="text-[13px] text-ink-muted">{locating ? "Finding you…" : "Your browser will ask first"}</span>
+                        <span class="text-[17px] {active === locateIndex ? 'font-semibold' : ''}">{t.useLocation}</span>
+                        <span class="text-[13px] text-ink-muted">{locating ? t.findingYou : t.browserAsks}</span>
                     </span>
                 </li>
             </ul>

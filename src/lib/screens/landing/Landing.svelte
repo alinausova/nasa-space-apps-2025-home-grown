@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { i18n } from "../../i18n/locale.svelte";
     import { onMount } from "svelte";
     import orbitDesktop from "../../../assets/landing-orbit.svg?raw";
     import orbitMobile from "../../../assets/landing-orbit-mobile.svg?raw";
@@ -15,11 +16,8 @@
     let playing = $state(!window.matchMedia("(prefers-reduced-motion: reduce)").matches);
     let tabVisible = $state(document.visibilityState === "visible");
 
-    const steps = [
-        { n: "01", title: "Draw your plot", text: "Pick a spot on the map and outline it." },
-        { n: "02", title: "We read satellite data", text: "And analyse a year of sun, heat and rain at your spot." },
-        { n: "03", title: "Get your crops", text: "Ranked by how well they will grow there." },
-    ];
+    let t = $derived(i18n.m.landing);
+    let steps = $derived(t.steps.map((step, i) => ({ n: `0${i + 1}`, ...step })));
 
     onMount(() => {
         const media = window.matchMedia(WIDE);
@@ -55,23 +53,23 @@
             </svg>
             Home Grown
         </span>
-        <nav class="flex items-center gap-7 text-sm lg:text-[15px]" aria-label="Main">
-            <a href={router.href({ name: "learn", tab: "scoring" })} class="text-ink no-underline hover:text-bright">How it works</a>
-            <a href={router.href({ name: "learn", tab: "data" })} class="hidden text-ink no-underline hover:text-bright lg:inline">Data</a>
-            <a href={router.href({ name: "learn", tab: "about" })} class="hidden text-ink no-underline hover:text-bright lg:inline">Team</a>
+        <nav class="flex items-center gap-7 text-sm lg:text-[15px]" aria-label={t.navLabel}>
+            <a href={router.href({ name: "learn", tab: "scoring" })} class="text-ink no-underline hover:text-bright">{t.howItWorks}</a>
+            <a href={router.href({ name: "learn", tab: "data" })} class="hidden text-ink no-underline hover:text-bright lg:inline">{t.data}</a>
+            <a href={router.href({ name: "learn", tab: "about" })} class="hidden text-ink no-underline hover:text-bright lg:inline">{t.team}</a>
         </nav>
     </header>
 
     <!-- Desktop -->
     <main class="relative z-10 hidden max-w-[820px] flex-col gap-[26px] px-14 pt-16 pb-24 lg:flex">
-        <span class="font-mono text-xs tracking-[0.12em] text-bright uppercase">Seen from space, grown at home</span>
-        <h1 class="m-0 text-[clamp(76px,6.6vw,96px)] leading-[0.98] font-normal tracking-[-0.035em]">What could your city grow?</h1>
+        <span class="font-mono text-xs tracking-[0.12em] text-bright uppercase">{t.eyebrow}</span>
+        <h1 class="m-0 text-[clamp(76px,6.6vw,96px)] leading-[0.98] font-normal tracking-[-0.035em]">{t.title}</h1>
         <p class="m-0 max-w-[520px] text-[19px] leading-[1.55] text-ink-muted">
-            Home Grown turns NASA climate data and the latest crop research into a planting list for any roof, yard or empty lot.
+            {t.tagline}
         </p>
         <div class="flex gap-3">
-            <Button href={router.href({ name: "app" })} size="lg" class="h-[52px]!">Pick a spot on Earth <span aria-hidden="true">→</span></Button>
-            <Button href={router.href({ name: "learn", tab: "scoring" })} variant="outline" size="lg" class="h-[52px]! border-line-strong font-normal!">How it works</Button>
+            <Button href={router.href({ name: "app" })} size="lg" class="h-[52px]!">{t.start} <span aria-hidden="true">→</span></Button>
+            <Button href={router.href({ name: "learn", tab: "scoring" })} variant="outline" size="lg" class="h-[52px]! border-line-strong font-normal!">{t.howItWorks}</Button>
         </div>
         <AwardBadge />
         <ol class="m-0 grid list-none grid-cols-[repeat(3,minmax(0,200px))] gap-7 p-0 pt-6">
@@ -88,9 +86,9 @@
     <!-- Mobile -->
     <main class="relative z-10 flex min-h-[calc(100dvh-64px)] flex-col justify-between gap-8 px-5 pt-5 pb-6 lg:hidden">
         <div class="flex flex-col gap-3.5">
-            <span class="font-mono text-[11px] tracking-[0.12em] text-ink-muted uppercase">Seen from space, grown at home</span>
-            <h1 class="m-0 text-[44px] leading-[1.04] font-normal tracking-[-0.025em]">What could your city grow?</h1>
-            <p class="m-0 text-[15px] leading-normal text-ink-muted">Home Grown turns NASA climate data and the latest crop research into a planting list for any roof, yard or empty lot.</p>
+            <span class="font-mono text-[11px] tracking-[0.12em] text-ink-muted uppercase">{t.eyebrow}</span>
+            <h1 class="m-0 text-[44px] leading-[1.04] font-normal tracking-[-0.025em]">{t.title}</h1>
+            <p class="m-0 text-[15px] leading-normal text-ink-muted">{t.tagline}</p>
             <ol class="m-0 flex list-none flex-col p-0 pt-1">
                 {#each steps as step (step.n)}
                     <li class="grid grid-cols-[26px_minmax(0,1fr)] gap-2.5 border-t border-line py-2.5">
@@ -105,13 +103,13 @@
         </div>
         <div class="flex flex-col gap-3">
             <AwardBadge compact />
-            <Button href={router.href({ name: "app" })} size="lg" block class="h-[52px]!">Pick a spot on Earth <span aria-hidden="true">→</span></Button>
+            <Button href={router.href({ name: "app" })} size="lg" block class="h-[52px]!">{t.start} <span aria-hidden="true">→</span></Button>
         </div>
     </main>
 
     <button
         type="button"
-        aria-label={playing ? "Pause animation" : "Play animation"}
+        aria-label={playing ? t.pause : t.play}
         aria-pressed={!playing}
         onclick={() => (playing = !playing)}
         class="absolute right-5 bottom-[150px] z-20 flex size-11 items-center justify-center rounded-full border border-ink/40 bg-paper text-ink

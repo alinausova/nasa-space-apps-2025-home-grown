@@ -1,6 +1,7 @@
 <script lang="ts">
+    import { i18n } from "../i18n/locale.svelte";
     // Small "Home Grown" label above AI-written text.
-    let { text = "Home Grown" }: { text?: string } = $props();
+    let { text }: { text?: string } = $props();
 </script>
 
 <span class="inline-flex items-center gap-1.5 text-sm font-semibold">
@@ -9,5 +10,5 @@
         <path d="M12 12c0-4 3-7 8-7 0 4-3 7-8 7z" />
         <path d="M12 14c0-3.5-2.5-6-7-6 0 3.5 2.5 6 7 6z" />
     </svg>
-    {text}
+    {text ?? i18n.m.results.leafLabel}
 </span>

@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { i18n } from "../../i18n/locale.svelte";
     import { lower } from "../../i18n/format";
     import type { CropCalendar } from "../../api/types";
     import { calendarRows, calendarSentence } from "../../derive/calendar";
@@ -12,7 +13,7 @@
 </script>
 
 <section class="flex flex-col gap-3.5 border-t border-line pt-6" aria-labelledby="when-to-grow" data-testid="grow-calendar">
-    <h2 id="when-to-grow" class="m-0 text-[19px] font-medium md:text-[22px]">When to grow it</h2>
+    <h2 id="when-to-grow" class="m-0 text-[19px] font-medium md:text-[22px]">{i18n.m.crop.calendarTitle}</h2>
     {#if calendar}
         <p class="sr-only">{calendarSentence(calendar)}</p>
         <div class="grid grid-cols-[4.5rem_repeat(12,minmax(0,1fr))] items-center gap-x-1 gap-y-1.5" aria-hidden="true">
@@ -34,16 +35,16 @@
         </div>
         <p class="m-0 text-[13px] leading-relaxed text-ink-muted">
             {#if calendar.mode === "plant"}
-                Planted from cuttings or corms, not seed. Worked out from this plot's weather in {year}.
+                {i18n.m.crop.calendarPlant(year)}
             {:else if calendar.mode === "plant_out"}
-                Start seeds indoors about six weeks earlier. Worked out from this plot's weather in {year}.
+                {i18n.m.crop.calendarPlantOut(year)}
             {:else}
-                Sowing outdoors, worked out from this plot's weather in {year}.
+                {i18n.m.crop.calendarSow(year)}
             {/if}
         </p>
     {:else}
         <p class="m-0 text-[15px] leading-relaxed text-ink-muted">
-            We could not find a sowing date that lets {lower(cropName)} ripen before frost or heat in this plot's weather in {year}.
+            {i18n.m.crop.calendarNone(lower(cropName), year)}
         </p>
     {/if}
 </section>

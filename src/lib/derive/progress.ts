@@ -1,3 +1,4 @@
+import { i18n } from '../i18n/locale.svelte';
 // Analysing progress, driven by the three-call API: the climate call covers step 2 (NASA POWER),
 // the crops call covers steps 3 and 4 (Landsat, then scoring, which takes milliseconds on the server).
 // Results appear when the crops call returns; the summary (step 5) arrives after them.
@@ -12,13 +13,18 @@ export interface AnalysisStep {
   short: string;
 }
 
-export const ANALYSIS_STEPS: readonly AnalysisStep[] = [
-  { title: 'Measured your plot', detail: '', short: 'Measuring your plot' },
-  { title: 'Fetched NASA POWER climate', detail: 'A year of daily heat, sun and rain', short: 'Fetching NASA POWER climate' },
-  { title: 'Reading Landsat 8/9', detail: 'Surface heat across the plot, 30 m detail', short: 'Reading Landsat surface temperature' },
-  { title: 'Scoring every crop', detail: 'Heat, sun, temperature and water for each', short: 'Scoring every crop' },
-  { title: 'Writing your summary', detail: 'Mistral AI, arrives after your results', short: 'Writing your summary' },
-];
+/** The five steps, worded in the active language. */
+export const ANALYSIS_STEPS: readonly AnalysisStep[] = [0, 1, 2, 3, 4].map((i) => ({
+  get title() {
+    return i18n.m.progress[i].title;
+  },
+  get detail() {
+    return i18n.m.progress[i].detail;
+  },
+  get short() {
+    return i18n.m.progress[i].short;
+  },
+}));
 
 /** Typical duration of each call in ms, before any have been measured (Render free tier). */
 export const DEFAULT_ESTIMATES: Record<Phase, number> = { climate: 2_000, crops: 5_000 };

@@ -1,25 +1,27 @@
 <script lang="ts">
     import LearnSection from "./LearnSection.svelte";
-    import { FORMULAS, SCORE_PARTS } from "./content";
+    import { learn } from "./content";
+
+    let c = $derived(learn());
 
     // Shades of stone ink for the weight bar (the factor greens belong to the app theme).
     const SHADES = ["#2F3336", "#5F6366", "#8E9194", "#BEC0C2"];
-    const total = FORMULAS.length;
+    let total = $derived(c.FORMULAS.length);
 </script>
 
 <LearnSection
-    label="Overview"
-    title="What makes up the score"
-    body="Crops without enough sun are removed first. Every other crop gets a score from 0 to 100, built from four weighted parts. The weakest of heat, sun and temperature sets a ceiling: a crop that is too cold or short of heat cannot score its way out with good rain."
+    label={c.UI.scoring.overview}
+    title={c.UI.scoring.title}
+    body={c.UI.scoring.body}
 >
     {#snippet aside()}
-        <div class="flex h-2.5 gap-0.5 overflow-hidden rounded-[5px]" role="img" aria-label="Weights: heat 35%, sunlight 25%, temperature 25%, water 15%">
-            {#each SCORE_PARTS as part, i (part.title)}
+        <div class="flex h-2.5 gap-0.5 overflow-hidden rounded-[5px]" role="img" aria-label={c.UI.scoring.weights}>
+            {#each c.SCORE_PARTS as part, i (part.title)}
                 <span class="block h-full" style:width="{part.weight}%" style:background={SHADES[i]}></span>
             {/each}
         </div>
         <dl class="m-0 grid grid-cols-2 overflow-hidden rounded-card border border-line-strong bg-surface md:grid-cols-4">
-            {#each SCORE_PARTS as part, i (part.title)}
+            {#each c.SCORE_PARTS as part, i (part.title)}
                 <div class="flex flex-col gap-1 p-3.5 {i % 2 ? '' : 'border-r'} {i < 2 ? 'border-b md:border-b-0' : ''} border-line md:border-r md:last:border-r-0">
                     <dt class="order-2 text-[13px] font-medium">{part.title}</dt>
                     <dd class="order-1 m-0 font-mono text-lg">{part.weight}%</dd>
@@ -30,7 +32,7 @@
     {/snippet}
 </LearnSection>
 
-{#each FORMULAS as formula, i (formula.title)}
+{#each c.FORMULAS as formula, i (formula.title)}
     <LearnSection label="{String(i + 1).padStart(2, '0')} / {String(total).padStart(2, '0')}" title={formula.title} body={formula.body}>
         {#snippet aside()}
             <!-- Focusable so keyboard users can scroll long formulas sideways (WCAG 2.1.1, axe scrollable-region-focusable). -->
@@ -38,7 +40,7 @@
             <pre
                 class="m-0 overflow-x-auto rounded-card border border-ink bg-surface px-4 py-3.5 font-mono text-[13px] leading-relaxed focus-visible:outline-2 focus-visible:outline-ink"
                 role="region"
-                aria-label="Formula: {formula.title}"
+                aria-label={c.UI.scoring.formula(formula.title)}
                 tabindex="0">{formula.code}</pre>
         {/snippet}
     </LearnSection>

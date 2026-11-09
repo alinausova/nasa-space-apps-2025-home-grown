@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { i18n } from "../i18n/locale.svelte";
     let {
         value,
         color,
@@ -13,7 +14,7 @@
     let dash = $derived(`${(circumference * clamped) / 100} ${circumference}`);
 </script>
 
-<svg width={size} height={size} viewBox="0 0 76 76" role="img" aria-label="{label} {Math.round(clamped)} out of 100">
+<svg width={size} height={size} viewBox="0 0 76 76" role="img" aria-label={i18n.m.results.ringLabel(label, Math.round(clamped))}>
     <circle cx="38" cy="38" r={radius} fill="none" stroke="currentColor" stroke-opacity="0.14" stroke-width="7" />
     <circle
         cx="38"

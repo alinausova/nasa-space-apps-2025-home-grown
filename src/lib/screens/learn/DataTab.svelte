@@ -1,11 +1,16 @@
 <script lang="ts">
     import LearnSection from "./LearnSection.svelte";
-    import { BIBLIOGRAPHY, CROP_DATA, DATA_RESEARCHED, DATA_USED } from "./content";
+    import { learn } from "./content";
+    import cropIcons from "../../../assets/crop-icons/crop-icons.json";
+
+    let c = $derived(learn());
+    /** Crops the API scores (api/crop_database.py); kept in step by the icon map test. */
+    const CROP_COUNT = Object.keys(cropIcons).length;
 
     let showBibliography = $state(false);
 </script>
 
-{#snippet table(rows: { variable: string; source: string; why: string; refs: string }[], caption: string, whyHeading = "Why it matters")}
+{#snippet table(rows: { variable: string; source: string; why: string; refs: string }[], caption: string, whyHeading = c.UI.data.whyItMatters)}
     <!-- Focusable so keyboard users can scroll the table sideways on narrow screens (WCAG 2.1.1, axe scrollable-region-focusable). -->
     <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
     <div class="overflow-x-auto rounded-card border border-line-strong bg-surface focus-visible:outline-2 focus-visible:outline-ink" role="region" aria-label={caption} tabindex="0">
@@ -13,8 +18,8 @@
             <caption class="sr-only">{caption}</caption>
             <thead>
                 <tr class="text-xs text-ink-muted">
-                    <th scope="col" class="px-4 py-2.5 font-normal">Variable</th>
-                    <th scope="col" class="px-4 py-2.5 font-normal">Source</th>
+                    <th scope="col" class="px-4 py-2.5 font-normal">{c.UI.data.variable}</th>
+                    <th scope="col" class="px-4 py-2.5 font-normal">{c.UI.data.source}</th>
                     <th scope="col" class="px-4 py-2.5 font-normal">{whyHeading}</th>
                 </tr>
             </thead>
@@ -33,35 +38,35 @@
 
 <LearnSection
     label="01"
-    title="Used in your results"
-    body="A year of daily NASA POWER data for the centre of your plot, plus Landsat 8/9 surface temperature from every clear scene over it."
+    title={c.UI.data.usedTitle}
+    body={c.UI.data.usedBody}
 >
     {#snippet aside()}
-        {@render table(DATA_USED, "Variables used in your results")}
+        {@render table(c.DATA_USED, c.UI.data.usedCaption)}
     {/snippet}
 </LearnSection>
 
 <LearnSection
     label="02"
-    title="Crop data"
-    body="Each of the 45 crops carries about 17 numbers. This is where they come from and what they drive. Most temperature limits and heat units now come from field studies. Ideal temperatures, frost classes and some heat units are still team estimates; we will cite each one as it is replaced."
+    title={c.UI.data.cropTitle}
+    body={c.UI.data.cropBody(CROP_COUNT)}
 >
     {#snippet aside()}
-        {@render table(CROP_DATA, "Where the crop numbers come from", "How we use it")}
+        {@render table(c.CROP_DATA, c.UI.data.cropCaption, c.UI.data.howWeUse)}
     {/snippet}
 </LearnSection>
 
 <LearnSection
     label="03"
-    title="Researched, not used yet"
-    body="Variables our research says matter, which Home Grown does not read yet. Measured shade would replace the 30% assumption."
+    title={c.UI.data.researchedTitle}
+    body={c.UI.data.researchedBody}
 >
     {#snippet aside()}
-        {@render table(DATA_RESEARCHED, "Variables researched but not used yet")}
+        {@render table(c.DATA_RESEARCHED, c.UI.data.researchedCaption)}
     {/snippet}
 </LearnSection>
 
-<LearnSection label="04" title="Sources">
+<LearnSection label="04" title={c.UI.data.sources}>
     <button
         type="button"
         aria-expanded={showBibliography}
@@ -69,11 +74,11 @@
         onclick={() => (showBibliography = !showBibliography)}
         class="mt-2 inline-flex min-h-11 items-center self-start rounded-full border border-ink px-5 text-sm hover:bg-surface"
     >
-        {showBibliography ? "Hide bibliography" : `Show bibliography · ${BIBLIOGRAPHY.length} sources`}
+        {showBibliography ? c.UI.data.hideBibliography : c.UI.data.showBibliography(c.BIBLIOGRAPHY.length)}
     </button>
     {#if showBibliography}
         <ol id="bibliography" class="m-0 mt-3 flex list-none flex-col gap-1.5 p-0 text-[13px] text-ink-muted">
-            {#each BIBLIOGRAPHY as entry, i (entry)}
+            {#each c.BIBLIOGRAPHY as entry, i (entry)}
                 <li><span class="font-mono text-[11px]">[{i + 1}]</span> {entry}</li>
             {/each}
         </ol>

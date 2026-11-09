@@ -1,8 +1,10 @@
 import type { CropRecommendation, RecommendationsResponse } from '../api/types';
 import type { FactorKey } from './score';
 import { formatNumber } from '../i18n/format';
+import { i18n } from '../i18n/locale.svelte';
 
 const n = (value: number) => formatNumber(Math.round(value));
+const hours = (value: number) => formatNumber(value, { minimumFractionDigits: 1, maximumFractionDigits: 1 });
 
 /** v1 back end: beyond this much surplus rain the water score dropped sharply (water_diff > 300). */
 const WET_SURPLUS_MM_V1 = 300;
@@ -16,40 +18,39 @@ const WET_SURPLUS_MM = 150;
  */
 export function factorReasons(crop: CropRecommendation, climate: RecommendationsResponse['climate_summary']): Record<FactorKey, string> {
   const m = crop.suitability.metrics;
+  const t = i18n.m.why;
   const seasonal = m.season_mean_temp !== undefined;
 
   let heat: string;
-  if (m.total_gdd >= m.required_gdd) heat = `More than the ${n(m.required_gdd)} heat units it needs`;
-  else if (m.heat_capped) heat = `Only ${n(m.total_gdd)} of the ${n(m.required_gdd)} heat units it needs to mature`;
-  else heat = `${n(m.total_gdd)} of ${n(m.required_gdd)} heat units`;
+  if (m.total_gdd >= m.required_gdd) heat = t.heatMore(n(m.required_gdd));
+  else if (m.heat_capped) heat = t.heatCapped(n(m.total_gdd), n(m.required_gdd));
+  else heat = t.heatPart(n(m.total_gdd), n(m.required_gdd));
 
-  const sunlight = `${m.adjusted_sun_hours.toFixed(1)} h a day after shade`;
+  const sunlight = t.sun(hours(m.adjusted_sun_hours));
 
-  const label = seasonal ? 'Growing-season average' : 'Year average';
+  const label = seasonal ? t.seasonAverage : t.yearAverage;
   // The scoring pass judges temperature over the crop's own growing days; prefer that average when present.
   const growing = m.temperature_mean !== undefined ? m.temperature_mean : m.season_mean_temp;
   const average = seasonal ? growing : (climate.avg_temp_max + climate.avg_temp_min) / 2;
   let temperature: string;
   if (average === null || average === undefined) {
-    temperature = 'Too cold to grow on any day';
+    temperature = t.tooColdAnyDay;
   } else if (m.optimal_temp_min !== undefined && m.optimal_temp_max !== undefined) {
     const range = `${m.optimal_temp_min}–${m.optimal_temp_max}°C`;
     temperature =
       average >= m.optimal_temp_min && average <= m.optimal_temp_max
-        ? `${label} inside the ideal ${range}`
-        : `${label} ${Math.round(average)}°C, ideal ${range}`;
+        ? t.insideIdeal(label, range)
+        : t.outsideIdeal(label, Math.round(average), range);
   } else {
-    temperature = `${label} ${Math.round(average)}°C`;
+    temperature = t.average(label, Math.round(average));
   }
 
   const rain = seasonal ? (m.season_precipitation_mm ?? m.annual_precipitation_mm) : m.annual_precipitation_mm;
   let water: string;
-  if (m.irrigation_needed_mm > 0) water = `Needs about ${n(m.irrigation_needed_mm)} mm of watering`;
-  else if (seasonal && rain - m.required_water_mm > WET_SURPLUS_MM)
-    water = `${n(rain)} mm of rain while it grows, more than its ${n(m.required_water_mm)} mm need`;
-  else if (!seasonal && rain - m.required_water_mm > WET_SURPLUS_MM_V1)
-    water = `${n(rain)} mm of rain, well over its ${n(m.required_water_mm)} mm need`;
-  else water = `Rain covers its ${n(m.required_water_mm)} mm need`;
+  if (m.irrigation_needed_mm > 0) water = t.watering(n(m.irrigation_needed_mm));
+  else if (seasonal && rain - m.required_water_mm > WET_SURPLUS_MM) water = t.rainSurplus(n(rain), n(m.required_water_mm));
+  else if (!seasonal && rain - m.required_water_mm > WET_SURPLUS_MM_V1) water = t.rainSurplusYear(n(rain), n(m.required_water_mm));
+  else water = t.rainCovers(n(m.required_water_mm));
 
   return { gdd: heat, sunlight, temperature, water };
 }
@@ -63,18 +64,19 @@ const HELD_BACK_BELOW = 80;
  */
 export function heldBack(crop: CropRecommendation): string | null {
   const m = crop.suitability.metrics;
+  const t = i18n.m.why;
   if (crop.suitability.overall_score >= HELD_BACK_BELOW) return null;
   switch (m.limited_by) {
     case 'temperature': {
-      const t = m.temperature_mean;
-      const ideal = m.optimal_temp_min !== undefined && m.optimal_temp_max !== undefined ? `, it wants ${m.optimal_temp_min}–${m.optimal_temp_max}°C` : '';
-      if (t === null || t === undefined) return 'Held back by temperature: rarely warm enough to grow.';
-      return `Held back by temperature: it averages ${Math.round(t)}°C while growing${ideal}.`;
+      const mean = m.temperature_mean;
+      const ideal = m.optimal_temp_min !== undefined && m.optimal_temp_max !== undefined ? `${m.optimal_temp_min}–${m.optimal_temp_max}°C` : null;
+      if (mean === null || mean === undefined) return t.heldTemperatureCold;
+      return t.heldTemperature(Math.round(mean), ideal);
     }
     case 'heat':
-      return `Held back by heat: about ${n(m.total_gdd)} heat units here, it needs ${n(m.required_gdd)} with some to spare.`;
+      return t.heldHeat(n(m.total_gdd), n(m.required_gdd));
     case 'sun':
-      return `Held back by sun: ${m.adjusted_sun_hours.toFixed(1)} h a day after shade, it wants ${m.optimal_sun_hours} h.`;
+      return t.heldSun(hours(m.adjusted_sun_hours), m.optimal_sun_hours);
     default:
       return null;
   }

@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { i18n } from "../../i18n/locale.svelte";
     import laurel from "../../../assets/laurel.svg";
     import { router } from "../../router/router.svelte";
 
@@ -12,7 +13,7 @@
 >
     <img src={laurel} alt="" width={compact ? 18 : 20} height={compact ? 18 : 20} class="shrink-0" />
     <span>
-        <span class="font-semibold">Winner</span>
-        {#if compact}· Pitch Perfect at UN climate conference COP30{:else}· Pitch Perfect at COP30, the UN Climate Change Conference, Belém 2025{/if}
+        <span class="font-semibold">{i18n.m.landing.winner}</span>
+        {compact ? i18n.m.landing.awardShort : i18n.m.landing.awardLong}
     </span>
 </a>
