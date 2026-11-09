@@ -67,9 +67,8 @@ export const RECOGNITION_FEATURED = {
 
 export const RECOGNITION = [
   { year: '2026', title: 'Climate Pitch, Munich Climate Week', body: 'Pitched Home Grown in Munich' },
-  // TODO: confirm the Climate Café year with the team (assumed 2026 in the design handoff).
   { year: '2026', title: 'Climate Café, Global Shapers Munich and TUM Think Tank', body: 'Presented Home Grown in Munich' },
-  { year: '2025', title: 'Where it started: NASA International Space Apps Challenge', body: 'Built in a weekend for the 2025 hackathon' },
+  { year: '2025', title: 'Where it started: NASA International Space Apps Challenge', body: 'The first version of Home Grown was built here, in a weekend' },
 ];
 
 export const CONTACT = [

@@ -56,6 +56,7 @@ test.describe('learn more', () => {
     await expect(section).toContainText('Climate Pitch, Munich Climate Week');
     await expect(section).toContainText('Climate Café, Global Shapers Munich and TUM Think Tank');
     await expect(section).toContainText('Where it started: NASA International Space Apps Challenge');
+    await expect(section).toContainText('The first version of Home Grown was built here, in a weekend');
   });
 
   test('get in touch: contact the team via LinkedIn, report an issue on GitHub', async ({ page }) => {
