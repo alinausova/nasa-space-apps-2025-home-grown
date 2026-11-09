@@ -1,6 +1,7 @@
 CROP_DATABASE = {
     "tomatoes": {
         "name": "Tomatoes",
+        "species": "Solanum lycopersicum",
         "base_temp": 7,
         "upper_temp": 28,
         "gdd_required": 1670,
@@ -33,6 +34,7 @@ CROP_DATABASE = {
     },
     "lettuce": {
         "name": "Lettuce",
+        "species": "Lactuca sativa",
         "base_temp": 4,
         "upper_temp": 28,
         "gdd_required": 985,
@@ -64,6 +66,7 @@ CROP_DATABASE = {
     },
     "spinach": {
         "name": "Spinach",
+        "species": "Spinacia oleracea",
         "base_temp": 4,
         "upper_temp": 25,
         "gdd_required": 505,
@@ -95,6 +98,7 @@ CROP_DATABASE = {
     },
     "peppers": {
         "name": "Peppers",
+        "species": "Capsicum annuum",
         "base_temp": 10,
         "upper_temp": 35,
         "gdd_required": 1250,
@@ -126,6 +130,7 @@ CROP_DATABASE = {
     },
     "carrots": {
         "name": "Carrots",
+        "species": "Daucus carota",
         "base_temp": 6,
         "upper_temp": 30,
         "gdd_required": 1575,
@@ -157,6 +162,7 @@ CROP_DATABASE = {
     },
     "beans": {
         "name": "Beans",
+        "species": "Phaseolus vulgaris",
         "base_temp": 10,
         "upper_temp": 32,
         "gdd_required": 615,
@@ -188,6 +194,8 @@ CROP_DATABASE = {
     },
     "kale": {
         "name": "Kale",
+        "species": "Brassica oleracea",
+        "group": "Acephala group (leaves)",
         "base_temp": 4.5,
         "upper_temp": 30,
         "gdd_required": 685,
@@ -219,6 +227,7 @@ CROP_DATABASE = {
     },
     "cucumbers": {
         "name": "Cucumbers",
+        "species": "Cucumis sativus",
         "base_temp": 10,
         "upper_temp": 32,
         "gdd_required": 600,
@@ -250,6 +259,7 @@ CROP_DATABASE = {
     },
     "radishes": {
         "name": "Radishes",
+        "species": "Raphanus sativus",
         "base_temp": 4.5,
         "upper_temp": 30,
         "gdd_required": 340,
@@ -281,6 +291,7 @@ CROP_DATABASE = {
     },
     "arugula": {
         "name": "Arugula",
+        "species": "Eruca vesicaria",
         "base_temp": 4.5,
         "upper_temp": 30,
         "gdd_required": 390,
@@ -312,6 +323,7 @@ CROP_DATABASE = {
     },
     "eggplant": {
         "name": "Eggplant",
+        "species": "Solanum melongena",
         "base_temp": 10,
         "upper_temp": 35,
         "gdd_required": 1370,
@@ -343,6 +355,8 @@ CROP_DATABASE = {
     },
     "broccoli": {
         "name": "Broccoli",
+        "species": "Brassica oleracea",
+        "group": "Italica group (flower heads)",
         "base_temp": 4.5,
         "upper_temp": 30,
         "gdd_required": 755,
@@ -374,6 +388,8 @@ CROP_DATABASE = {
     },
     "cabbage": {
         "name": "Cabbage",
+        "species": "Brassica oleracea",
+        "group": "Capitata group (heads)",
         "base_temp": 4.5,
         "upper_temp": 30,
         "gdd_required": 885,
@@ -405,6 +421,8 @@ CROP_DATABASE = {
     },
     "cauliflower": {
         "name": "Cauliflower",
+        "species": "Brassica oleracea",
+        "group": "Botrytis group (curds)",
         "base_temp": 4.5,
         "upper_temp": 30,
         "gdd_required": 835,
@@ -436,6 +454,7 @@ CROP_DATABASE = {
     },
     "onions": {
         "name": "Onions",
+        "species": "Allium cepa",
         "base_temp": 4.5,
         "upper_temp": 35,
         "gdd_required": 2290,
@@ -467,6 +486,7 @@ CROP_DATABASE = {
     },
     "garlic": {
         "name": "Garlic",
+        "species": "Allium sativum",
         "base_temp": 4,
         "upper_temp": 30,
         "gdd_required": 1140,
@@ -498,6 +518,7 @@ CROP_DATABASE = {
     },
     "potato": {
         "name": "Potato",
+        "species": "Solanum tuberosum",
         "base_temp": 2,
         "upper_temp": 30,
         "gdd_required": 1600,
@@ -529,6 +550,7 @@ CROP_DATABASE = {
     },
     "sweet_potato": {
         "name": "Sweet Potato",
+        "species": "Ipomoea batatas",
         "base_temp": 12,
         "upper_temp": 30,
         "gdd_required": 935,
@@ -560,6 +582,7 @@ CROP_DATABASE = {
     },
     "squash": {
         "name": "Squash",
+        "species": "Cucurbita pepo",
         "base_temp": 10,
         "upper_temp": 32,
         "gdd_required": 910,
@@ -591,6 +614,7 @@ CROP_DATABASE = {
     },
     "pumpkin": {
         "name": "Pumpkin",
+        "species": "Cucurbita maxima",
         "base_temp": 10,
         "upper_temp": 32,
         "gdd_required": 965,
@@ -622,6 +646,7 @@ CROP_DATABASE = {
     },
     "melon": {
         "name": "Melon",
+        "species": "Cucumis melo",
         "base_temp": 10,
         "upper_temp": 38,
         "gdd_required": 1020,
@@ -653,6 +678,7 @@ CROP_DATABASE = {
     },
     "watermelon": {
         "name": "Watermelon",
+        "species": "Citrullus lanatus",
         "base_temp": 10,
         "upper_temp": 35,
         "gdd_required": 1505,
@@ -684,6 +710,7 @@ CROP_DATABASE = {
     },
     "strawberries": {
         "name": "Strawberries",
+        "species": "Fragaria × ananassa",
         "base_temp": 3,
         "upper_temp": 30,
         "gdd_required": 800,
@@ -715,6 +742,7 @@ CROP_DATABASE = {
     },
     "peas": {
         "name": "Peas",
+        "species": "Pisum sativum",
         "base_temp": 5,
         "upper_temp": 27,
         "gdd_required": 1080,
@@ -746,6 +774,7 @@ CROP_DATABASE = {
     },
     "corn": {
         "name": "Corn/Maize",
+        "species": "Zea mays",
         "base_temp": 10,
         "upper_temp": 32,
         "gdd_required": 1540,
@@ -777,6 +806,7 @@ CROP_DATABASE = {
     },
     "basil": {
         "name": "Basil",
+        "species": "Ocimum basilicum",
         "base_temp": 10,
         "upper_temp": 30,
         "gdd_required": 665,
@@ -808,6 +838,7 @@ CROP_DATABASE = {
     },
     "parsley": {
         "name": "Parsley",
+        "species": "Petroselinum crispum",
         "base_temp": 4,
         "upper_temp": 27,
         "gdd_required": 500,
@@ -839,6 +870,7 @@ CROP_DATABASE = {
     },
     "wheat": {
         "name": "Wheat",
+        "species": "Triticum aestivum",
         "base_temp": 0,
         "upper_temp": 35,
         "gdd_required": 1645,
@@ -870,6 +902,7 @@ CROP_DATABASE = {
     },
     "rice": {
         "name": "Rice",
+        "species": "Oryza sativa",
         "base_temp": 12,
         "upper_temp": 35,
         "gdd_required": 1670,
@@ -901,6 +934,7 @@ CROP_DATABASE = {
     },
     "soybeans": {
         "name": "Soybeans",
+        "species": "Glycine max",
         "base_temp": 10,
         "upper_temp": 40,
         "gdd_required": 1660,
@@ -932,6 +966,7 @@ CROP_DATABASE = {
     },
     "sunflower": {
         "name": "Sunflower",
+        "species": "Helianthus annuus",
         "base_temp": 8,
         "upper_temp": 30,
         "gdd_required": 1790,
@@ -963,6 +998,7 @@ CROP_DATABASE = {
     },
     "okra": {
         "name": "Okra",
+        "species": "Abelmoschus esculentus",
         "base_temp": 10,
         "upper_temp": 35,
         "gdd_required": 750,
@@ -996,6 +1032,7 @@ CROP_DATABASE = {
     },
     "cassava": {
         "name": "Cassava",
+        "species": "Manihot esculenta",
         "propagation": "vegetative",
         "base_temp": 10,
         "upper_temp": 40,
@@ -1030,6 +1067,7 @@ CROP_DATABASE = {
     },
     "sorghum": {
         "name": "Sorghum",
+        "species": "Sorghum bicolor",
         "base_temp": 10,
         "upper_temp": 30,
         "gdd_required": 1380,
@@ -1063,6 +1101,7 @@ CROP_DATABASE = {
     },
     "pearl_millet": {
         "name": "Pearl millet",
+        "species": "Pennisetum glaucum",
         "base_temp": 10,
         "upper_temp": 40,
         "gdd_required": 1200,
@@ -1096,6 +1135,7 @@ CROP_DATABASE = {
     },
     "groundnut": {
         "name": "Groundnut",
+        "species": "Arachis hypogaea",
         "base_temp": 10,
         "upper_temp": 35,
         "gdd_required": 1530,
@@ -1129,6 +1169,7 @@ CROP_DATABASE = {
     },
     "barley": {
         "name": "Barley",
+        "species": "Hordeum vulgare",
         "base_temp": 0,
         "upper_temp": 30,
         "gdd_required": 1450,
@@ -1162,6 +1203,7 @@ CROP_DATABASE = {
     },
     "beetroot": {
         "name": "Beetroot",
+        "species": "Beta vulgaris",
         "base_temp": 4.5,
         "upper_temp": 30,
         "gdd_required": 850,
@@ -1195,6 +1237,7 @@ CROP_DATABASE = {
     },
     "chickpea": {
         "name": "Chickpea",
+        "species": "Cicer arietinum",
         "base_temp": 5,
         "upper_temp": 32,
         "gdd_required": 1530,
@@ -1228,6 +1271,7 @@ CROP_DATABASE = {
     },
     "lentil": {
         "name": "Lentil",
+        "species": "Lens culinaris",
         "base_temp": 2,
         "upper_temp": 35,
         "gdd_required": 1400,
@@ -1261,6 +1305,7 @@ CROP_DATABASE = {
     },
     "cowpea": {
         "name": "Cowpea",
+        "species": "Vigna unguiculata",
         "base_temp": 10,
         "upper_temp": 35,
         "gdd_required": 1050,
@@ -1294,6 +1339,7 @@ CROP_DATABASE = {
     },
     "fava_bean": {
         "name": "Fava bean",
+        "species": "Vicia faba",
         "base_temp": 5,
         "upper_temp": 30,
         "gdd_required": 1800,
@@ -1327,6 +1373,7 @@ CROP_DATABASE = {
     },
     "taro": {
         "name": "Taro",
+        "species": "Colocasia esculenta",
         "propagation": "vegetative",
         "base_temp": 10,
         "upper_temp": 35,
@@ -1361,6 +1408,7 @@ CROP_DATABASE = {
     },
     "oats": {
         "name": "Oats",
+        "species": "Avena sativa",
         "base_temp": 0,
         "upper_temp": 30,
         "gdd_required": 1850,
@@ -1394,6 +1442,7 @@ CROP_DATABASE = {
     },
     "turnip": {
         "name": "Turnip",
+        "species": "Brassica rapa",
         "base_temp": 4,
         "upper_temp": 35,
         "gdd_required": 380,
