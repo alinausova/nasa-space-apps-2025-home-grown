@@ -63,9 +63,9 @@
     </header>
 
     <!-- Desktop -->
-    <main class="relative z-10 hidden max-w-[760px] flex-col gap-[26px] px-14 pt-16 pb-24 lg:flex">
+    <main class="relative z-10 hidden max-w-[820px] flex-col gap-[26px] px-14 pt-16 pb-24 lg:flex">
         <span class="font-mono text-xs tracking-[0.12em] text-bright uppercase">Seen from space, grown at home</span>
-        <h1 class="m-0 text-[76px] leading-[0.98] font-normal tracking-[-0.035em]">What could your city grow?</h1>
+        <h1 class="m-0 text-[clamp(76px,6.6vw,96px)] leading-[0.98] font-normal tracking-[-0.035em]">What could your city grow?</h1>
         <p class="m-0 max-w-[520px] text-[19px] leading-[1.55] text-ink-muted">
             Home Grown turns NASA climate data into a planting list for any roof, yard or empty lot.
         </p>
@@ -89,7 +89,7 @@
     <main class="relative z-10 flex min-h-[calc(100dvh-64px)] flex-col justify-between gap-8 px-5 pt-5 pb-6 lg:hidden">
         <div class="flex flex-col gap-3.5">
             <span class="font-mono text-[11px] tracking-[0.12em] text-ink-muted uppercase">Seen from space, grown at home</span>
-            <h1 class="m-0 text-[40px] leading-[1.04] font-normal tracking-[-0.025em]">What could your city grow?</h1>
+            <h1 class="m-0 text-[44px] leading-[1.04] font-normal tracking-[-0.025em]">What could your city grow?</h1>
             <p class="m-0 text-[15px] leading-normal text-ink-muted">Home Grown turns NASA climate data into a planting list for any roof, yard or empty lot.</p>
             <ol class="m-0 flex list-none flex-col p-0 pt-1">
                 {#each steps as step (step.n)}

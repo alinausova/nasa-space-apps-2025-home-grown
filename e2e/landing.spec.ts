@@ -77,4 +77,22 @@ test.describe('landing', () => {
     });
     await expect.poll(() => page.evaluate(svgPaused)).toBe(false);
   });
+
+  test('headline scales with the window and stays on two lines', async ({ browser }) => {
+    for (const [width, height, min, max] of [[1024, 768, 76, 76], [1440, 900, 90, 96], [1920, 1080, 96, 96], [390, 844, 44, 44]]) {
+      const context = await browser.newContext({ viewport: { width, height } });
+      const page = await context.newPage();
+      await mockApi(page);
+      await page.goto('');
+      const { size, lines } = await page.evaluate(() => {
+        const h1 = [...document.querySelectorAll('h1')].find((e) => (e as HTMLElement).offsetParent)!;
+        const style = getComputedStyle(h1);
+        return { size: parseFloat(style.fontSize), lines: Math.round(h1.getBoundingClientRect().height / parseFloat(style.lineHeight)) };
+      });
+      expect(size, `font size at ${width}px`).toBeGreaterThanOrEqual(min);
+      expect(size, `font size at ${width}px`).toBeLessThanOrEqual(max);
+      expect(lines, `lines at ${width}px`).toBe(2);
+      await context.close();
+    }
+  });
 });
