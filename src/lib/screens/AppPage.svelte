@@ -16,7 +16,7 @@
     import CropDetail from "./crop/CropDetail.svelte";
     import CropNav from "./crop/CropNav.svelte";
     import { formatKg } from "../derive/format";
-    import { formatNumber, lower } from "../i18n/format";
+    import { formatNumber } from "../i18n/format";
     import { i18n } from "../i18n/locale.svelte";
     import { cropName } from "../i18n/crops";
     import { ANALYSIS_STEPS, failedStep, phaseTimeline } from "../derive/progress";
@@ -318,7 +318,7 @@
             <ScanOverlay ring={journey.plot.ring} active={journey.request.status === "loading"} />
             {#if journey.climate}<EarlyClimateCard climate={journey.climate} />{/if}
             <MapChip only="desktop" live>
-                {#if journey.request.status === "landsat-failed"}<span class="size-2 rounded-full bg-harvest" aria-hidden="true"></span>{t.chip.landsatFailed}{:else if failedAt !== null}{t.chip.stoppedAt(lower(ANALYSIS_STEPS[failedAt].short))}{:else}<span class="size-2 rounded-full bg-bright" aria-hidden="true"></span>{ANALYSIS_STEPS[progress.current].short}{/if}
+                {#if journey.request.status === "landsat-failed"}<span class="size-2 rounded-full bg-harvest" aria-hidden="true"></span>{t.chip.landsatFailed}{:else if failedAt !== null}{t.chip.stoppedAt(ANALYSIS_STEPS[failedAt].short)}{:else}<span class="size-2 rounded-full bg-bright" aria-hidden="true"></span>{ANALYSIS_STEPS[progress.current].short}{/if}
             </MapChip>
             <MapChip only="mobile" tone="bright">{formatArea(journey.plot.areaM2)}</MapChip>
         {:else if crop && journey.plot}

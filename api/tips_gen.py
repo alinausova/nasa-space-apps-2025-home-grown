@@ -5,6 +5,8 @@ from typing import Dict, List, Optional
 
 from mistralai import Mistral
 
+from languages import language_rule, max_tokens
+
 MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
 
 SYSTEM_PROMPT = """You are an urban agriculture advisor. Someone is planning to grow one crop on a plot
@@ -61,7 +63,7 @@ def tips_input(crop_id: str, crop_data: Dict, crop_entry: Dict, climate: Dict, l
     }
 
 
-def generate_crop_tips(facts: Dict, api_key: Optional[str] = None) -> str:
+def generate_crop_tips(facts: Dict, api_key: Optional[str] = None, lang: str = "en") -> str:
     api_key = api_key or os.environ.get("MISTRAL_API_KEY")
     if not api_key:
         raise ValueError("MISTRAL_API_KEY not found in environment variables")
@@ -69,10 +71,10 @@ def generate_crop_tips(facts: Dict, api_key: Optional[str] = None) -> str:
     response = client.chat.complete(
         model="mistral-large-latest",
         messages=[
-            {"role": "system", "content": SYSTEM_PROMPT},
+            {"role": "system", "content": SYSTEM_PROMPT + language_rule(lang)},
             {"role": "user", "content": f"Data for this crop and plot:\n\n{json.dumps(facts, indent=1)}\n\nWrite the tips now."},
         ],
         temperature=0.5,
-        max_tokens=220,
+        max_tokens=max_tokens(220, lang),
     )
     return response.choices[0].message.content

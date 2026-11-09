@@ -16,7 +16,7 @@ from crop_database import CROP_DATABASE
 from geometry import calculate_polygon_area_m2, calculate_polygon_centroid
 from landsat import LandsatResult, fetch_landsat, surface_heat
 from analysis import PlotCache, climate_block, crops_block, legacy_summary_input, plot_id
-from models import CropsRequest, PlotRef, PolygonInput, TipsRequest
+from models import CropsRequest, PolygonInput, SummaryRequest, TipsRequest
 from summary_gen import generate_crop_summary
 from tips_gen import generate_crop_tips, tips_input
 
@@ -178,25 +178,26 @@ async def analysis_crops(request: Request, body: CropsRequest):
 
 @app.post("/analysis/summary")
 @limiter.limit(SUMMARY_RATE_LIMIT)
-async def analysis_summary(request: Request, body: PlotRef):
-    """Step 3: two or three plain sentences by Mistral AI. `summary` is null if the model is unavailable."""
+async def analysis_summary(request: Request, body: SummaryRequest):
+    """Step 3: two or three plain sentences by Mistral AI, in `lang`. `summary` is null if the model is unavailable."""
     entry = cached_plot(body.plot_id)
     if "crops" not in entry:
         raise HTTPException(status_code=409, detail="Score the crops first (POST /analysis/crops).")
-    if "summary" not in entry:
+    summaries = entry.setdefault("summaries", {})
+    if body.lang not in summaries:
         source = legacy_summary_input(entry["location"], entry["climate"]["climate"], entry["crops"]["crops"], entry["sunshine_factor"])
         try:
-            entry["summary"] = await asyncio.to_thread(generate_crop_summary, source)
+            summaries[body.lang] = await asyncio.to_thread(generate_crop_summary, source, lang=body.lang)
         except Exception as e:  # noqa: BLE001 - the summary is optional; the results stand without it
-            logger.warning(f"Summary failed: {e}")
-            return {"plot_id": body.plot_id, "summary": None, "error": "The summary is not available right now."}
-    return {"plot_id": body.plot_id, "summary": entry["summary"]}
+            logger.warning(f"Summary failed ({body.lang}): {e}")
+            return {"plot_id": body.plot_id, "lang": body.lang, "summary": None, "error": "The summary is not available right now."}
+    return {"plot_id": body.plot_id, "lang": body.lang, "summary": summaries[body.lang]}
 
 
 @app.post("/analysis/tips")
 @limiter.limit(TIPS_RATE_LIMIT)
 async def analysis_tips(request: Request, body: TipsRequest):
-    """Three or four plain sentences of tips for one crop on this plot, by Mistral AI. Cached per plot and crop."""
+    """Three or four plain sentences of tips for one crop on this plot, by Mistral AI, in `lang`. Cached per plot, crop and language."""
     entry = cached_plot(body.plot_id)
     crop_data = CROP_DATABASE.get(body.crop_id)
     if crop_data is None:
@@ -204,15 +205,16 @@ async def analysis_tips(request: Request, body: TipsRequest):
     if "crops" not in entry:
         raise HTTPException(status_code=409, detail="Score the crops first (POST /analysis/crops).")
     tips = entry.setdefault("tips", {})
-    if body.crop_id not in tips:
+    key = f"{body.crop_id}:{body.lang}"
+    if key not in tips:
         crop_entry = next(c for c in entry["crops"]["crops"] if c["crop_id"] == body.crop_id)
         facts = tips_input(body.crop_id, crop_data, crop_entry, entry["climate"], entry["location"])
         try:
-            tips[body.crop_id] = await asyncio.to_thread(generate_crop_tips, facts)
+            tips[key] = await asyncio.to_thread(generate_crop_tips, facts, lang=body.lang)
         except Exception as e:  # noqa: BLE001 - tips are optional
             logger.warning(f"Tips failed for {body.crop_id}: {e}")
-            return {"plot_id": body.plot_id, "crop_id": body.crop_id, "tips": None, "error": "Tips are not available right now."}
-    return {"plot_id": body.plot_id, "crop_id": body.crop_id, "tips": tips[body.crop_id]}
+            return {"plot_id": body.plot_id, "crop_id": body.crop_id, "lang": body.lang, "tips": None, "error": "Tips are not available right now."}
+    return {"plot_id": body.plot_id, "crop_id": body.crop_id, "lang": body.lang, "tips": tips[key]}
 
 
 if __name__ == "__main__":

@@ -60,6 +60,7 @@ export interface CropsResponse {
 
 export interface SummaryResponse {
   plot_id: string;
+  lang?: string;
   summary: string | null;
   error?: string;
 }
@@ -67,6 +68,7 @@ export interface SummaryResponse {
 export interface TipsResponse {
   plot_id: string;
   crop_id: string;
+  lang?: string;
   tips: string | null;
   error?: string;
 }
@@ -81,12 +83,13 @@ export function fetchCrops(plotId: string, { useLandsat = true, signal, fetchImp
   return apiFetch('/analysis/crops', { method: 'POST', body: JSON.stringify({ plot_id: plotId, use_landsat: useLandsat }), signal }, fetchImpl);
 }
 
-export function fetchSummary(plotId: string, { signal, fetchImpl }: Options = {}): Promise<SummaryResponse> {
-  return apiFetch('/analysis/summary', { method: 'POST', body: JSON.stringify({ plot_id: plotId }), signal }, fetchImpl);
+/** `lang`: language the AI writes in (the app's locale). */
+export function fetchSummary(plotId: string, { signal, fetchImpl, lang = 'en' }: Options & { lang?: string } = {}): Promise<SummaryResponse> {
+  return apiFetch('/analysis/summary', { method: 'POST', body: JSON.stringify({ plot_id: plotId, lang }), signal }, fetchImpl);
 }
 
-export function fetchTips(plotId: string, cropId: string, { signal, fetchImpl }: Options = {}): Promise<TipsResponse> {
-  return apiFetch('/analysis/tips', { method: 'POST', body: JSON.stringify({ plot_id: plotId, crop_id: cropId }), signal }, fetchImpl);
+export function fetchTips(plotId: string, cropId: string, { signal, fetchImpl, lang = 'en' }: Options & { lang?: string } = {}): Promise<TipsResponse> {
+  return apiFetch('/analysis/tips', { method: 'POST', body: JSON.stringify({ plot_id: plotId, crop_id: cropId, lang }), signal }, fetchImpl);
 }
 
 export interface AnalysisApi {

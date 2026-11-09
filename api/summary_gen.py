@@ -1,10 +1,12 @@
 import os
 import json
+
+from languages import language_rule, max_tokens
 from mistralai import Mistral
 
 api_key = os.getenv("MISTRAL_API_KEY")
 
-def generate_crop_summary(api_response: dict, api_key: str = None) -> str:
+def generate_crop_summary(api_response: dict, api_key: str = None, lang: str = "en") -> str:
     """
     Generate a natural language summary of crop recommendations using Mistral AI.
 
@@ -105,7 +107,7 @@ Write the two or three sentences now."""
         messages=[
             {
                 "role": "system",
-                "content": system_prompt
+                "content": system_prompt + language_rule(lang)
             },
             {
                 "role": "user",
@@ -113,7 +115,7 @@ Write the two or three sentences now."""
             }
         ],
         temperature=0.5,
-        max_tokens=180    # Two or three sentences
+        max_tokens=max_tokens(180, lang)    # Two or three sentences
     )
 
     # Extract and return the summary

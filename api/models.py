@@ -2,6 +2,7 @@
 import logging
 from typing import Annotated, List, Optional, Tuple
 
+from languages import LANG_PATTERN
 from pydantic import BaseModel, Field, field_validator
 
 logger = logging.getLogger(__name__)
@@ -33,5 +34,10 @@ class CropsRequest(PlotRef):
     use_landsat: bool = Field(True, description="Read Landsat surface temperature (false = NASA POWER only)")
 
 
+class SummaryRequest(PlotRef):
+    lang: str = Field("en", pattern=LANG_PATTERN, description="Language to write in")
+
+
 class TipsRequest(PlotRef):
     crop_id: str = Field(..., min_length=1, max_length=40)
+    lang: str = Field("en", pattern=LANG_PATTERN, description="Language to write in")

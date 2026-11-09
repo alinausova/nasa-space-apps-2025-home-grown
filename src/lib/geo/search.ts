@@ -1,3 +1,4 @@
+import { i18n } from '../i18n/locale.svelte';
 import type { LngLat } from '../derive/geo';
 import { SEARCH_TYPES, suggestionsFrom, type ForwardFeature, type PlaceSuggestion } from '../derive/search';
 
@@ -15,7 +16,7 @@ export async function searchPlaces(
     q: query,
     autocomplete: 'true',
     limit: '5',
-    language: 'en',
+    language: i18n.locale,
     types: SEARCH_TYPES,
     access_token: token,
   });

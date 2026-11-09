@@ -99,7 +99,7 @@ def test_tips_are_written_once_per_plot_and_crop(stubs):
     pid = climate().json()["plot_id"]
     client.post("/analysis/crops", json={"plot_id": pid})
     first = tips(pid).json()
-    assert first == {"plot_id": pid, "crop_id": "kale", "tips": "Sow kale early."}
+    assert first == {"plot_id": pid, "crop_id": "kale", "lang": "en", "tips": "Sow kale early."}
     assert tips(pid).json() == first
     assert stubs["tips"] == 1
     tips(pid, "lettuce")
@@ -136,3 +136,43 @@ def test_tips_failure_is_soft(stubs, monkeypatch):
     body = tips(pid).json()
     assert body["tips"] is None
     assert body["error"] == "Tips are not available right now."
+
+
+def scored_plot():
+    pid = climate().json()["plot_id"]
+    client.post("/analysis/crops", json={"plot_id": pid})
+    return pid
+
+
+def test_summary_in_the_requested_language_cached_per_language(stubs):
+    pid = scored_plot()
+    en = client.post("/analysis/summary", json={"plot_id": pid}).json()
+    de = client.post("/analysis/summary", json={"plot_id": pid, "lang": "de"}).json()
+    again = client.post("/analysis/summary", json={"plot_id": pid, "lang": "de"}).json()
+    assert en["lang"] == "en" and en["summary"] == "Cool summers suit leafy greens."
+    assert de == again == {"plot_id": pid, "lang": "de", "summary": "[de] Cool summers suit leafy greens."}
+    assert stubs["summary"] == 2  # one per language, the repeat is cached
+    assert stubs["summary_lang"] == "de"
+
+
+def test_tips_in_the_requested_language(stubs):
+    pid = scored_plot()
+    ru = client.post("/analysis/tips", json={"plot_id": pid, "crop_id": "kale", "lang": "ru"}).json()
+    assert ru["lang"] == "ru" and ru["tips"] == "[ru] Sow kale early."
+    client.post("/analysis/tips", json={"plot_id": pid, "crop_id": "kale"})
+    assert stubs["tips"] == 2
+
+
+def test_unknown_language_is_rejected(stubs):
+    pid = scored_plot()
+    assert client.post("/analysis/summary", json={"plot_id": pid, "lang": "xx"}).status_code == 422
+    assert client.post("/analysis/tips", json={"plot_id": pid, "crop_id": "kale", "lang": "EN"}).status_code == 422
+
+
+def test_language_rule_and_token_budget():
+    from languages import language_rule, max_tokens
+
+    assert language_rule("en") == ""
+    assert "Russian" in language_rule("ru")
+    assert max_tokens(200, "ru") > max_tokens(200, "de") > max_tokens(200, "en") == 200
+

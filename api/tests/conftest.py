@@ -41,14 +41,17 @@ def stubs(monkeypatch):
         calls["landsat_enabled"] = enabled
         return LandsatResult("ok" if enabled else "disabled", [SceneReading(f"{year}0715", "landsat-9", 41.2)] if enabled else [])
 
-    def fake_summary(response):
+    def fake_summary(response, lang="en"):
         calls["summary"] += 1
-        return "Cool summers suit leafy greens."
+        calls["summary_lang"] = lang
+        return "Cool summers suit leafy greens." if lang == "en" else f"[{lang}] Cool summers suit leafy greens."
 
-    def fake_tips(facts):
+    def fake_tips(facts, lang="en"):
         calls["tips"] = calls.get("tips", 0) + 1
         calls["tips_facts"] = facts
-        return f"Sow {facts['crop']['name'].lower()} early."
+        calls["tips_lang"] = lang
+        tip = f"Sow {facts['crop']['name'].lower()} early."
+        return tip if lang == "en" else f"[{lang}] {tip}"
 
     # fetch_all_climate_data lives in climate.py and looks the fetcher up there.
     monkeypatch.setattr(climate, "fetch_nasa_power_data", fake_nasa)

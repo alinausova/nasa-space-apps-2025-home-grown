@@ -131,7 +131,7 @@ class TestApiFlow:
         assert crops["landsat"]["status"] == "ok"
 
         summary = client.post("/analysis/summary", json={"plot_id": pid}).json()
-        assert summary == {"plot_id": pid, "summary": "Cool summers suit leafy greens."}
+        assert summary == {"plot_id": pid, "lang": "en", "summary": "Cool summers suit leafy greens."}
         assert stubs["nasa"] == 1
 
     def test_climate_is_cached_per_plot(self, stubs):
