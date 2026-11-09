@@ -1,11 +1,11 @@
 <script lang="ts">
     import LearnSection from "./LearnSection.svelte";
-    import { BIBLIOGRAPHY, DATA_RESEARCHED, DATA_USED } from "./content";
+    import { BIBLIOGRAPHY, CROP_DATA, DATA_RESEARCHED, DATA_USED } from "./content";
 
     let showBibliography = $state(false);
 </script>
 
-{#snippet table(rows: { variable: string; source: string; why: string; refs: string }[], caption: string)}
+{#snippet table(rows: { variable: string; source: string; why: string; refs: string }[], caption: string, whyHeading = "Why it matters")}
     <!-- Focusable so keyboard users can scroll the table sideways on narrow screens (WCAG 2.1.1, axe scrollable-region-focusable). -->
     <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
     <div class="overflow-x-auto rounded-card border border-line-strong bg-surface focus-visible:outline-2 focus-visible:outline-ink" role="region" aria-label={caption} tabindex="0">
@@ -15,7 +15,7 @@
                 <tr class="text-xs text-ink-muted">
                     <th scope="col" class="px-4 py-2.5 font-normal">Variable</th>
                     <th scope="col" class="px-4 py-2.5 font-normal">Source</th>
-                    <th scope="col" class="px-4 py-2.5 font-normal">Why it matters</th>
+                    <th scope="col" class="px-4 py-2.5 font-normal">{whyHeading}</th>
                 </tr>
             </thead>
             <tbody>
@@ -43,6 +43,16 @@
 
 <LearnSection
     label="02"
+    title="Crop data"
+    body="Each of the 31 crops carries about 17 numbers. This is where they come from and what they drive. Heat units, ideal temperatures and frost classes are team estimates for now. We are checking them against FAO ECOCROP and Oregon State’s field data, and will cite each one as it is replaced."
+>
+    {#snippet aside()}
+        {@render table(CROP_DATA, "Where the crop numbers come from", "How we use it")}
+    {/snippet}
+</LearnSection>
+
+<LearnSection
+    label="03"
     title="Researched, not used yet"
     body="Variables our research says matter, which Home Grown does not read yet. Measured shade would replace the 30% assumption."
 >
@@ -51,7 +61,7 @@
     {/snippet}
 </LearnSection>
 
-<LearnSection label="03" title="Sources">
+<LearnSection label="04" title="Sources">
     <button
         type="button"
         aria-expanded={showBibliography}
