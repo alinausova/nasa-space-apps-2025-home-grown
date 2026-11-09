@@ -105,6 +105,61 @@
  },
  "crops": [
   {
+   "crop_id": "barley",
+   "crop_name": "Barley",
+   "season": "cool",
+   "frost_tolerance": "hardy",
+   "drought_resistance": "tolerant",
+   "usable": false,
+   "calendar": null,
+   "suitability": {
+    "overall_score": 25.6,
+    "category": "Poor",
+    "scores": {
+     "gdd": 25.6,
+     "sunlight": 92.0,
+     "temperature": 39.2,
+     "water": 43.8
+    },
+    "metrics": {
+     "total_gdd": 370.9,
+     "required_gdd": 1450,
+     "estimated_sun_hours": 10.52,
+     "adjusted_sun_hours": 7.36,
+     "sunshine_factor": 0.7,
+     "growing_days": 109,
+     "min_sun_hours": 6,
+     "optimal_sun_hours": 8,
+     "annual_precipitation_mm": 686.1,
+     "season_precipitation_mm": 246.3,
+     "season_mean_temp": 3.3,
+     "heat_capped": true,
+     "required_water_mm": 550,
+     "irrigation_needed_mm": 303.7,
+     "optimal_temp_min": 15,
+     "optimal_temp_max": 20,
+     "base_temp": 0
+    },
+    "yield_estimate": {
+     "yield_per_m2_kg": 0.04,
+     "total_yield_kg": 173.51,
+     "total_yield_tons": 0.174,
+     "yield_category": "Minimal (Poor conditions)",
+     "yield_range": {
+      "lower_kg_m2": 0.16,
+      "average_kg_m2": 0.32,
+      "upper_kg_m2": 0.48
+     }
+    }
+   },
+   "miss_reason": {
+    "kind": "heat",
+    "short_heat_units": 1079,
+    "approx_warm_days": null,
+    "beyond_a_year": true
+   }
+  },
+  {
    "crop_id": "wheat",
    "crop_name": "Wheat",
    "season": "cool",
@@ -760,6 +815,61 @@
    "miss_reason": {
     "kind": "heat",
     "short_heat_units": 795,
+    "approx_warm_days": null,
+    "beyond_a_year": true
+   }
+  },
+  {
+   "crop_id": "beetroot",
+   "crop_name": "Beetroot",
+   "season": "cool",
+   "frost_tolerance": "half_hardy",
+   "drought_resistance": "moderate",
+   "usable": false,
+   "calendar": null,
+   "suitability": {
+    "overall_score": 4.7,
+    "category": "Poor",
+    "scores": {
+     "gdd": 4.7,
+     "sunlight": 100,
+     "temperature": 35.7,
+     "water": 45.0
+    },
+    "metrics": {
+     "total_gdd": 40.3,
+     "required_gdd": 850,
+     "estimated_sun_hours": 12.19,
+     "adjusted_sun_hours": 8.54,
+     "sunshine_factor": 0.7,
+     "growing_days": 38,
+     "min_sun_hours": 4,
+     "optimal_sun_hours": 6,
+     "annual_precipitation_mm": 686.1,
+     "season_precipitation_mm": 75.0,
+     "season_mean_temp": 5.1,
+     "heat_capped": true,
+     "required_water_mm": 350,
+     "irrigation_needed_mm": 275.0,
+     "optimal_temp_min": 15,
+     "optimal_temp_max": 25,
+     "base_temp": 4.5
+    },
+    "yield_estimate": {
+     "yield_per_m2_kg": 0.11,
+     "total_yield_kg": 450.48,
+     "total_yield_tons": 0.45,
+     "yield_category": "Minimal (Poor conditions)",
+     "yield_range": {
+      "lower_kg_m2": 2.24,
+      "average_kg_m2": 2.69,
+      "upper_kg_m2": 3.36
+     }
+    }
+   },
+   "miss_reason": {
+    "kind": "heat",
+    "short_heat_units": 810,
     "approx_warm_days": null,
     "beyond_a_year": true
    }
@@ -1785,6 +1895,276 @@
       "lower_kg_m2": 0.15,
       "average_kg_m2": 0.25,
       "upper_kg_m2": 0.4
+     }
+    }
+   },
+   "miss_reason": {
+    "kind": "sun",
+    "needed_hours": 6,
+    "available_hours": 0.0
+   }
+  },
+  {
+   "crop_id": "okra",
+   "crop_name": "Okra",
+   "season": "warm",
+   "frost_tolerance": "tender",
+   "drought_resistance": "tolerant",
+   "usable": false,
+   "calendar": null,
+   "suitability": {
+    "overall_score": 0.0,
+    "category": "Poor",
+    "scores": {
+     "gdd": 0.0,
+     "sunlight": 0.0,
+     "temperature": 0.0,
+     "water": 27.5
+    },
+    "metrics": {
+     "total_gdd": 0.0,
+     "required_gdd": 750,
+     "estimated_sun_hours": 0,
+     "adjusted_sun_hours": 0.0,
+     "sunshine_factor": 0.7,
+     "growing_days": 0,
+     "min_sun_hours": 6,
+     "optimal_sun_hours": 8,
+     "annual_precipitation_mm": 686.1,
+     "season_precipitation_mm": 0.0,
+     "season_mean_temp": null,
+     "heat_capped": true,
+     "required_water_mm": 600,
+     "irrigation_needed_mm": 600.0,
+     "optimal_temp_min": 20,
+     "optimal_temp_max": 30,
+     "base_temp": 10
+    },
+    "yield_estimate": {
+     "yield_per_m2_kg": 0.0,
+     "total_yield_kg": 0.0,
+     "total_yield_tons": 0.0,
+     "yield_category": "Minimal (Poor conditions)",
+     "yield_range": {
+      "lower_kg_m2": 0.34,
+      "average_kg_m2": 0.67,
+      "upper_kg_m2": 1.68
+     }
+    }
+   },
+   "miss_reason": {
+    "kind": "sun",
+    "needed_hours": 6,
+    "available_hours": 0.0
+   }
+  },
+  {
+   "crop_id": "cassava",
+   "crop_name": "Cassava",
+   "season": "warm",
+   "frost_tolerance": "tender",
+   "drought_resistance": "moderate",
+   "usable": false,
+   "calendar": null,
+   "suitability": {
+    "overall_score": 0.0,
+    "category": "Poor",
+    "scores": {
+     "gdd": 0.0,
+     "sunlight": 0.0,
+     "temperature": 0.0,
+     "water": 20.0
+    },
+    "metrics": {
+     "total_gdd": 0.0,
+     "required_gdd": 2610,
+     "estimated_sun_hours": 0,
+     "adjusted_sun_hours": 0.0,
+     "sunshine_factor": 0.7,
+     "growing_days": 0,
+     "min_sun_hours": 6,
+     "optimal_sun_hours": 8,
+     "annual_precipitation_mm": 686.1,
+     "season_precipitation_mm": 0.0,
+     "season_mean_temp": null,
+     "heat_capped": true,
+     "required_water_mm": 1000,
+     "irrigation_needed_mm": 1000.0,
+     "optimal_temp_min": 20,
+     "optimal_temp_max": 29,
+     "base_temp": 10
+    },
+    "yield_estimate": {
+     "yield_per_m2_kg": 0.0,
+     "total_yield_kg": 0.0,
+     "total_yield_tons": 0.0,
+     "yield_category": "Minimal (Poor conditions)",
+     "yield_range": {
+      "lower_kg_m2": 0.51,
+      "average_kg_m2": 1.02,
+      "upper_kg_m2": 1.53
+     }
+    }
+   },
+   "miss_reason": {
+    "kind": "sun",
+    "needed_hours": 6,
+    "available_hours": 0.0
+   }
+  },
+  {
+   "crop_id": "sorghum",
+   "crop_name": "Sorghum",
+   "season": "warm",
+   "frost_tolerance": "tender",
+   "drought_resistance": "tolerant",
+   "usable": false,
+   "calendar": null,
+   "suitability": {
+    "overall_score": 0.0,
+    "category": "Poor",
+    "scores": {
+     "gdd": 0.0,
+     "sunlight": 0.0,
+     "temperature": 0.0,
+     "water": 30.3
+    },
+    "metrics": {
+     "total_gdd": 0.0,
+     "required_gdd": 1380,
+     "estimated_sun_hours": 0,
+     "adjusted_sun_hours": 0.0,
+     "sunshine_factor": 0.7,
+     "growing_days": 0,
+     "min_sun_hours": 6,
+     "optimal_sun_hours": 8,
+     "annual_precipitation_mm": 686.1,
+     "season_precipitation_mm": 0.0,
+     "season_mean_temp": null,
+     "heat_capped": true,
+     "required_water_mm": 550,
+     "irrigation_needed_mm": 550.0,
+     "optimal_temp_min": 22,
+     "optimal_temp_max": 35,
+     "base_temp": 10
+    },
+    "yield_estimate": {
+     "yield_per_m2_kg": 0.0,
+     "total_yield_kg": 0.0,
+     "total_yield_tons": 0.0,
+     "yield_category": "Minimal (Poor conditions)",
+     "yield_range": {
+      "lower_kg_m2": 0.07,
+      "average_kg_m2": 0.15,
+      "upper_kg_m2": 0.22
+     }
+    }
+   },
+   "miss_reason": {
+    "kind": "sun",
+    "needed_hours": 6,
+    "available_hours": 0.0
+   }
+  },
+  {
+   "crop_id": "pearl_millet",
+   "crop_name": "Pearl millet",
+   "season": "warm",
+   "frost_tolerance": "tender",
+   "drought_resistance": "tolerant",
+   "usable": false,
+   "calendar": null,
+   "suitability": {
+    "overall_score": 0.0,
+    "category": "Poor",
+    "scores": {
+     "gdd": 0.0,
+     "sunlight": 0.0,
+     "temperature": 0.0,
+     "water": 30.3
+    },
+    "metrics": {
+     "total_gdd": 0.0,
+     "required_gdd": 1200,
+     "estimated_sun_hours": 0,
+     "adjusted_sun_hours": 0.0,
+     "sunshine_factor": 0.7,
+     "growing_days": 0,
+     "min_sun_hours": 6,
+     "optimal_sun_hours": 8,
+     "annual_precipitation_mm": 686.1,
+     "season_precipitation_mm": 0.0,
+     "season_mean_temp": null,
+     "heat_capped": true,
+     "required_water_mm": 550,
+     "irrigation_needed_mm": 550.0,
+     "optimal_temp_min": 25,
+     "optimal_temp_max": 35,
+     "base_temp": 10
+    },
+    "yield_estimate": {
+     "yield_per_m2_kg": 0.0,
+     "total_yield_kg": 0.0,
+     "total_yield_tons": 0.0,
+     "yield_category": "Minimal (Poor conditions)",
+     "yield_range": {
+      "lower_kg_m2": 0.05,
+      "average_kg_m2": 0.1,
+      "upper_kg_m2": 0.15
+     }
+    }
+   },
+   "miss_reason": {
+    "kind": "sun",
+    "needed_hours": 6,
+    "available_hours": 0.0
+   }
+  },
+  {
+   "crop_id": "groundnut",
+   "crop_name": "Groundnut",
+   "season": "warm",
+   "frost_tolerance": "tender",
+   "drought_resistance": "moderate",
+   "usable": false,
+   "calendar": null,
+   "suitability": {
+    "overall_score": 0.0,
+    "category": "Poor",
+    "scores": {
+     "gdd": 0.0,
+     "sunlight": 0.0,
+     "temperature": 0.0,
+     "water": 25.0
+    },
+    "metrics": {
+     "total_gdd": 0.0,
+     "required_gdd": 1530,
+     "estimated_sun_hours": 0,
+     "adjusted_sun_hours": 0.0,
+     "sunshine_factor": 0.7,
+     "growing_days": 0,
+     "min_sun_hours": 6,
+     "optimal_sun_hours": 8,
+     "annual_precipitation_mm": 686.1,
+     "season_precipitation_mm": 0.0,
+     "season_mean_temp": null,
+     "heat_capped": true,
+     "required_water_mm": 600,
+     "irrigation_needed_mm": 600.0,
+     "optimal_temp_min": 22,
+     "optimal_temp_max": 32,
+     "base_temp": 10
+    },
+    "yield_estimate": {
+     "yield_per_m2_kg": 0.0,
+     "total_yield_kg": 0.0,
+     "total_yield_tons": 0.0,
+     "yield_category": "Minimal (Poor conditions)",
+     "yield_range": {
+      "lower_kg_m2": 0.09,
+      "average_kg_m2": 0.18,
+      "upper_kg_m2": 0.28
      }
     }
    },

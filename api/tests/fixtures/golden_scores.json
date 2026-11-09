@@ -13,6 +13,18 @@
     },
     "yield_per_m2_kg": 2.31
    },
+   "barley": {
+    "category": "Excellent",
+    "irrigation_needed_mm": 363.2,
+    "score": 86.1,
+    "scores": {
+     "gdd": 100,
+     "sunlight": 100,
+     "temperature": 80.0,
+     "water": 40.5
+    },
+    "yield_per_m2_kg": 0.42
+   },
    "basil": {
     "category": "Excellent",
     "irrigation_needed_mm": 115.8,
@@ -36,6 +48,18 @@
      "water": 76.8
     },
     "yield_per_m2_kg": 4.0
+   },
+   "beetroot": {
+    "category": "Excellent",
+    "irrigation_needed_mm": 163.2,
+    "score": 90.1,
+    "scores": {
+     "gdd": 100,
+     "sunlight": 100,
+     "temperature": 80.0,
+     "water": 67.4
+    },
+    "yield_per_m2_kg": 3.36
    },
    "broccoli": {
     "category": "Excellent",
@@ -72,6 +96,18 @@
      "water": 67.4
     },
     "yield_per_m2_kg": 8.0
+   },
+   "cassava": {
+    "category": "Excellent",
+    "irrigation_needed_mm": 815.8,
+    "score": 88.0,
+    "scores": {
+     "gdd": 100,
+     "sunlight": 100,
+     "temperature": 100.0,
+     "water": 20.0
+    },
+    "yield_per_m2_kg": 1.43
    },
    "cauliflower": {
     "category": "Excellent",
@@ -133,6 +169,18 @@
     },
     "yield_per_m2_kg": 1.77
    },
+   "groundnut": {
+    "category": "Excellent",
+    "irrigation_needed_mm": 415.8,
+    "score": 85.1,
+    "scores": {
+     "gdd": 100,
+     "sunlight": 100,
+     "temperature": 80.0,
+     "water": 34.2
+    },
+    "yield_per_m2_kg": 0.23
+   },
    "kale": {
     "category": "Excellent",
     "irrigation_needed_mm": 193.2,
@@ -169,6 +217,18 @@
     },
     "yield_per_m2_kg": 3.5
    },
+   "okra": {
+    "category": "Excellent",
+    "irrigation_needed_mm": 415.8,
+    "score": 90.6,
+    "scores": {
+     "gdd": 100,
+     "sunlight": 100,
+     "temperature": 100.0,
+     "water": 37.6
+    },
+    "yield_per_m2_kg": 1.68
+   },
    "onions": {
     "category": "Excellent",
     "irrigation_needed_mm": 313.2,
@@ -192,6 +252,18 @@
      "water": 77.4
     },
     "yield_per_m2_kg": 1.53
+   },
+   "pearl_millet": {
+    "category": "Excellent",
+    "irrigation_needed_mm": 365.8,
+    "score": 81.1,
+    "scores": {
+     "gdd": 100,
+     "sunlight": 100,
+     "temperature": 60.0,
+     "water": 40.4
+    },
+    "yield_per_m2_kg": 0.11
    },
    "peas": {
     "category": "Excellent",
@@ -264,6 +336,18 @@
      "water": 18.0
     },
     "yield_per_m2_kg": 0.73
+   },
+   "sorghum": {
+    "category": "Excellent",
+    "irrigation_needed_mm": 365.8,
+    "score": 86.1,
+    "scores": {
+     "gdd": 100,
+     "sunlight": 100,
+     "temperature": 80.0,
+     "water": 40.4
+    },
+    "yield_per_m2_kg": 0.19
    },
    "soybeans": {
     "category": "Excellent",
@@ -390,6 +474,18 @@
     },
     "yield_per_m2_kg": 2.5
    },
+   "barley": {
+    "category": "Excellent",
+    "irrigation_needed_mm": 0,
+    "score": 85.6,
+    "scores": {
+     "gdd": 100,
+     "sunlight": 82.8,
+     "temperature": 80.0,
+     "water": 65.8
+    },
+    "yield_per_m2_kg": 0.41
+   },
    "basil": {
     "category": "Excellent",
     "irrigation_needed_mm": 0,
@@ -413,6 +509,18 @@
      "water": 85.0
     },
     "yield_per_m2_kg": 3.66
+   },
+   "beetroot": {
+    "category": "Excellent",
+    "irrigation_needed_mm": 0,
+    "score": 85.7,
+    "scores": {
+     "gdd": 100,
+     "sunlight": 100,
+     "temperature": 60.0,
+     "water": 71.6
+    },
+    "yield_per_m2_kg": 3.07
    },
    "broccoli": {
     "category": "Excellent",
@@ -449,6 +557,18 @@
      "water": 75.6
     },
     "yield_per_m2_kg": 8.0
+   },
+   "cassava": {
+    "category": "Moderate",
+    "irrigation_needed_mm": 362.1,
+    "score": 53.5,
+    "scores": {
+     "gdd": 53.5,
+     "sunlight": 100,
+     "temperature": 60.0,
+     "water": 36.9
+    },
+    "yield_per_m2_kg": 0.3
    },
    "cauliflower": {
     "category": "Excellent",
@@ -510,6 +630,18 @@
     },
     "yield_per_m2_kg": 2.0
    },
+   "groundnut": {
+    "category": "Excellent",
+    "irrigation_needed_mm": 0,
+    "score": 86.7,
+    "scores": {
+     "gdd": 91.3,
+     "sunlight": 100,
+     "temperature": 58.9,
+     "water": 100.0
+    },
+    "yield_per_m2_kg": 0.25
+   },
    "kale": {
     "category": "Excellent",
     "irrigation_needed_mm": 0,
@@ -546,6 +678,18 @@
     },
     "yield_per_m2_kg": 3.34
    },
+   "okra": {
+    "category": "Excellent",
+    "irrigation_needed_mm": 0,
+    "score": 90.0,
+    "scores": {
+     "gdd": 100,
+     "sunlight": 100,
+     "temperature": 60.0,
+     "water": 100.0
+    },
+    "yield_per_m2_kg": 1.68
+   },
    "onions": {
     "category": "Excellent",
     "irrigation_needed_mm": 0,
@@ -569,6 +713,18 @@
      "water": 65.5
     },
     "yield_per_m2_kg": 1.8
+   },
+   "pearl_millet": {
+    "category": "Excellent",
+    "irrigation_needed_mm": 0,
+    "score": 86.0,
+    "scores": {
+     "gdd": 100,
+     "sunlight": 100,
+     "temperature": 43.9,
+     "water": 100.0
+    },
+    "yield_per_m2_kg": 0.13
    },
    "peas": {
     "category": "Excellent",
@@ -641,6 +797,18 @@
      "water": 25.2
     },
     "yield_per_m2_kg": 0.25
+   },
+   "sorghum": {
+    "category": "Excellent",
+    "irrigation_needed_mm": 0,
+    "score": 87.8,
+    "scores": {
+     "gdd": 100,
+     "sunlight": 100,
+     "temperature": 51.4,
+     "water": 100.0
+    },
+    "yield_per_m2_kg": 0.2
    },
    "soybeans": {
     "category": "Excellent",
@@ -764,6 +932,30 @@
      "sunlight": 100,
      "temperature": 60.0,
      "water": 65.2
+    },
+    "yield_per_m2_kg": 0.2
+   },
+   "barley": {
+    "category": "Poor",
+    "irrigation_needed_mm": 333.8,
+    "score": 27.3,
+    "scores": {
+     "gdd": 27.3,
+     "sunlight": 100,
+     "temperature": 41.6,
+     "water": 42.1
+    },
+    "yield_per_m2_kg": 0.04
+   },
+   "beetroot": {
+    "category": "Poor",
+    "irrigation_needed_mm": 273.8,
+    "score": 9.0,
+    "scores": {
+     "gdd": 9.0,
+     "sunlight": 100,
+     "temperature": 39.8,
+     "water": 45.2
     },
     "yield_per_m2_kg": 0.2
    },
@@ -975,13 +1167,18 @@
   "filtered_by_sunlight": [
    "basil",
    "beans",
+   "cassava",
    "corn",
    "cucumbers",
    "eggplant",
+   "groundnut",
    "melon",
+   "okra",
+   "pearl_millet",
    "peppers",
    "pumpkin",
    "rice",
+   "sorghum",
    "soybeans",
    "squash",
    "sweet_potato",

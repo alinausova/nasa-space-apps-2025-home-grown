@@ -32,6 +32,12 @@ describe('calendarRows', () => {
   });
 });
 
+describe('cuttings', () => {
+  it('names the first row Plant', () => {
+    expect(calendarRows({ mode: 'plant', sow: [4], grow: [4], harvest: [12] })[0].label).toBe('Plant');
+  });
+});
+
 describe('calendarSentence', () => {
   it('reads the three rows', () => {
     expect(calendarSentence({ mode: 'sow', sow: [3, 4], grow: [3, 4, 5, 6], harvest: [6] })).toBe(

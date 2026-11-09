@@ -206,7 +206,10 @@ def crops_block(nasa_data: Dict, analysis: Dict, sunshine_factor: float, area_m2
 
         suitability = calculate_crop_suitability(crop_data, analysis, nasa_data, sunshine_factor, area_m2)
         score = 0.0 if sun_filtered else suitability["overall_score"]
-        usable = sun_filtered is None and score >= USABLE_SCORE
+        calendar = crop_calendars[crop_id]
+        # A crop no sowing date can bring to harvest is not recommended, whatever its yearly score.
+        no_window = calendar is None and sun_filtered is None and score >= USABLE_SCORE
+        usable = sun_filtered is None and score >= USABLE_SCORE and not no_window
         entry = {
             "crop_id": crop_id,
             "crop_name": crop_data["name"],
@@ -214,10 +217,12 @@ def crops_block(nasa_data: Dict, analysis: Dict, sunshine_factor: float, area_m2
             "frost_tolerance": crop_data["frost_tolerance"],
             "drought_resistance": crop_data.get("drought_resistance", "unknown"),
             "usable": usable,
-            "calendar": crop_calendars[crop_id],
+            "calendar": calendar,
             "suitability": {**suitability, "overall_score": score, "category": suitability["category"] if not sun_filtered else "Poor"},
         }
-        if not usable:
+        if no_window:
+            entry["miss_reason"] = {"kind": "no_window"}
+        elif not usable:
             entry["miss_reason"] = miss_reason(crop_data, suitability, nasa_data, sun_filtered)
         crops.append(entry)
 

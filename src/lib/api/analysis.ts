@@ -42,7 +42,8 @@ export type MissReason =
   | { kind: 'too_cold' }
   | { kind: 'heat'; short_heat_units: number; approx_warm_days: number | null; beyond_a_year: boolean }
   | { kind: 'temperature'; season_mean_temp: number | null; ideal_min: number; ideal_max: number }
-  | { kind: 'water'; irrigation_mm: number };
+  | { kind: 'water'; irrigation_mm: number }
+  | { kind: 'no_window' };
 
 export interface AnalysedCrop extends CropRecommendation {
   usable: boolean;
