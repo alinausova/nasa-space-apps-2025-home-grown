@@ -33,7 +33,13 @@
 {#each FORMULAS as formula, i (formula.title)}
     <LearnSection label="{String(i + 1).padStart(2, '0')} / {String(total).padStart(2, '0')}" title={formula.title} body={formula.body}>
         {#snippet aside()}
-            <pre class="m-0 overflow-x-auto rounded-card border border-ink bg-surface px-4 py-3.5 font-mono text-[13px] leading-relaxed">{formula.code}</pre>
+            <!-- Focusable so keyboard users can scroll long formulas sideways (WCAG 2.1.1, axe scrollable-region-focusable). -->
+            <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
+            <pre
+                class="m-0 overflow-x-auto rounded-card border border-ink bg-surface px-4 py-3.5 font-mono text-[13px] leading-relaxed focus-visible:outline-2 focus-visible:outline-ink"
+                role="region"
+                aria-label="Formula: {formula.title}"
+                tabindex="0">{formula.code}</pre>
         {/snippet}
     </LearnSection>
 {/each}

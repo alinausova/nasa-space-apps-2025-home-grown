@@ -1,11 +1,6 @@
 @import "tailwindcss";
 @import "./tokens.css";
 
-/* TODO(redesign PR 9): remove DaisyUI once the last pre-redesign component is deleted. */
-@plugin "daisyui" {
-  "themes": ["light"]
-};
-
 /*
  * Design tokens exposed as Tailwind utilities (bg-paper, text-ink, border-line, font-mono, rounded-card, ...).
  * `inline` keeps the var() reference, so the theme classes below can swap values per subtree.
@@ -129,18 +124,4 @@
     height: max(100%, var(--hg-tap));
     transform: translate(-50%, -50%);
   }
-}
-
-/* Pre-redesign styles, removed with the old components in PR 9. */
-.glassmorphism-button {
-  backdrop-filter: blur(8px) saturate(110%);
-  -webkit-backdrop-filter: blur(8px) saturate(110%);
-  background: rgba(255, 255, 255, 0.3);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  box-shadow: 0px 2px 8px 0 rgba(12, 74, 110, 0.1),
-              inset 0px 0px 2px 1px rgba(255, 255, 255, 0.3);
-}
-
-.glassmorphism-button:hover {
-  background: rgba(255, 255, 255, 0.4);
 }

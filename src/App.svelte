@@ -1,21 +1,13 @@
 <script lang="ts">
     import { onMount } from "svelte";
     import LearnPage from "./lib/screens/learn/LearnPage.svelte";
-    import AppPage from "./lib/screens/AppPage.svelte";
     import Landing from "./lib/screens/landing/Landing.svelte";
     import { router } from "./lib/router/router.svelte";
     import { wakeServer } from "./lib/api/recommendations";
-    import { journey } from "./lib/state/journey.svelte";
-    import { mapController } from "./lib/map/controller.svelte";
 
     onMount(() => {
         wakeServer();
         const stop = router.start();
-
-        if (import.meta.env.DEV) {
-            // Test hook for e2e (drawing a polygon without mouse gestures).
-            (window as unknown as { __hg: unknown }).__hg = { journey, map: mapController, router };
-        }
 
         return stop;
     });
@@ -33,7 +25,10 @@
         <gallery.default />
     {/await}
 {:else if router.route.name === "app" || router.route.name === "crop"}
-    <AppPage />
+    <!-- Lazy: keeps Mapbox (most of the bundle) off the landing and Learn more pages. -->
+    {#await import("./lib/screens/AppPage.svelte") then page}
+        <page.default />
+    {/await}
 {:else if router.route.name === "learn"}
     <LearnPage tab={router.route.tab} />
 {:else if router.route.name === "legacy-learn"}
