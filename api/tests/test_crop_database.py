@@ -25,3 +25,12 @@ def test_a_species_repeats_only_as_distinct_groups():
         groups = [CROP_DATABASE[i].get("group") for i in ids]
         assert all(groups), f"{species} appears as {ids}; each needs a group"
         assert len(set(groups)) == len(groups), f"{species}: groups repeat in {ids}"
+
+
+def test_every_crop_has_an_icon():
+    import json
+    from pathlib import Path
+
+    icons = json.loads((Path(__file__).parents[2] / "src/assets/crop-icons/crop-icons.json").read_text())
+    missing = [c["name"] for c in CROP_DATABASE.values() if c["name"] not in icons]
+    assert not missing, f"No icon in src/assets/crop-icons/crop-icons.json for {missing}"
