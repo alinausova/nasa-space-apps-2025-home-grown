@@ -15,7 +15,8 @@ dependencies = [
     "planetary-computer>=1.0.0",
     "geopandas>=1.1.1",
     "pandas>=2.3.3",
-    "mistralai"
+    "mistralai",
+    "slowapi>=0.1.10",
 ]
 
 [tool.hatch.build.targets.wheel]
@@ -24,3 +25,8 @@ packages = ["."]
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
+
+[dependency-groups]
+dev = [
+    "pytest>=9.2.0",
+]
