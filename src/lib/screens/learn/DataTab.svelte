@@ -6,7 +6,9 @@
 </script>
 
 {#snippet table(rows: { variable: string; source: string; why: string; refs: string }[], caption: string)}
-    <div class="overflow-x-auto rounded-card border border-line-strong bg-surface">
+    <!-- Focusable so keyboard users can scroll the table sideways on narrow screens (WCAG 2.1.1, axe scrollable-region-focusable). -->
+    <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
+    <div class="overflow-x-auto rounded-card border border-line-strong bg-surface focus-visible:outline-2 focus-visible:outline-ink" role="region" aria-label={caption} tabindex="0">
         <table class="w-full min-w-[560px] border-collapse text-left text-[13px]">
             <caption class="sr-only">{caption}</caption>
             <thead>

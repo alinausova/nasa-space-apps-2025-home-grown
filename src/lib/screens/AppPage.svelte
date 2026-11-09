@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { untrack } from "svelte";
+    import { onMount, untrack } from "svelte";
     import AppShell, { type SheetSize } from "../layout/AppShell.svelte";
     import Button from "../ui/Button.svelte";
     import Icon from "../ui/Icon.svelte";
@@ -24,6 +24,13 @@
     import { lookupPlaceName } from "../geo/placeName";
     import { ringCenter, type LngLat } from "../derive/geo";
     import { SAMPLE_CITIES, type SampleCity } from "../data/cities";
+
+    onMount(() => {
+        if (import.meta.env.DEV) {
+            // Test hook for e2e (drawing a polygon without mouse gestures).
+            (window as unknown as { __hg: unknown }).__hg = { journey, map: mapController, router };
+        }
+    });
 
     /** Below this zoom, buildings are too small to outline. */
     const DRAW_ZOOM = 14;

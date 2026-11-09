@@ -22,6 +22,6 @@
     </ul>
     <p class="m-0 mt-6 max-w-[640px] text-[13px] text-ink-muted">
         The UN Sustainable Development Goals are 17 targets every UN member agreed to reach by 2030.
-        Read more at the <a href="https://sdgs.un.org/goals" target="_blank" rel="noopener noreferrer" class="text-ink">UN</a>.
+        Read more at the <a href="https://sdgs.un.org/goals" target="_blank" rel="noopener noreferrer" class="text-ink underline underline-offset-2">UN</a>.
     </p>
 </section>
