@@ -24,7 +24,7 @@ export class MapController {
   ready = $state(false);
   #drawing = $state(false);
 
-  /** True while an outline is being drawn. Also shows a crosshair so it is clear the next click places a corner. */
+  /** True while an outline is being drawn. Also shows a pointer cursor so it is clear the next click places a corner. */
   get isDrawing(): boolean {
     return this.#drawing;
   }
@@ -32,7 +32,7 @@ export class MapController {
   set isDrawing(value: boolean) {
     this.#drawing = value;
     const canvas = this.map?.getCanvas();
-    if (canvas) canvas.style.cursor = value ? 'crosshair' : '';
+    if (canvas) canvas.style.cursor = value ? 'pointer' : '';
   }
   error = $state<string | null>(null);
   /** Live map centre and zoom, for the coordinates readout. */

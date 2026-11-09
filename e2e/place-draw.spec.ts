@@ -44,7 +44,7 @@ test.describe('draw', () => {
     await page.getByRole('button', { name: /Draw your plot here/ }).click();
     await expect(page.getByText('Click each corner · double-click to finish')).toBeVisible();
     const cursor = () => page.evaluate(() => (document.querySelector('.mapboxgl-canvas') as HTMLElement).style.cursor);
-    expect(await cursor()).toBe('crosshair');
+    expect(await cursor()).toBe('pointer');
 
     const box = (await page.getByTestId('map').boundingBox())!;
     const cx = box.x + box.width / 2;
