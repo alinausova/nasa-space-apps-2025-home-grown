@@ -4,8 +4,8 @@
 
 🏆 Winner · Pitch Perfect at COP30, the UN Climate Change Conference, Belém 2025
 
-🌐 **Live:** https://alinausova.github.io/nasa-space-apps-2025-home-grown/
-📖 **How it works:** https://alinausova.github.io/nasa-space-apps-2025-home-grown/learn/scoring
+🌐 **Live:** https://home-grown.app/
+📖 **How it works:** https://home-grown.app/learn/scoring
 
 ## What it does
 
@@ -22,7 +22,7 @@
 ```bash
 npm install
 cp .env.example .env   # set VITE_MAPBOX_ACCESS_TOKEN (and VITE_API_URL if the API is not on :8000)
-npm run dev            # http://localhost:5173/nasa-space-apps-2025-home-grown/
+npm run dev            # http://localhost:5173/
 ```
 
 ### Back end

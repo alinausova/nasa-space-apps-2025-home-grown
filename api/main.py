@@ -50,6 +50,8 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:5173",  # Local development
         "https://alinausova.github.io",  # GitHub Pages
+        "https://home-grown.app",  # Custom domain
+        "https://www.home-grown.app",
     ],
     allow_credentials=True,
     allow_methods=["*"],

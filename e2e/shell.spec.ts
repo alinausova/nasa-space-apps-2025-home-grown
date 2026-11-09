@@ -58,7 +58,7 @@ test.describe('routing', () => {
   test('unknown paths go to the landing page', async ({ page }) => {
     await mockApi(page);
     await page.goto('nope/nothing');
-    await expect(page).toHaveURL(/home-grown\/$/);
+    await expect(page).toHaveURL(/:\d+\/$/);
   });
 
   test('GitHub Pages 404 redirect is restored', async ({ page }) => {

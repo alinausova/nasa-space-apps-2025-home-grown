@@ -2,7 +2,7 @@ import { defineConfig, devices } from '@playwright/test';
 
 // Local end-to-end checks. Needs VITE_MAPBOX_ACCESS_TOKEN in .env (the map is real; the API is mocked).
 const PORT = 5173;
-const BASE = `http://localhost:${PORT}/nasa-space-apps-2025-home-grown/`;
+const BASE = `http://localhost:${PORT}/`;
 
 export default defineConfig({
   testDir: 'e2e',
