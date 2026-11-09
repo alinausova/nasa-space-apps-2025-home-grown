@@ -1,8 +1,8 @@
 <script lang="ts">
     import { onMount } from "svelte";
-    import MapLayer from "./lib/MapLayer.svelte";
     import LearnMore from "./lib/LearnMore.svelte";
     import AppPage from "./lib/screens/AppPage.svelte";
+    import Landing from "./lib/screens/landing/Landing.svelte";
     import { router } from "./lib/router/router.svelte";
     import { wakeServer } from "./lib/api/recommendations";
     import { journey } from "./lib/state/journey.svelte";
@@ -35,6 +35,5 @@
     <!-- TODO(redesign PR 8): new Learn more pages. -->
     <LearnMore />
 {:else}
-    <!-- TODO(redesign PR 7): new landing. Until then the old map app stays on the landing route. -->
-    <MapLayer />
+    <Landing />
 {/if}
