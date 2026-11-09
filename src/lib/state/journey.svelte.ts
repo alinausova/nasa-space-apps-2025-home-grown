@@ -48,6 +48,8 @@ export class Journey {
   filter = $state<CropFilter>('all');
   /** Sample city last jumped to (highlighted in the picker). */
   city = $state<string | null>(null);
+  /** Name of the place picked last (sample city, search result or "Your location"), for the map chip. */
+  placeLabel = $state<string | null>(null);
   /** Previous plots for undo, oldest first. `null` = no plot. */
   history = $state<(LngLat[] | null)[]>([]);
 
