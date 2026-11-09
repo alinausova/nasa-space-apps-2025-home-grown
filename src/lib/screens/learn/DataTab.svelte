@@ -34,7 +34,7 @@
 <LearnSection
     label="01"
     title="Used in your results"
-    body="A year of daily NASA POWER data for the centre of your plot, refined with Landsat surface temperature wherever a clear scene exists."
+    body="A year of daily NASA POWER data for the centre of your plot, plus Landsat 8/9 surface temperature from every clear scene over it."
 >
     {#snippet aside()}
         {@render table(DATA_USED, "Variables used in your results")}

@@ -23,7 +23,9 @@ export interface Plot {
 export type RequestState =
   | { status: 'idle' }
   | { status: 'loading'; phase: Phase; startedAt: number; stepStartedAt: number }
-  | { status: 'error'; phase: Phase; message: string };
+  | { status: 'error'; phase: Phase; message: string }
+  /** Crops are in, but Landsat did not answer: offer "Try again" or "Continue without Landsat". */
+  | { status: 'landsat-failed' };
 
 export type SummaryState = { status: 'idle' | 'loading' | 'failed' } | { status: 'done'; text: string };
 
@@ -151,9 +153,13 @@ export class Journey {
       if (signal.aborted) return;
       this.estimates = recordDuration(this.estimates, 'crops', Date.now() - t1);
       this.crops = crops;
+      void this.#loadSummary(this.climate.plot_id);
+      if (useLandsat && (crops.landsat.status === 'timeout' || crops.landsat.status === 'error')) {
+        this.request = { status: 'landsat-failed' };
+        return;
+      }
       this.request = { status: 'idle' };
       this.step = 'results';
-      void this.#loadSummary(this.climate.plot_id);
     } catch (error) {
       if (isAbortError(error) || signal.aborted) return;
       this.request = { status: 'error', phase, message: error instanceof Error ? error.message : 'Something went wrong.' };
@@ -175,6 +181,14 @@ export class Journey {
       if (isAbortError(error) || controller.signal.aborted) return;
       this.summary = { status: 'failed' };
     }
+  }
+
+  /** Landsat failed: show the results from NASA POWER alone (the crops are already scored). */
+  continueWithoutLandsat(): void {
+    if (!this.crops) return;
+    this.crops = { ...this.crops, landsat: { status: 'disabled', scenes: [], surface_heat: null } };
+    this.request = { status: 'idle' };
+    this.step = 'results';
   }
 
   /** Stops a running analysis and returns to drawing with the plot kept. */

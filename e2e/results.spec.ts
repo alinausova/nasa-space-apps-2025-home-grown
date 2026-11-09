@@ -33,6 +33,12 @@ test.describe('results', () => {
     await expect(page.getByText('Mar–Oct · 245 d')).toBeVisible();
     await expect(page.getByRole('img', { name: /Growing season Mar to Oct/ })).toBeVisible();
 
+    // Rain bars for every month and the Landsat surface heat figure.
+    await expect(page.getByTestId('rain-bars').locator('rect')).toHaveCount(12);
+    const heat = v2('munich', 'crops').landsat.surface_heat;
+    await expect(page.getByTestId('surface-heat')).toContainText(`+${heat.offset_c.toFixed(1)} °C`);
+    await expect(page.getByRole('img', { name: /Rain peaks at \d+ millimetres/ })).toBeVisible();
+
     // AI summary from the fixture.
     await expect(page.getByText(/Cool, wet summers suit leafy greens/)).toBeVisible();
 
@@ -91,8 +97,14 @@ test.describe('results', () => {
     await openResults(page, 'svalbard');
     await expect(page.getByTestId('nothing-grows')).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Too cold for anything to grow outdoors' })).toBeVisible();
-    const warmest = v2('svalbard', 'climate').climate.warmest_month.temp_avg;
-    await expect(page.getByText(`${warmest.toFixed(1)}°C`)).toBeVisible();
+    const c = v2('svalbard', 'climate').climate;
+    await expect(page.getByText(`${c.warmest_month.temp_avg.toFixed(1)}°C`)).toBeVisible();
+    await expect(page.getByText(`${c.days_above_5c} days`)).toBeVisible();
+
+    // Closest calls: the three best crops that missed, each with its reason.
+    const calls = page.getByTestId('closest-call');
+    await expect(calls).toHaveCount(3);
+    await expect(calls.first()).toContainText('Not enough warmth in a year here to mature');
     await expect(page.getByText(/Greenhouses change the picture completely/)).toBeVisible();
     await page.screenshot({ path: `e2e/.output/shots/${info.project.name}-nothing-grows.png` });
 

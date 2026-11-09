@@ -88,7 +88,7 @@ const MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June', 'Ju
 
 /**
  * The result shape the v1 screens read, built from the v2 calls. Usable crops become `recommendations`.
- * TODO(redesign v2-06): let the screens read ClimateResponse / CropsResponse directly.
+ * The planting plan, crop list and crop detail read this; the climate card and "Nothing grows" read the v2 responses directly.
  */
 export function toResults(climate: ClimateResponse, crops: CropsResponse, summary: string | null): RecommendationsResponse {
   const usable = crops.crops.filter((c) => c.usable);

@@ -17,7 +17,6 @@ from geometry import calculate_polygon_area_m2, calculate_polygon_centroid
 from landsat import LandsatResult, fetch_landsat, surface_heat
 from analysis import PlotCache, climate_block, crops_block, legacy_summary_input, plot_id
 from models import CropsRequest, PlotRef, PolygonInput
-from scoring import calculate_growing_season_sunshine, process_crop_recommendations
 from summary_gen import generate_crop_summary
 
 load_dotenv()
@@ -188,109 +187,6 @@ async def analysis_summary(request: Request, body: PlotRef):
             logger.warning(f"Summary failed: {e}")
             return {"plot_id": body.plot_id, "summary": None, "error": "The summary is not available right now."}
     return {"plot_id": body.plot_id, "summary": entry["summary"]}
-
-
-@app.post("/recommendations/polygon")
-@limiter.limit(RECOMMENDATION_RATE_LIMIT)
-async def get_polygon_crop_recommendations(
-        request: Request,
-        polygon: PolygonInput,
-        year: int | None = Query(None, ge=1984, le=datetime.now().year - 1, description="Defaults to the latest complete year"),
-        min_score: float = Query(50.0, ge=0, le=100),
-        limit: int = Query(10, ge=1, le=50),
-        include_monthly_temps: bool = True,
-        use_landsat: bool = Query(True, description="Read Landsat surface temperature (false = NASA POWER only)"),
-):
-    """
-    Get crop recommendations for a specific polygon area based on NASA climate data.
-
-    Parameters:
-    - polygon: Polygon coordinates defining the field area
-    - year: Year to analyse (default: the latest complete year)
-    - min_score: Minimum suitability score (0-100, default: 50)
-    - limit: Maximum number of recommendations to return
-    - include_monthly_temps: Include monthly average temperatures for the analysed year (default: True)
-    - use_landsat: Read Landsat surface temperature over the plot (default: True)
-    """
-
-    year = year or latest_complete_year()
-
-    # ========== GEOMETRY CALCULATIONS ==========
-    center_lat, center_lon = calculate_polygon_centroid(polygon.coordinates)
-    area_m2 = calculate_polygon_area_m2(polygon.coordinates)
-    area_hectares = area_m2 / 10000
-
-    check_area(area_m2)
-    sunshine_factor = sunshine_factor_of(polygon)
-
-    # ========== PARALLEL DATA FETCHING ==========
-    # Landsat is reported as surface heat; it does not change the NASA POWER data the scores use.
-    logger.info(f"Fetching {year} data for ({center_lat:.5f}, {center_lon:.5f})")
-    climate_data, landsat = await asyncio.gather(
-        fetch_all_climate_data(center_lat, center_lon, year, include_multi_year=include_monthly_temps),
-        fetch_landsat(polygon, year, enabled=use_landsat),
-    )
-    heat = surface_heat(landsat.readings, climate_data["primary_year_data"]) if landsat.status == "ok" else None
-    logger.info(f"Landsat: {landsat.status}, {len(landsat.readings)} scenes")
-
-    # ========== CROP PROCESSING ==========
-    crop_results = process_crop_recommendations(
-        climate_data, sunshine_factor, area_m2, min_score
-    )
-
-    # ========== RESPONSE CONSTRUCTION ==========
-    climate_analysis = climate_data["climate_analysis"]
-
-    # Calculate a representative sunshine value for display
-    display_sunshine = calculate_growing_season_sunshine(
-        climate_data["primary_year_data"],
-        crop_base_temp=10.0,
-        sunshine_factor=sunshine_factor
-    )
-
-    response = {
-        "location": {
-            "center_latitude": round(center_lat, 6),
-            "center_longitude": round(center_lon, 6),
-            "area_m2": round(area_m2, 2),
-            "area_hectares": round(area_hectares, 4)
-        },
-        "year": year,
-        "sunshine_factor": round(sunshine_factor, 2),
-        "data_sources": {
-            "nasa_power": True,
-            "landsat_surface_temp": heat is not None,
-            "landsat_dates_available": len(landsat.readings),
-        },
-        "landsat": {
-            "status": landsat.status,
-            "scenes": [vars(r) for r in landsat.readings],
-            "surface_heat": heat,
-        },
-        "climate_summary": {
-            "avg_temp_max": round(climate_analysis["temperature_max"]["mean"], 1),
-            "avg_temp_min": round(climate_analysis["temperature_min"]["mean"], 1),
-            "annual_precipitation_mm": round(climate_analysis["precipitation"]["total_annual"], 1),
-            "representative_sun_hours_daily": display_sunshine["adjusted_sun_hours"],
-            "note": "Daily NASA POWER data for the plot's centre; Landsat surface temperature is reported separately under 'landsat'"
-        },
-        "recommendations": crop_results["recommendations"][:limit],
-        "total_suitable_crops": crop_results["total_suitable"],
-        "total_filtered_by_sunlight": crop_results["total_filtered"],
-    }
-
-    # Add monthly temperature data if available
-    if climate_data["monthly_averages"]:
-        response["monthly_temperature_averages"] = climate_data["monthly_averages"]
-
-    try:
-        llm_summary = await asyncio.to_thread(generate_crop_summary, response)
-        response["llm_summary"] = llm_summary
-    except Exception as e:
-        response["llm_summary"] = "The LLM in charge of assembling your summary was asleep. We did not want to wake it."
-        response["llm_err"] = str(e)
-
-    return response
 
 
 if __name__ == "__main__":
