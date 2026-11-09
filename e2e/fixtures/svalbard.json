@@ -1,0 +1,116 @@
+{
+ "location": {
+  "center_latitude": 78.223,
+  "center_longitude": 15.6455,
+  "area_m2": 6056.63,
+  "area_hectares": 0.6057
+ },
+ "year": 2023,
+ "sunshine_factor": 0.7,
+ "data_sources": {
+  "nasa_power": true,
+  "landsat_surface_temp": false,
+  "landsat_dates_available": 0
+ },
+ "climate_summary": {
+  "avg_temp_max": -3.1,
+  "avg_temp_min": -7.0,
+  "annual_precipitation_mm": 725.4,
+  "representative_sun_hours_daily": 0.0,
+  "note": "Temperatures merged from NASA POWER (coarse) and Landsat (fine-grained) where available"
+ },
+ "recommendations": [],
+ "total_suitable_crops": 0,
+ "total_filtered_by_sunlight": 7,
+ "monthly_temperature_averages": {
+  "monthly_averages": [
+   {
+    "month": 1,
+    "month_name": "January",
+    "avg_temp_max": -5.4,
+    "avg_temp_min": -9.0,
+    "avg_temp": -7.2
+   },
+   {
+    "month": 2,
+    "month_name": "February",
+    "avg_temp_max": -6.5,
+    "avg_temp_min": -11.5,
+    "avg_temp": -9.0
+   },
+   {
+    "month": 3,
+    "month_name": "March",
+    "avg_temp_max": -13.4,
+    "avg_temp_min": -18.7,
+    "avg_temp": -16.1
+   },
+   {
+    "month": 4,
+    "month_name": "April",
+    "avg_temp_max": -4.4,
+    "avg_temp_min": -11.5,
+    "avg_temp": -8.0
+   },
+   {
+    "month": 5,
+    "month_name": "May",
+    "avg_temp_max": -2.3,
+    "avg_temp_min": -6.4,
+    "avg_temp": -4.3
+   },
+   {
+    "month": 6,
+    "month_name": "June",
+    "avg_temp_max": 2.1,
+    "avg_temp_min": 0.7,
+    "avg_temp": 1.4
+   },
+   {
+    "month": 7,
+    "month_name": "July",
+    "avg_temp_max": 7.3,
+    "avg_temp_min": 3.9,
+    "avg_temp": 5.6
+   },
+   {
+    "month": 8,
+    "month_name": "August",
+    "avg_temp_max": 5.9,
+    "avg_temp_min": 3.5,
+    "avg_temp": 4.7
+   },
+   {
+    "month": 9,
+    "month_name": "September",
+    "avg_temp_max": -0.3,
+    "avg_temp_min": -2.9,
+    "avg_temp": -1.6
+   },
+   {
+    "month": 10,
+    "month_name": "October",
+    "avg_temp_max": -4.9,
+    "avg_temp_min": -8.9,
+    "avg_temp": -6.9
+   },
+   {
+    "month": 11,
+    "month_name": "November",
+    "avg_temp_max": -7.8,
+    "avg_temp_min": -12.0,
+    "avg_temp": -9.9
+   },
+   {
+    "month": 12,
+    "month_name": "December",
+    "avg_temp_max": -7.5,
+    "avg_temp_min": -11.4,
+    "avg_temp": -9.5
+   }
+  ],
+  "years_analyzed": 1
+ },
+ "llm_summary": "The LLM in charge of assembling your summary was asleep. We did not want to wake it.",
+ "llm_err": "API error occurred: Status 401\n{\"detail\":\"Invalid API Key\"}\n"
+}

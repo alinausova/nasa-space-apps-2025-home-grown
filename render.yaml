@@ -8,6 +8,6 @@ services:
     envVars:
       - key: PYTHON_VERSION
         value: 3.13.0
-      - key: EXTERNAL_API_KEY
+      - key: MISTRAL_API_KEY
         sync: false  # Set this in Render dashboard
     healthCheckPath: /api/health

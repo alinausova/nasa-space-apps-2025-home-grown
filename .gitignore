@@ -64,3 +64,16 @@ htmlcov/
 
 # Jupyter Notebook
 .ipynb_checkpoints
+
+# Design handoff: local reference only (tokens and assets live in src/)
+design-handoff/
+
+# Local working notes (plans, analysis)
+.claude/scratchpads/
+
+# Playwright
+e2e/.output/
+playwright-report/
+
+# Python caches anywhere
+__pycache__/
