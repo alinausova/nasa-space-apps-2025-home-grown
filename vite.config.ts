@@ -5,7 +5,7 @@ import tailwindcss from '@tailwindcss/vite'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: '/nasa-space-apps-2025-home-grown/',
+  base: '/',
   plugins: [tailwindcss(), svelte()],
   build: {
     rollupOptions: {
