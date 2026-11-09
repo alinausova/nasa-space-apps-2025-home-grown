@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { i18n } from "../../i18n/locale.svelte";
     import Icon from "../../ui/Icon.svelte";
     import StepLabel from "../../ui/StepLabel.svelte";
     import AreaMeter from "./AreaMeter.svelte";
@@ -31,21 +32,21 @@
             onclick={onBack}
             class="-mt-2 -mb-2 hidden items-center gap-1.5 self-start rounded-full py-1 pr-2 text-sm text-ink hover:underline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink md:inline-flex"
         >
-            <Icon name="back" size={16} /> Pick a place
+            <Icon name="back" size={16} /> {i18n.m.draw.backToPlace}
         </button>
     {/if}
     <div class="hidden md:block">
-        <StepLabel step={2} label="Draw your plot">
-            <h1 class="m-0 text-[38px] leading-[1.1] font-normal tracking-[-0.02em]">Mark the space you want to grow on</h1>
-            <p class="m-0 text-[15px] leading-relaxed text-ink-muted">Click each corner of a rooftop, yard or empty lot. Double-click to finish.</p>
+        <StepLabel step={2} label={i18n.m.draw.step}>
+            <h1 class="m-0 text-[38px] leading-[1.1] font-normal tracking-[-0.02em]">{i18n.m.draw.title}</h1>
+            <p class="m-0 text-[15px] leading-relaxed text-ink-muted">{i18n.m.draw.intro}</p>
         </StepLabel>
     </div>
 
     <h1 class="m-0 font-mono text-xs font-normal text-ink-muted md:hidden">
-        02 / Draw your plot{corners > 0 ? ` · ${corners} ${corners === 1 ? "corner" : "corners"}` : ""}
+        02 / {i18n.m.draw.step}{corners > 0 ? ` · ${i18n.m.draw.corners(corners)}` : ""}
     </h1>
 
-    <section class="hidden flex-col gap-2.5 md:flex" aria-label="Jump to a sample city">
+    <section class="hidden flex-col gap-2.5 md:flex" aria-label={i18n.m.place.jumpToSample}>
         <SampleCities variant="chips" selected={selectedCity} {onpick} />
     </section>
 

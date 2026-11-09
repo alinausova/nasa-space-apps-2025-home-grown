@@ -1,10 +1,11 @@
 <script lang="ts">
+    import { i18n } from "../i18n/locale.svelte";
     let { playing = $bindable(true) }: { playing?: boolean } = $props();
 </script>
 
 <button
     type="button"
-    aria-label={playing ? "Pause animation" : "Play animation"}
+    aria-label={playing ? i18n.m.landing.pause : i18n.m.landing.play}
     aria-pressed={!playing}
     onclick={() => (playing = !playing)}
     class="tap-target flex size-[30px] items-center justify-center rounded-full border border-ink/35 bg-transparent text-ink

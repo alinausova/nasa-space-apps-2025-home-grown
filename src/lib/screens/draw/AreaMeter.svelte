@@ -1,8 +1,10 @@
 <script lang="ts">
+    import { i18n } from "../../i18n/locale.svelte";
     import type { Plot } from "../../state/journey.svelte";
     import { areaComparison, formatArea, limitFraction, percentOverLimit } from "../../derive/area";
 
     let { plot, tooLarge }: { plot: Plot | null; tooLarge: boolean } = $props();
+    let t = $derived(i18n.m.draw);
 
     let hasArea = $derived(plot !== null && plot.areaM2 > 0);
     let corners = $derived(plot?.corners ?? 0);
@@ -15,8 +17,8 @@
     aria-live="polite"
 >
     <span class="hidden items-baseline justify-between md:flex">
-        <span class="text-[13px] {tooLarge ? 'font-semibold text-warn-ink' : ''}">{tooLarge ? "Plot too large" : "Your plot"}</span>
-        <span class="font-mono text-xs text-ink-muted">{corners} {corners === 1 ? "corner" : "corners"}</span>
+        <span class="text-[13px] {tooLarge ? 'font-semibold text-warn-ink' : ''}">{tooLarge ? t.tooLarge : t.yourPlot}</span>
+        <span class="font-mono text-xs text-ink-muted">{t.corners(corners)}</span>
     </span>
 
     {#if hasArea && plot}
@@ -24,7 +26,7 @@
             <span class="font-mono text-[40px] leading-none tracking-[-0.02em] tabular md:text-[34px] {tooLarge ? 'text-warn-ink' : ''}">
                 {formatArea(plot.areaM2)}
             </span>
-            <span class="max-w-[50%] text-right text-[13px] text-ink-muted md:hidden">{tooLarge ? "Over the 1 km² limit" : areaComparison(plot.areaM2)}</span>
+            <span class="max-w-[50%] text-right text-[13px] text-ink-muted md:hidden">{tooLarge ? t.overLimitShort : areaComparison(plot.areaM2)}</span>
         </div>
 
         <span class="hidden h-1 rounded-sm bg-ink/12 md:block" aria-hidden="true">
@@ -36,16 +38,16 @@
 
         {#if tooLarge}
             <span class="text-[13px] text-ink-muted">
-                That is {percentOverLimit(plot.areaM2)}% over the 1 km² limit. Drag a corner inwards or redraw a smaller shape.
+                {t.overLimit(percentOverLimit(plot.areaM2))}
             </span>
         {:else}
-            <span class="hidden text-[13px] text-ink-muted md:block">{areaComparison(plot.areaM2)}. Limit is 1 km².</span>
+            <span class="hidden text-[13px] text-ink-muted md:block">{t.withinLimit(areaComparison(plot.areaM2))}</span>
         {/if}
     {:else}
         <span class="font-mono text-[40px] leading-none tracking-[-0.02em] text-ink/30 md:text-[34px]">0 m²</span>
         <span class="text-[13px] text-ink-muted">
-            <span class="hidden md:inline">Click each corner on the map, then double-click to finish.</span>
-            <span class="md:hidden">Tap each corner on the map, then tap the first corner to finish.</span>
+            <span class="hidden md:inline">{t.hintDesktop}</span>
+            <span class="md:hidden">{t.hintMobile}</span>
         </span>
     {/if}
 </div>

@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { i18n } from "../../i18n/locale.svelte";
     import Chip from "../../ui/Chip.svelte";
     import { SAMPLE_CITIES, type SampleCity } from "../../data/cities";
 
@@ -21,7 +22,7 @@
                     {selected === city.id ? 'border-ink bg-selected' : ''}"
             >
                 <span class="text-[15px] font-semibold">{city.name}</span>
-                <span class="text-xs text-ink-muted">{city.climate}</span>
+                <span class="text-xs text-ink-muted">{i18n.m.place.climates[city.id] ?? city.climate}</span>
             </button>
         {/each}
     </div>
