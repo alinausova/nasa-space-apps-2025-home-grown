@@ -74,3 +74,6 @@ design-handoff/
 # Playwright
 e2e/.output/
 playwright-report/
+
+# Python caches anywhere
+__pycache__/
