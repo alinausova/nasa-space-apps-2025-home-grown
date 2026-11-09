@@ -12,6 +12,8 @@
         wide = false,
         sheet = "mid",
         headerAction,
+        header,
+        scrollKey,
         children,
         footer,
         mapOverlay,
@@ -20,6 +22,10 @@
         /** Preferred mobile sheet height for the current screen; the user can drag between sizes. */
         sheet?: SheetSize;
         headerAction?: Snippet;
+        /** Replaces the logo header on desktop (crop detail puts its navigation there). */
+        header?: Snippet;
+        /** Changing this scrolls the sidebar back to the top (e.g. stepping to another crop). */
+        scrollKey?: string;
         children: Snippet;
         footer?: Snippet;
         mapOverlay?: Snippet;
@@ -29,6 +35,12 @@
     const HEIGHT: Record<SheetSize, string> = { low: "34dvh", mid: "62dvh", high: "92dvh" };
 
     let size = $state<SheetSize>("mid");
+    let body: HTMLDivElement;
+
+    $effect(() => {
+        void scrollKey;
+        body?.scrollTo({ top: 0 });
+    });
     let dragOffset = $state(0);
     let dragStart: number | null = null;
 
@@ -99,12 +111,16 @@
             <span class="block h-1.5 w-12 rounded-full bg-ink/40"></span>
         </button>
 
-        <header class="hidden shrink-0 items-center justify-between border-b border-line px-8 py-4 md:flex">
-            <Logo />
-            {#if headerAction}{@render headerAction()}{/if}
+        <header class="hidden min-h-[72px] shrink-0 items-center justify-between border-b border-line px-8 py-3 md:flex">
+            {#if header}
+                {@render header()}
+            {:else}
+                <Logo />
+                {#if headerAction}{@render headerAction()}{/if}
+            {/if}
         </header>
 
-        <div class="min-h-0 flex-1 overflow-y-auto px-6 pb-6 md:px-8 md:py-8">
+        <div bind:this={body} class="min-h-0 flex-1 overflow-y-auto px-6 pb-6 md:px-8 md:py-8">
             {@render children()}
         </div>
 

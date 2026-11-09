@@ -13,6 +13,8 @@
     import AnalysingPanel from "./analysing/AnalysingPanel.svelte";
     import ScanOverlay from "../map/overlays/ScanOverlay.svelte";
     import ResultsPanel from "./results/ResultsPanel.svelte";
+    import CropDetail from "./crop/CropDetail.svelte";
+    import CropNav from "./crop/CropNav.svelte";
     import { formatKg } from "../derive/format";
     import { ANALYSIS_STEPS, failedStep, timeline } from "../derive/progress";
     import { formatArea } from "../derive/area";
@@ -29,6 +31,7 @@
     const SHEET: Record<typeof journey.step, SheetSize> = { place: "mid", draw: "low", analysing: "mid", results: "mid" };
 
     let cropId = $derived(router.route.name === "crop" ? router.route.id : null);
+    let crop = $derived(cropId ? (journey.results?.recommendations.find((c) => c.crop_id === cropId) ?? null) : null);
     let cityName = $derived(SAMPLE_CITIES.find((c) => c.id === journey.city)?.name ?? null);
     let zoomedIn = $derived(mapController.view.zoom >= DRAW_ZOOM);
 
@@ -93,8 +96,8 @@
     }
 
     $effect(() => {
-        // Deep links to a crop need results in memory; without them, start over.
-        if (cropId && !journey.results) router.navigate({ name: "app" }, { replace: true });
+        // Deep links to a crop need results in memory (and a crop that is in them); otherwise start over.
+        if (cropId && (!journey.results || !crop)) router.navigate({ name: "app" }, { replace: true });
     });
 
     $effect(() => {
@@ -148,10 +151,16 @@
     {/if}
 {/snippet}
 
+{#snippet cropHeader()}
+    {#if crop && journey.results}<CropNav {crop} results={journey.results} filter={journey.filter} />{/if}
+{/snippet}
+
 <AppShell
     wide={journey.step === "results" || cropId !== null}
-    sheet={SHEET[journey.step]}
+    sheet={crop ? "high" : SHEET[journey.step]}
     footer={journey.step === "results" ? undefined : stepFooter}
+    header={crop ? cropHeader : undefined}
+    scrollKey={cropId ?? journey.step}
 >
     {#snippet headerAction()}
         {#if journey.step === "results"}
@@ -167,6 +176,8 @@
         <DrawPanel plot={journey.plot} tooLarge={journey.isTooLarge} selectedCity={journey.city} onpick={pickCity} />
     {:else if journey.step === "analysing"}
         <AnalysingPanel plot={journey.plot} request={journey.request} {progress} {elapsedMs} />
+    {:else if crop && journey.results && journey.plot}
+        <CropDetail {crop} results={journey.results} plot={journey.plot} filter={journey.filter} />
     {:else if journey.results && journey.plot}
         <ResultsPanel
             results={journey.results}
@@ -218,6 +229,11 @@
                 {#if journey.request.status === "error"}Stopped at: {ANALYSIS_STEPS[failedStep(progress.current)].short.toLowerCase()}{:else}<span class="size-2 rounded-full bg-bright" aria-hidden="true"></span>{ANALYSIS_STEPS[progress.current].short}{/if}
             </MapChip>
             <MapChip only="mobile" tone="bright">{formatArea(journey.plot.areaM2)}</MapChip>
+        {:else if crop && journey.plot}
+            <MapBack label="Back to all crops" href={router.href({ name: "app" })} />
+            <div class="absolute right-5 bottom-14 z-10 hidden rounded-[14px] border border-ink bg-surface px-[18px] py-3 text-[17px] md:block">
+                {crop.crop_name} on {Math.round(journey.plot.areaM2 * 0.7).toLocaleString("en-US")} m² of your plot
+            </div>
         {:else if journey.step === "results" && journey.plot}
             <MapBack label="Back to your plot" onclick={() => journey.editPlot()} />
             <MapChip only="mobile" tone="bright">{formatArea(journey.plot.areaM2)}</MapChip>
