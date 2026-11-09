@@ -39,7 +39,7 @@ export interface YieldEstimate {
 
 /** Months (1–12) to sow or plant out, grow and harvest, simulated on the plot's year. */
 export interface CropCalendar {
-  /** "plant_out": seedlings started indoors; "plant": grown from cuttings (cassava). */
+  /** "plant_out": seedlings started indoors; "plant": grown from cuttings or corms (cassava, taro). */
   mode: 'sow' | 'plant_out' | 'plant';
   sow: number[];
   grow: number[];

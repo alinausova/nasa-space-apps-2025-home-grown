@@ -116,7 +116,7 @@ def crop_calendar(crop: Dict, days: List[Dict], transplant: bool = False) -> Opt
 
 def calendar_for(crop: Dict, days: List[Dict]) -> Optional[Dict]:
     direct = crop_calendar(crop, days)
-    if crop.get("propagation") == "cuttings":
+    if crop.get("propagation") == "vegetative":
         return {**direct, "mode": "plant"} if direct else None
     if crop.get("frost_tolerance") != "tender":
         return direct

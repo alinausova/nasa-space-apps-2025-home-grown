@@ -121,6 +121,18 @@
     },
     "yield_per_m2_kg": 2.65
    },
+   "chickpea": {
+    "category": "Excellent",
+    "irrigation_needed_mm": 238.2,
+    "score": 93.6,
+    "scores": {
+     "gdd": 100,
+     "sunlight": 100,
+     "temperature": 100.0,
+     "water": 57.6
+    },
+    "yield_per_m2_kg": 0.18
+   },
    "corn": {
     "category": "Excellent",
     "irrigation_needed_mm": 365.8,
@@ -132,6 +144,18 @@
      "water": 36.7
     },
     "yield_per_m2_kg": 0.98
+   },
+   "cowpea": {
+    "category": "Excellent",
+    "irrigation_needed_mm": 215.8,
+    "score": 88.5,
+    "scores": {
+     "gdd": 100,
+     "sunlight": 100,
+     "temperature": 80.0,
+     "water": 56.8
+    },
+    "yield_per_m2_kg": 0.09
    },
    "cucumbers": {
     "category": "Excellent",
@@ -156,6 +180,18 @@
      "water": 36.7
     },
     "yield_per_m2_kg": 8.0
+   },
+   "fava_bean": {
+    "category": "Excellent",
+    "irrigation_needed_mm": 238.2,
+    "score": 93.6,
+    "scores": {
+     "gdd": 100,
+     "sunlight": 100,
+     "temperature": 100.0,
+     "water": 57.6
+    },
+    "yield_per_m2_kg": 0.94
    },
    "garlic": {
     "category": "Excellent",
@@ -193,6 +229,18 @@
     },
     "yield_per_m2_kg": 4.38
    },
+   "lentil": {
+    "category": "Excellent",
+    "irrigation_needed_mm": 238.2,
+    "score": 93.6,
+    "scores": {
+     "gdd": 100,
+     "sunlight": 100,
+     "temperature": 100.0,
+     "water": 57.6
+    },
+    "yield_per_m2_kg": 0.18
+   },
    "lettuce": {
     "category": "Excellent",
     "irrigation_needed_mm": 63.2,
@@ -216,6 +264,18 @@
      "water": 56.8
     },
     "yield_per_m2_kg": 3.5
+   },
+   "oats": {
+    "category": "Excellent",
+    "irrigation_needed_mm": 363.2,
+    "score": 86.1,
+    "scores": {
+     "gdd": 100,
+     "sunlight": 100,
+     "temperature": 80.0,
+     "water": 40.5
+    },
+    "yield_per_m2_kg": 0.34
    },
    "okra": {
     "category": "Excellent",
@@ -421,6 +481,18 @@
     },
     "yield_per_m2_kg": 4.0
    },
+   "taro": {
+    "category": "Excellent",
+    "irrigation_needed_mm": 1615.8,
+    "score": 87.7,
+    "scores": {
+     "gdd": 100,
+     "sunlight": 100,
+     "temperature": 100.0,
+     "water": 18.0
+    },
+    "yield_per_m2_kg": 1.04
+   },
    "tomatoes": {
     "category": "Excellent",
     "irrigation_needed_mm": 313.2,
@@ -432,6 +504,18 @@
      "water": 35.4
     },
     "yield_per_m2_kg": 8.0
+   },
+   "turnip": {
+    "category": "Excellent",
+    "irrigation_needed_mm": 163.2,
+    "score": 86.1,
+    "scores": {
+     "gdd": 100,
+     "sunlight": 100,
+     "temperature": 60.0,
+     "water": 74.1
+    },
+    "yield_per_m2_kg": 4.65
    },
    "watermelon": {
     "category": "Excellent",
@@ -582,6 +666,18 @@
     },
     "yield_per_m2_kg": 3.0
    },
+   "chickpea": {
+    "category": "Excellent",
+    "irrigation_needed_mm": 0,
+    "score": 84.9,
+    "scores": {
+     "gdd": 100,
+     "sunlight": 93.9,
+     "temperature": 60.0,
+     "water": 76.3
+    },
+    "yield_per_m2_kg": 0.15
+   },
    "corn": {
     "category": "Excellent",
     "irrigation_needed_mm": 0,
@@ -593,6 +689,18 @@
      "water": 100.0
     },
     "yield_per_m2_kg": 1.03
+   },
+   "cowpea": {
+    "category": "Excellent",
+    "irrigation_needed_mm": 0,
+    "score": 88.0,
+    "scores": {
+     "gdd": 100,
+     "sunlight": 100,
+     "temperature": 56.4,
+     "water": 93.0
+    },
+    "yield_per_m2_kg": 0.09
    },
    "cucumbers": {
     "category": "Excellent",
@@ -617,6 +725,18 @@
      "water": 100.0
     },
     "yield_per_m2_kg": 8.0
+   },
+   "fava_bean": {
+    "category": "Excellent",
+    "irrigation_needed_mm": 0,
+    "score": 84.9,
+    "scores": {
+     "gdd": 100,
+     "sunlight": 93.9,
+     "temperature": 60.0,
+     "water": 76.3
+    },
+    "yield_per_m2_kg": 0.78
    },
    "garlic": {
     "category": "Excellent",
@@ -654,6 +774,18 @@
     },
     "yield_per_m2_kg": 4.5
    },
+   "lentil": {
+    "category": "Excellent",
+    "irrigation_needed_mm": 0,
+    "score": 80.8,
+    "scores": {
+     "gdd": 100,
+     "sunlight": 85.4,
+     "temperature": 60.0,
+     "water": 62.8
+    },
+    "yield_per_m2_kg": 0.13
+   },
    "lettuce": {
     "category": "Excellent",
     "irrigation_needed_mm": 0,
@@ -677,6 +809,18 @@
      "water": 93.0
     },
     "yield_per_m2_kg": 3.34
+   },
+   "oats": {
+    "category": "Excellent",
+    "irrigation_needed_mm": 0,
+    "score": 80.6,
+    "scores": {
+     "gdd": 100,
+     "sunlight": 82.8,
+     "temperature": 60.0,
+     "water": 65.8
+    },
+    "yield_per_m2_kg": 0.27
    },
    "okra": {
     "category": "Excellent",
@@ -882,6 +1026,18 @@
     },
     "yield_per_m2_kg": 3.54
    },
+   "taro": {
+    "category": "Moderate",
+    "irrigation_needed_mm": 1162.1,
+    "score": 53.5,
+    "scores": {
+     "gdd": 53.5,
+     "sunlight": 100,
+     "temperature": 60.0,
+     "water": 18.0
+    },
+    "yield_per_m2_kg": 0.22
+   },
    "tomatoes": {
     "category": "Excellent",
     "irrigation_needed_mm": 0,
@@ -893,6 +1049,18 @@
      "water": 88.6
     },
     "yield_per_m2_kg": 7.49
+   },
+   "turnip": {
+    "category": "Excellent",
+    "irrigation_needed_mm": 0,
+    "score": 92.7,
+    "scores": {
+     "gdd": 100,
+     "sunlight": 90.0,
+     "temperature": 100.0,
+     "water": 68.0
+    },
+    "yield_per_m2_kg": 5.34
    },
    "watermelon": {
     "category": "Excellent",
@@ -1007,6 +1175,30 @@
     },
     "yield_per_m2_kg": 0.09
    },
+   "chickpea": {
+    "category": "Poor",
+    "irrigation_needed_mm": 362.9,
+    "score": 3.9,
+    "scores": {
+     "gdd": 3.9,
+     "sunlight": 100,
+     "temperature": 32.3,
+     "water": 40.5
+    },
+    "yield_per_m2_kg": 0.0
+   },
+   "fava_bean": {
+    "category": "Poor",
+    "irrigation_needed_mm": 362.9,
+    "score": 3.3,
+    "scores": {
+     "gdd": 3.3,
+     "sunlight": 100,
+     "temperature": 27.3,
+     "water": 40.5
+    },
+    "yield_per_m2_kg": 0.01
+   },
    "garlic": {
     "category": "Poor",
     "irrigation_needed_mm": 369.0,
@@ -1031,6 +1223,18 @@
     },
     "yield_per_m2_kg": 0.22
    },
+   "lentil": {
+    "category": "Poor",
+    "irrigation_needed_mm": 276.9,
+    "score": 15.8,
+    "scores": {
+     "gdd": 15.8,
+     "sunlight": 100,
+     "temperature": 24.0,
+     "water": 49.1
+    },
+    "yield_per_m2_kg": 0.01
+   },
    "lettuce": {
     "category": "Poor",
     "irrigation_needed_mm": 169.0,
@@ -1042,6 +1246,18 @@
      "water": 66.2
     },
     "yield_per_m2_kg": 0.15
+   },
+   "oats": {
+    "category": "Poor",
+    "irrigation_needed_mm": 333.8,
+    "score": 21.4,
+    "scores": {
+     "gdd": 21.4,
+     "sunlight": 100,
+     "temperature": 39.1,
+     "water": 42.1
+    },
+    "yield_per_m2_kg": 0.03
    },
    "onions": {
     "category": "Poor",
@@ -1151,6 +1367,18 @@
     },
     "yield_per_m2_kg": 0.04
    },
+   "turnip": {
+    "category": "Poor",
+    "irrigation_needed_mm": 269.0,
+    "score": 25.6,
+    "scores": {
+     "gdd": 25.6,
+     "sunlight": 100,
+     "temperature": 60.0,
+     "water": 50.8
+    },
+    "yield_per_m2_kg": 0.46
+   },
    "wheat": {
     "category": "Poor",
     "irrigation_needed_mm": 333.8,
@@ -1169,6 +1397,7 @@
    "beans",
    "cassava",
    "corn",
+   "cowpea",
    "cucumbers",
    "eggplant",
    "groundnut",
@@ -1182,6 +1411,7 @@
    "soybeans",
    "squash",
    "sweet_potato",
+   "taro",
    "watermelon"
   ]
  }

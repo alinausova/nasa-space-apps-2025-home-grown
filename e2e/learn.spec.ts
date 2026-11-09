@@ -95,9 +95,9 @@ test.describe('learn more', () => {
     await expect(page.getByRole('table', { name: 'Variables researched but not used yet' })).toContainText('Copernicus Sentinel-3');
     const crops = page.getByRole('table', { name: 'Where the crop numbers come from' });
     await expect(crops.getByRole('rowheader')).toHaveCount(9);
-    await expect(crops).toContainText('Consolidated thresholds from Paredes et al. for 36 crops');
+    await expect(crops).toContainText('Consolidated thresholds from Paredes et al. for 43 crops');
     await expect(crops).toContainText('FAO Irrigation and Drainage Paper 56');
-    await expect(crops).toContainText('Field-measured totals from Paredes et al. for 15 crops');
+    await expect(crops).toContainText('Field-measured totals from Paredes et al. for 16 crops');
 
     await page.getByRole('button', { name: 'Show bibliography · 32 sources' }).click();
     await expect(page.locator('#bibliography li')).toHaveCount(32);
