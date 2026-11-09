@@ -43,6 +43,8 @@ test.describe('draw', () => {
     await waitForMap(page);
     await page.getByRole('button', { name: /Draw your plot here/ }).click();
     await expect(page.getByText('Click each corner · double-click to finish')).toBeVisible();
+    const cursor = () => page.evaluate(() => (document.querySelector('.mapboxgl-canvas') as HTMLElement).style.cursor);
+    expect(await cursor()).toBe('crosshair');
 
     const box = (await page.getByTestId('map').boundingBox())!;
     const cx = box.x + box.width / 2;
@@ -64,6 +66,7 @@ test.describe('draw', () => {
     await expect(page.getByText(/tennis court|parking space|football pitch/).filter({ visible: true })).toBeVisible();
     await expect(page.getByRole('button', { name: /Analyse this plot/ })).toBeEnabled();
     await expect(page.getByText('Drag a corner to adjust')).toBeVisible();
+    expect(await cursor()).toBe('');
     await shot(page, 'draw', info.project.name);
   });
 

@@ -22,7 +22,18 @@ function ringOf(feature: GeoJSON.Feature | undefined): LngLat[] | null {
 /** Owns the Mapbox map and Draw control. Components talk to this, never to Mapbox directly. */
 export class MapController {
   ready = $state(false);
-  isDrawing = $state(false);
+  #drawing = $state(false);
+
+  /** True while an outline is being drawn. Also shows a crosshair so it is clear the next click places a corner. */
+  get isDrawing(): boolean {
+    return this.#drawing;
+  }
+
+  set isDrawing(value: boolean) {
+    this.#drawing = value;
+    const canvas = this.map?.getCanvas();
+    if (canvas) canvas.style.cursor = value ? 'crosshair' : '';
+  }
   error = $state<string | null>(null);
   /** Live map centre and zoom, for the coordinates readout. */
   view = $state({ lng: 0, lat: 0, zoom: 0 });
