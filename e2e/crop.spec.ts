@@ -85,3 +85,40 @@ test.describe('crop detail', () => {
     await expect(page.getByTestId('crop-row').first()).toBeVisible();
   });
 });
+
+test.describe('grow calendar', () => {
+  const crop = (id: string) => RECS.find((r) => r.crop_id === id)!;
+  const open = (page: Page, id: string) => page.evaluate((cropId) => (window as any).__hg.router.navigate({ name: 'crop', id: cropId }), id);
+  const cells = (page: Page, row: string) => page.locator(`[data-testid="grow-calendar"] [data-row="${row}"][data-on]`);
+
+  test('shows the sow, grow and harvest months from the response', async ({ page }, info) => {
+    await openResults(page);
+    await page.getByTestId('crop-row').first().click();
+    const cal = TOP.calendar;
+    const section = page.getByTestId('grow-calendar');
+    await expect(section.getByRole('heading', { name: 'When to grow it' })).toBeVisible();
+    await expect(cells(page, 'sow')).toHaveCount(cal.sow.length);
+    await expect(cells(page, 'grow')).toHaveCount(cal.grow.length);
+    await expect(cells(page, 'harvest')).toHaveCount(cal.harvest.length);
+    await expect(section.getByText(/^Sow .*\. Grows .*\. Harvest .*\.$/)).toBeAttached();
+    await section.scrollIntoViewIfNeeded();
+    await page.screenshot({ path: `e2e/.output/shots/${info.project.name}-calendar.png` });
+  });
+
+  test('frost-tender crops are planted out as seedlings', async ({ page }) => {
+    expect(crop('tomatoes').calendar.mode).toBe('plant_out');
+    await openResults(page);
+    await open(page, 'tomatoes');
+    await expect(cropHeading(page)).toHaveText('Tomatoes');
+    const section = page.getByTestId('grow-calendar');
+    await expect(section.getByText('Plant out', { exact: true })).toBeVisible();
+    await expect(section.getByText(/Start seeds indoors about six weeks earlier/)).toBeVisible();
+  });
+
+  test('says so when no sowing date works', async ({ page }) => {
+    expect(crop('rice').calendar).toBeNull();
+    await openResults(page);
+    await open(page, 'rice');
+    await expect(page.getByTestId('grow-calendar')).toContainText('We could not find a sowing date that lets rice ripen');
+  });
+});
