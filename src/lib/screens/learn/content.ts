@@ -126,8 +126,8 @@ export const DATA_USED = [
 
 /** Where each crop number comes from (api/crop_database.py) and what it drives. Refs point into BIBLIOGRAPHY. */
 export const CROP_DATA = [
-  { variable: 'Base and upper temperature', source: 'Literature compiled by Paredes et al. Our values match the authors’ consolidated thresholds for 10 of the 29 crops they cover; most others are within a few degrees. Kale and arugula use cabbage-family values.', why: 'Which days count towards growth, in the heat score and the calendar.', refs: '[20][28]' },
-  { variable: 'Heat units needed', source: 'Team estimates, being checked against field-measured totals from Paredes et al. and Oregon State’s Croptime models', why: 'Heat score, the cap on every score, and when a sowing is ready.', refs: '[27][28]' },
+  { variable: 'Base and upper temperature', source: 'Consolidated thresholds from Paredes et al. for 29 crops. Kale and arugula use cabbage-family values.', why: 'Which days count towards growth, in the heat score and the calendar.', refs: '[20][28]' },
+  { variable: 'Heat units to first harvest', source: 'Field-measured totals from Paredes et al. for 13 crops and Oregon State’s Croptime for tomatoes, peppers, cucumbers and green beans. The other 14 are team estimates.', why: 'Heat score, the cap on every score, and when a sowing is ready.', refs: '[27][28]' },
   { variable: 'Ideal temperature range', source: 'Team estimates, being checked against FAO ECOCROP', why: 'Temperature score over the growing season.', refs: '[26]' },
   { variable: 'Frost tolerance', source: 'Team estimates', why: 'Which frosts end a sowing in the calendar.', refs: '' },
   { variable: 'Water need per season', source: 'FAO Irrigation and Drainage Paper 56', why: 'Water score: growing-season rain against this need.', refs: '[19]' },

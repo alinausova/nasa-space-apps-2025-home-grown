@@ -4,15 +4,16 @@ For sowing dates on the 1st and 15th of each month:
 - the seed has to germinate: the week after sowing averages within its germination range;
 - the crop then grows by heat units (same GDD method as the scores) until it reaches `gdd_required`;
 - a frost below the crop's tolerance before maturity kills it (that sowing does not count);
-- more than a third of the growing days above the crop's upper temperature counts as too hot;
+- more than a third of the growing days with a daily mean above the crop's upper temperature counts as
+  too hot (development stops above that threshold; Paredes et al. 2025b, Eq. 1);
 - maturity has to come within a year.
 Each sowing that works marks its sow month, the months it grows through, and a harvest window of
 HARVEST_DAYS after maturity (cut short by a killing frost). The year repeats, so winter sowings
 (garlic in October) can mature the next summer.
 
-Frost-tender crops that cannot be sown outdoors in time (tomatoes in Munich) are tried again as
-seedlings planted out: TRANSPLANT_WEEKS indoors at INDOOR_TEMP_C give them a head start in heat
-units, and the first row reads "plant out" instead of "sow".
+Frost-tender crops are also tried as seedlings planted out: TRANSPLANT_WEEKS indoors at
+INDOOR_TEMP_C give them a head start in heat units. Planting out wins when sowing outdoors does not
+work or gives a shorter harvest (tomatoes in Munich), and the first row then reads "plant out".
 """
 from typing import Dict, List, Optional
 
@@ -86,7 +87,7 @@ def crop_calendar(crop: Dict, days: List[Dict], transplant: bool = False) -> Opt
             today = days[i % n]
             if today["min"] < kill_below:
                 break
-            hot += today["max"] > crop["upper_temp"]
+            hot += today["mean"] > crop["upper_temp"]
             total += gdd[i % n]
             if total >= crop["gdd_required"]:
                 mature = i
@@ -115,9 +116,12 @@ def crop_calendar(crop: Dict, days: List[Dict], transplant: bool = False) -> Opt
 
 def calendar_for(crop: Dict, days: List[Dict]) -> Optional[Dict]:
     direct = crop_calendar(crop, days)
-    if direct or crop.get("frost_tolerance") != "tender":
+    if crop.get("frost_tolerance") != "tender":
         return direct
-    return crop_calendar(crop, days, transplant=True)
+    planted = crop_calendar(crop, days, transplant=True)
+    if direct is None or (planted and len(planted["harvest"]) > len(direct["harvest"])):
+        return planted
+    return direct
 
 
 def calendars(nasa_data: Dict, crops: Dict[str, Dict]) -> Dict[str, Optional[Dict]]:

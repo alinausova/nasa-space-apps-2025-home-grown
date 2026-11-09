@@ -32,7 +32,7 @@ test.describe('crop detail', () => {
 
     // v2 responses carry growing-season figures, so the reasons talk about the growing season.
     const m = TOP.suitability.metrics;
-    await expect(page.getByText(`More than the ${m.required_gdd} heat units it needs`).filter({ visible: true })).toBeVisible();
+    await expect(page.getByText(`More than the ${m.required_gdd.toLocaleString('en-US')} heat units it needs`).filter({ visible: true })).toBeVisible();
     await expect(page.getByText(`Growing-season average inside the ideal ${m.optimal_temp_min}–${m.optimal_temp_max}°C`).filter({ visible: true })).toBeVisible();
 
     if (isMobile) await expect(page.getByRole('link', { name: 'All crops', exact: true })).toBeVisible();
