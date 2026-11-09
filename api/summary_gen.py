@@ -1,6 +1,5 @@
 import os
 import json
-import mistralai
 from mistralai import Mistral
 
 api_key = os.getenv("MISTRAL_API_KEY")
