@@ -1,5 +1,6 @@
 <script lang="ts">
     import { i18n } from "../../i18n/locale.svelte";
+    import { errorSentence } from "../../i18n/errors";
     import StepLabel from "../../ui/StepLabel.svelte";
     import Button from "../../ui/Button.svelte";
     import Notice from "../../ui/Notice.svelte";
@@ -36,9 +37,9 @@
 
     let t = $derived(i18n.m.analysing);
     let failed = $derived(request.status === "error");
-    let errorText = $derived(
-        request.status === "error" ? (/[.!?]$/.test(request.message.trim()) ? request.message.trim() : `${request.message.trim()}.`) : "",
-    );
+    // Worded per language from the status; the server's own text stays as a "Details" line for problem reports.
+    let errorText = $derived(request.status === "error" ? errorSentence(request.httpStatus) : "");
+    let errorDetail = $derived(request.status === "error" ? (request.detail ?? null) : null);
     /** Step shown as current: the running one, or the one that failed. */
     let shown = $derived(failedAt ?? progress.current);
     let steps = $derived(
@@ -87,6 +88,7 @@
     {#if failed && request.status === "error"}
         <Notice title={t.errorTitle}>
             {errorText} {t.errorKept}
+            {#if errorDetail}<span class="mt-1 block font-mono text-xs opacity-80">{i18n.m.errors.details(errorDetail)}</span>{/if}
         </Notice>
     {:else}
         <GrowingRowLoader />

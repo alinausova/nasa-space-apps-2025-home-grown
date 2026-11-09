@@ -1,3 +1,4 @@
+import { i18n } from '../i18n/locale.svelte';
 import { placeNameFrom, type GeocodeFeature, type LngLat } from '../derive/geo';
 
 const ENDPOINT = 'https://api.mapbox.com/search/geocode/v6/reverse';
@@ -14,7 +15,7 @@ export async function lookupPlaceName(
     longitude: lng.toFixed(6),
     latitude: lat.toFixed(6),
     types: 'neighborhood,locality,place,region',
-    language: 'en',
+    language: i18n.locale,
     limit: '1',
     access_token: token,
   });

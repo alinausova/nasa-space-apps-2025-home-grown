@@ -1,6 +1,8 @@
 import { describe, expect, it, vi } from 'vitest';
 import type { LngLat } from '../api/recommendations';
 import type { AnalysisApi, ClimateResponse, CropsResponse } from '../api/analysis';
+import { ApiError } from '../api/client';
+import { i18n } from '../i18n/locale.svelte';
 import { Journey, MAX_AREA_M2, plotFromRing } from './journey.svelte';
 
 // ~100 m × 100 m square in Munich.
@@ -268,4 +270,26 @@ describe('Journey', () => {
     await journey.loadTips('kale');
     expect(journey.tips.kale).toEqual({ status: 'done', text: 'Water often.' });
   });
+
+  it('asks for the summary and tips in the active language', async () => {
+    const { impl } = api();
+    const journey = new Journey(impl);
+    i18n.locale = 'de';
+    journey.setPlot(SMALL);
+    await journey.analyse();
+    await flush();
+    await journey.loadTips('kale');
+    expect(impl.summary).toHaveBeenCalledWith('p1', expect.objectContaining({ lang: 'de' }));
+    expect(impl.tips).toHaveBeenCalledWith('p1', 'kale', { lang: 'de' });
+    i18n.locale = 'en';
+  });
+
+  it('keeps the HTTP status and detail of a failed call', async () => {
+    const failing = vi.fn().mockRejectedValue(new ApiError('NASA POWER API returned 503', 502, 'NASA POWER API returned 503'));
+    const journey = new Journey(api({ climate: failing }).impl);
+    journey.setPlot(SMALL);
+    await journey.analyse();
+    expect(journey.request).toMatchObject({ status: 'error', phase: 'climate', httpStatus: 502, detail: 'NASA POWER API returned 503' });
+  });
 });
+

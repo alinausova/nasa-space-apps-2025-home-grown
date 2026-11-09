@@ -1,5 +1,6 @@
 import { area as turfArea, polygon as turfPolygon } from '@turf/turf';
-import { isAbortError } from '../api/client';
+import { ApiError, isAbortError } from '../api/client';
+import { i18n } from '../i18n/locale.svelte';
 import type { LngLat } from '../api/recommendations';
 import { analysisApi, toResults, type AnalysisApi, type ClimateResponse, type CropsResponse } from '../api/analysis';
 import type { RecommendationsResponse } from '../api/types';
@@ -23,7 +24,8 @@ export interface Plot {
 export type RequestState =
   | { status: 'idle' }
   | { status: 'loading'; phase: Phase; startedAt: number; stepStartedAt: number }
-  | { status: 'error'; phase: Phase; message: string }
+  /** httpStatus/detail come from the API (null status: the server could not be reached); the screen words it per language. */
+  | { status: 'error'; phase: Phase; message: string; httpStatus?: number | null; detail?: string | null }
   /** Crops are in, but Landsat did not answer: offer "Try again" or "Continue without Landsat". */
   | { status: 'landsat-failed' };
 
@@ -169,7 +171,12 @@ export class Journey {
       this.step = 'results';
     } catch (error) {
       if (isAbortError(error) || signal.aborted) return;
-      this.request = { status: 'error', phase, message: error instanceof Error ? error.message : 'Something went wrong.' };
+      this.request = {
+        status: 'error',
+        phase,
+        message: error instanceof Error ? error.message : 'Something went wrong.',
+        ...(error instanceof ApiError ? { httpStatus: error.status, detail: error.detail } : {}),
+      };
     } finally {
       if (this.#controller === controller) this.#controller = null;
     }
@@ -183,7 +190,7 @@ export class Journey {
     this.tips = { ...this.tips, [cropId]: { status: 'loading' } };
     let next: TipsState;
     try {
-      const response = await this.#api.tips(plotId, cropId);
+      const response = await this.#api.tips(plotId, cropId, { lang: i18n.locale });
       next = response.tips ? { status: 'done', text: response.tips } : { status: 'failed' };
     } catch {
       next = { status: 'failed' };
@@ -198,7 +205,7 @@ export class Journey {
     this.#summaryController = controller;
     this.summary = { status: 'loading' };
     try {
-      const response = await this.#api.summary(plotId, { signal: controller.signal });
+      const response = await this.#api.summary(plotId, { signal: controller.signal, lang: i18n.locale });
       if (controller.signal.aborted) return;
       this.summary = response.summary ? { status: 'done', text: response.summary } : { status: 'failed' };
     } catch (error) {

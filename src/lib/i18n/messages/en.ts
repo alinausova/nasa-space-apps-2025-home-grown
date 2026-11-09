@@ -313,6 +313,15 @@ export const en = {
     tipsUnavailable: 'Tips are not available right now.',
     tipsDisclaimer: "Written by Mistral AI from your plot's data. Check before you rely on it.",
   },
+  errors: {
+    network: 'We could not reach the Home Grown server.',
+    rateLimited: 'Too many analyses in a short time. Wait a minute and try again.',
+    expired: 'This plot is no longer in memory. Please analyse it again.',
+    server: 'The server or one of its data sources had a problem.',
+    invalid: 'The server could not use this plot.',
+    other: (status: number) => `The server answered with ${status}.`,
+    details: (detail: string) => `Details: ${detail}`,
+  },
   crops: {
     arugula: "Arugula",
     barley: "Barley",
