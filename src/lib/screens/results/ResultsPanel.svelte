@@ -22,7 +22,6 @@
         summaryStatus = "done",
         onNewPlot,
         onCompare,
-        onExport,
     }: {
         results: RecommendationsResponse;
         climate: ClimateResponse;
@@ -32,7 +31,6 @@
         summaryStatus?: SummaryState["status"];
         onNewPlot: () => void;
         onCompare: () => void;
-        onExport?: () => void;
     } = $props();
 
     let usableCrops = $derived(results.recommendations);
@@ -68,15 +66,5 @@
         {/if}
 
         <CropList crops={usableCrops} bind:filter />
-
-        {#if onExport}
-            <button
-                type="button"
-                onclick={onExport}
-                class="inline-flex min-h-12 items-center justify-center gap-2 self-start rounded-full border border-ink px-5 text-[17px] text-ink hover:bg-selected md:hidden"
-            >
-                Export PDF
-            </button>
-        {/if}
     </div>
 {/if}

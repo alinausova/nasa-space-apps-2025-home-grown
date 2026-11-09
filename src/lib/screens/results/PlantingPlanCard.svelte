@@ -27,7 +27,7 @@
 </script>
 
 <!-- Desktop: drawn plan with labels. -->
-<div class="hidden justify-center rounded-panel border border-line-strong bg-paper bg-geo-lines p-2.5 md:flex print:flex">
+<div class="hidden justify-center rounded-panel border border-line-strong bg-paper bg-geo-lines p-2.5 md:flex">
     <svg class="block h-auto w-full max-w-[440px]" viewBox="0 0 460 300" role="img" aria-label={ariaLabel}>
         <defs>
             <clipPath id="{id}-clip"><polygon points={outline} /></clipPath>
@@ -79,7 +79,7 @@
 </div>
 
 <!-- Mobile: compact summary. -->
-<div class="flex items-center gap-4 rounded-panel border border-line-strong p-4 md:hidden print:hidden">
+<div class="flex items-center gap-4 rounded-panel border border-line-strong p-4 md:hidden">
     <svg class="h-20 w-12 shrink-0" viewBox="0 0 {plan.width} {plan.height}" aria-hidden="true">
         <defs><clipPath id="{id}-mclip"><polygon points={plan.outline.map((p) => `${p.x},${p.y}`).join(" ")} /></clipPath></defs>
         <g clip-path="url(#{id}-mclip)" stroke="#F2FEF0" stroke-width="10">
