@@ -28,6 +28,22 @@ test.describe('pick a place', () => {
     await expect(page.getByText(/Cape Town · (ready|zoom in) to draw/)).toBeVisible();
   });
 
+  test('back from drawing to picking a place, on both layouts', async ({ page, isMobile }) => {
+    await mockApi(page);
+    await page.goto('app');
+    await waitForMap(page);
+    await page.getByRole('button', { name: /Draw your plot here/ }).click();
+    await expect(page.getByText(/0 m²/)).toBeVisible();
+
+    const back = isMobile
+      ? page.getByRole('button', { name: 'Back to pick a place' })
+      : page.getByRole('button', { name: 'Pick a place' });
+    await expect(back).toBeVisible();
+    await back.click();
+    await expect(page.getByRole('heading', { name: 'Where do you want to grow?' })).toBeVisible();
+    await expect(page.getByRole('combobox', { name: 'Search for an address or place' })).toBeVisible();
+  });
+
   test('draw button opens the draw step', async ({ page }) => {
     await mockApi(page);
     await page.goto('app');
