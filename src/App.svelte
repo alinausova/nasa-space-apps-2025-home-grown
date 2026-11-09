@@ -2,62 +2,39 @@
     import { onMount } from "svelte";
     import MapLayer from "./lib/MapLayer.svelte";
     import LearnMore from "./lib/LearnMore.svelte";
-    import { checkHealth } from "./lib/api";
-
-    let currentPath = $state(window.location.pathname);
+    import AppPage from "./lib/screens/AppPage.svelte";
+    import { router } from "./lib/router/router.svelte";
+    import { wakeServer } from "./lib/api/recommendations";
+    import { journey } from "./lib/state/journey.svelte";
+    import { mapController } from "./lib/map/controller.svelte";
 
     onMount(() => {
-        // Wake up the backend server (Render free tier)
-        checkHealth().catch(() => {
-            // Silently ignore errors - we just want to wake up the server
-        });
+        wakeServer();
+        const stop = router.start();
 
-        // Handle GitHub Pages 404 redirect
-        const query = window.location.search;
-        if (query.startsWith('?/')) {
-            const path = query.slice(2).replace(/~and~/g, '&');
-            const fullPath = '/nasa-space-apps-2025-home-grown/' + path;
-            window.history.replaceState({}, '', fullPath);
-            currentPath = fullPath;
+        if (import.meta.env.DEV) {
+            // Test hook for e2e (drawing a polygon without mouse gestures).
+            (window as unknown as { __hg: unknown }).__hg = { journey, map: mapController, router };
         }
 
-        const handleNavigation = () => {
-            currentPath = window.location.pathname;
-        };
-
-        window.addEventListener("popstate", handleNavigation);
-
-        // Intercept link clicks
-        document.addEventListener("click", (e) => {
-            const target = e.target as HTMLElement;
-            const link = target.closest("a");
-
-            if (link && link.href && link.target !== "_blank") {
-                const url = new URL(link.href);
-                if (url.origin === window.location.origin && url.pathname.startsWith("/nasa-space-apps-2025-home-grown")) {
-                    e.preventDefault();
-                    window.history.pushState({}, "", url.pathname);
-                    currentPath = url.pathname;
-                }
-            }
-        });
-
-        return () => {
-            window.removeEventListener("popstate", handleNavigation);
-        };
+        return stop;
     });
 
     $effect(() => {
-        currentPath = window.location.pathname;
+        if (router.route.name === "not-found") router.navigate({ name: "landing" }, { replace: true });
     });
 </script>
 
-{#if import.meta.env.DEV && currentPath === "/nasa-space-apps-2025-home-grown/dev/ui"}
+{#if router.route.name === "dev-ui" && import.meta.env.DEV}
     {#await import("./lib/dev/UiGallery.svelte") then gallery}
         <gallery.default />
     {/await}
-{:else if currentPath === "/nasa-space-apps-2025-home-grown/learn-more"}
+{:else if router.route.name === "app" || router.route.name === "crop"}
+    <AppPage />
+{:else if router.route.name === "learn" || router.route.name === "legacy-learn"}
+    <!-- TODO(redesign PR 8): new Learn more pages. -->
     <LearnMore />
 {:else}
+    <!-- TODO(redesign PR 7): new landing. Until then the old map app stays on the landing route. -->
     <MapLayer />
 {/if}
