@@ -45,10 +45,16 @@ def stubs(monkeypatch):
         calls["summary"] += 1
         return "Cool summers suit leafy greens."
 
+    def fake_tips(facts):
+        calls["tips"] = calls.get("tips", 0) + 1
+        calls["tips_facts"] = facts
+        return f"Sow {facts['crop']['name'].lower()} early."
+
     # fetch_all_climate_data lives in climate.py and looks the fetcher up there.
     monkeypatch.setattr(climate, "fetch_nasa_power_data", fake_nasa)
     monkeypatch.setattr(main, "fetch_landsat", fake_landsat)
     monkeypatch.setattr(main, "generate_crop_summary", fake_summary)
+    monkeypatch.setattr(main, "generate_crop_tips", fake_tips)
     monkeypatch.setattr(main, "plot_cache", main.PlotCache())
     main.limiter.reset()
     return calls

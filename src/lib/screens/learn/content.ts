@@ -164,7 +164,7 @@ export const PIPELINE = [
 
 export const STACK = [
   { title: 'Front end', body: 'Svelte 5, TypeScript, Mapbox GL JS, Turf.js' },
-  { title: 'Back end', body: 'FastAPI in Python, crop database, Mistral AI summaries' },
+  { title: 'Back end', body: 'FastAPI in Python, crop database, Mistral AI summaries and crop tips' },
   { title: 'Data', body: 'NASA POWER, Microsoft Planetary Computer (Landsat)' },
   { title: 'Hosting', body: 'GitHub Pages and Render' },
 ];

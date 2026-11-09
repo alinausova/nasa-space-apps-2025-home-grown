@@ -59,11 +59,12 @@ export interface MockOptions {
   climate?: CallMock;
   crops?: CallMock;
   summary?: CallMock;
+  tips?: CallMock;
 }
 
-/** Mocks the back end's three analysis calls from the fixtures. Returns call counters. */
-export async function mockApi(page: Page, name: Fixture = 'munich', options: MockOptions = {}): Promise<Record<Part, number>> {
-  const counter: Record<Part, number> = { climate: 0, crops: 0, summary: 0 };
+/** Mocks the back end's analysis calls from the fixtures (tips are made up per crop). Returns call counters. */
+export async function mockApi(page: Page, name: Fixture = 'munich', options: MockOptions = {}): Promise<Record<Part | 'tips', number>> {
+  const counter: Record<Part | 'tips', number> = { climate: 0, crops: 0, summary: 0, tips: 0 };
   await page.route('**/api/health', (route) => route.fulfill({ json: { status: 'ok' } }));
   await page.route('**/search/geocode/v6/reverse**', (route) =>
     route.fulfill({
@@ -80,6 +81,16 @@ export async function mockApi(page: Page, name: Fixture = 'munich', options: Moc
       await route.fulfill({ status: mock.status ?? 200, json: mock.body ?? v2(name, part) });
     });
   }
+  await page.route('**/analysis/tips', async (route) => {
+    counter.tips += 1;
+    const { plot_id, crop_id } = route.request().postDataJSON();
+    const mock = options.tips ?? {};
+    if (mock.delayMs) await new Promise((r) => setTimeout(r, mock.delayMs));
+    await route.fulfill({
+      status: mock.status ?? 200,
+      json: mock.body ?? { plot_id, crop_id, tips: `Sow ${crop_id} in spring. Keep <b>it</b> watered in July.` },
+    });
+  });
   return counter;
 }
 

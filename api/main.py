@@ -16,8 +16,9 @@ from crop_database import CROP_DATABASE
 from geometry import calculate_polygon_area_m2, calculate_polygon_centroid
 from landsat import LandsatResult, fetch_landsat, surface_heat
 from analysis import PlotCache, climate_block, crops_block, legacy_summary_input, plot_id
-from models import CropsRequest, PlotRef, PolygonInput
+from models import CropsRequest, PlotRef, PolygonInput, TipsRequest
 from summary_gen import generate_crop_summary
+from tips_gen import generate_crop_tips, tips_input
 
 load_dotenv()
 logging.basicConfig(level=os.getenv("LOG_LEVEL", "INFO"), format="%(levelname)s %(name)s: %(message)s")
@@ -34,6 +35,7 @@ def client_ip(request: Request) -> str:
 
 RECOMMENDATION_RATE_LIMIT = os.getenv("RECOMMENDATION_RATE_LIMIT", "20/minute")
 SUMMARY_RATE_LIMIT = os.getenv("SUMMARY_RATE_LIMIT", "10/minute")
+TIPS_RATE_LIMIT = os.getenv("TIPS_RATE_LIMIT", "10/minute")
 MAX_AREA_M2 = 1_000_000  # 1 km²
 plot_cache = PlotCache()
 limiter = Limiter(key_func=client_ip)
@@ -187,6 +189,28 @@ async def analysis_summary(request: Request, body: PlotRef):
             logger.warning(f"Summary failed: {e}")
             return {"plot_id": body.plot_id, "summary": None, "error": "The summary is not available right now."}
     return {"plot_id": body.plot_id, "summary": entry["summary"]}
+
+
+@app.post("/analysis/tips")
+@limiter.limit(TIPS_RATE_LIMIT)
+async def analysis_tips(request: Request, body: TipsRequest):
+    """Three or four plain sentences of tips for one crop on this plot, by Mistral AI. Cached per plot and crop."""
+    entry = cached_plot(body.plot_id)
+    crop_data = CROP_DATABASE.get(body.crop_id)
+    if crop_data is None:
+        raise HTTPException(status_code=404, detail="Unknown crop.")
+    if "crops" not in entry:
+        raise HTTPException(status_code=409, detail="Score the crops first (POST /analysis/crops).")
+    tips = entry.setdefault("tips", {})
+    if body.crop_id not in tips:
+        crop_entry = next(c for c in entry["crops"]["crops"] if c["crop_id"] == body.crop_id)
+        facts = tips_input(body.crop_id, crop_data, crop_entry, entry["climate"], entry["location"])
+        try:
+            tips[body.crop_id] = await asyncio.to_thread(generate_crop_tips, facts)
+        except Exception as e:  # noqa: BLE001 - tips are optional
+            logger.warning(f"Tips failed for {body.crop_id}: {e}")
+            return {"plot_id": body.plot_id, "crop_id": body.crop_id, "tips": None, "error": "Tips are not available right now."}
+    return {"plot_id": body.plot_id, "crop_id": body.crop_id, "tips": tips[body.crop_id]}
 
 
 if __name__ == "__main__":
