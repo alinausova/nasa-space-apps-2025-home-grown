@@ -6,7 +6,8 @@
     import PlantingPlanCard from "./PlantingPlanCard.svelte";
     import StepLabel from "../../ui/StepLabel.svelte";
     import type { RecommendationsResponse } from "../../api/types";
-    import type { CropFilter, Plot } from "../../state/journey.svelte";
+    import type { CropFilter, Plot, SummaryState } from "../../state/journey.svelte";
+    import LeafLabel from "../../ui/LeafLabel.svelte";
     import { formatArea } from "../../derive/area";
     import { formatLatLng } from "../../derive/geo";
     import { planFor } from "../../derive/plan";
@@ -15,12 +16,14 @@
         results,
         plot,
         filter = $bindable(),
+        summaryStatus = "done",
         onNewPlot,
         onCompare,
     }: {
         results: RecommendationsResponse;
         plot: Plot;
         filter: CropFilter;
+        summaryStatus?: SummaryState["status"];
         onNewPlot: () => void;
         onCompare: () => void;
     } = $props();
@@ -46,7 +49,14 @@
 
         <ClimateCard {results} />
 
-        {#if results.llm_summary && !results.llm_err}
+        {#if summaryStatus === "loading"}
+            <section class="flex flex-col gap-2" role="status" aria-live="polite" data-testid="summary-loading">
+                <LeafLabel />
+                <p class="m-0 text-[15px] text-ink-muted">Writing your summary…</p>
+                <span class="block h-3 w-11/12 animate-pulse rounded bg-ink/8 motion-reduce:animate-none" aria-hidden="true"></span>
+                <span class="block h-3 w-3/4 animate-pulse rounded bg-ink/8 motion-reduce:animate-none" aria-hidden="true"></span>
+            </section>
+        {:else if results.llm_summary && !results.llm_err}
             <AiSummary text={results.llm_summary} />
         {/if}
 

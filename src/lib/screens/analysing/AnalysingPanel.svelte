@@ -3,7 +3,9 @@
     import Notice from "../../ui/Notice.svelte";
     import GrowingRowLoader from "./GrowingRowLoader.svelte";
     import StepList from "./StepList.svelte";
-    import { ANALYSIS_STEPS, SLOW_AFTER_MS, failedStep, type Timeline } from "../../derive/progress";
+    import { ANALYSIS_STEPS, SLOW_AFTER_MS, type Timeline } from "../../derive/progress";
+    import type { ClimateResponse } from "../../api/analysis";
+    import EarlyClimateCard from "./EarlyClimateCard.svelte";
     import { formatArea } from "../../derive/area";
     import { formatLatLng, ringCenter } from "../../derive/geo";
     import type { Plot, RequestState } from "../../state/journey.svelte";
@@ -12,15 +14,24 @@
         plot,
         request,
         progress,
+        failedAt,
         elapsedMs,
-    }: { plot: Plot | null; request: RequestState; progress: Timeline; elapsedMs: number } = $props();
+        climate,
+    }: {
+        plot: Plot | null;
+        request: RequestState;
+        progress: Timeline;
+        failedAt: number | null;
+        elapsedMs: number;
+        climate: ClimateResponse | null;
+    } = $props();
 
     let failed = $derived(request.status === "error");
     let errorText = $derived(
         request.status === "error" ? (/[.!?]$/.test(request.message.trim()) ? request.message.trim() : `${request.message.trim()}.`) : "",
     );
     /** Step shown as current: the running one, or the one that failed. */
-    let shown = $derived(failed ? failedStep(progress.current) : progress.current);
+    let shown = $derived(failedAt ?? progress.current);
     let steps = $derived(
         ANALYSIS_STEPS.map((step, i) => {
             if (i !== 0 || !plot) return step;
@@ -51,7 +62,10 @@
         <span class="flex items-baseline justify-between gap-3 text-[13px]">
             <span class="hidden md:inline">Step {shown + 1} of {ANALYSIS_STEPS.length}</span>
             <span class="font-semibold md:hidden">{ANALYSIS_STEPS[shown].short}</span>
-            <span class="font-mono md:hidden">{shown + 1} of {ANALYSIS_STEPS.length}</span>
+            <span class="font-mono">
+                <span class="md:hidden">{shown + 1} of {ANALYSIS_STEPS.length}{#if !failed && progress.secondsLeft !== null}&nbsp;·&nbsp;~{progress.secondsLeft} s{/if}</span>
+                {#if !failed && progress.secondsLeft !== null}<span class="hidden md:inline">about {progress.secondsLeft} s left</span>{/if}
+            </span>
         </span>
         <span class="block h-1.5 rounded-[3px] bg-ink/12" aria-hidden="true">
             <span
@@ -69,6 +83,11 @@
             </span>
         {/if}
     </div>
+
+    {#if climate}
+        <!-- Mobile: the early climate card sits in the sheet (desktop shows it on the map). -->
+        <div class="md:hidden"><EarlyClimateCard {climate} inline /></div>
+    {/if}
 
     <div class="hidden md:block">
         <StepList steps={steps} states={progress.states} failedAt={failed ? shown : null} />

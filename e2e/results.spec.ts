@@ -1,5 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
-import { PLOTS, drawPlot, fixture, mockApi, waitForMap, type Fixture } from './helpers';
+import { PLOTS, drawPlot, mockApi, usable, v2, waitForMap, type Fixture } from './helpers';
 
 async function openResults(page: Page, name: Fixture): Promise<void> {
   await mockApi(page, name);
@@ -13,7 +13,8 @@ async function openResults(page: Page, name: Fixture): Promise<void> {
 test.describe('results', () => {
   test('Munich: header, plan, climate, summary, ranked crops', async ({ page, isMobile }, info) => {
     await openResults(page, 'munich');
-    const data = fixture('munich') as any;
+    const crops = usable('munich');
+    const top4 = crops.slice(0, 4).map((c) => c.crop_name.toLowerCase());
 
     await expect(page.getByRole('heading', { level: 1, name: 'Maxvorstadt, Munich' })).toBeVisible();
     await expect(page.getByText(/13,695 m² · 48\.147 N · 11\.565 E/)).toBeVisible();
@@ -21,9 +22,10 @@ test.describe('results', () => {
     // Planting plan: desktop drawing (labelled), mobile summary.
     if (isMobile) {
       await expect(page.getByText(/Four beds fill your plot/)).toBeVisible();
-      await expect(page.getByText('31 crops fit in total.', { exact: false })).toBeVisible();
+      await expect(page.getByText(`${crops.length} crops fit in total.`, { exact: false })).toBeVisible();
     } else {
-      await expect(page.getByRole('img', { name: /Example planting plan for your plot: four beds of lettuce, spinach, arugula and peas/ })).toBeVisible();
+      const names = `${top4.slice(0, 3).join(', ')} and ${top4[3]}`;
+      await expect(page.getByRole('img', { name: `Example planting plan for your plot: four beds of ${names}, with paths between them.` })).toBeVisible();
     }
 
     // Climate card with real figures and a text alternative for the chart.
@@ -36,9 +38,9 @@ test.describe('results', () => {
 
     // Ranked list: every usable crop, in score order.
     const rows = page.getByTestId('crop-row');
-    await expect(rows).toHaveCount(data.recommendations.length);
-    await expect(rows.first()).toContainText('Lettuce');
-    await expect(rows.first()).toContainText('83');
+    await expect(rows).toHaveCount(crops.length);
+    await expect(rows.first()).toContainText(crops[0].crop_name);
+    await expect(rows.first()).toContainText(String(Math.round(crops[0].suitability.overall_score)));
     await page.screenshot({ path: `e2e/.output/shots/${info.project.name}-results.png` });
     await page.getByRole('img', { name: /Monthly climate/ }).scrollIntoViewIfNeeded();
     await page.screenshot({ path: `e2e/.output/shots/${info.project.name}-results-chart.png` });
@@ -48,22 +50,22 @@ test.describe('results', () => {
 
   test('filters narrow the list', async ({ page }) => {
     await openResults(page, 'munich');
-    const data = fixture('munich') as any;
-    const cool = data.recommendations.filter((r: any) => r.season === 'cool').length;
+    const all = usable('munich');
+    const cool = all.filter((r) => r.season === 'cool').length;
     const rows = page.getByTestId('crop-row');
 
     await page.getByRole('button', { name: 'Cool season' }).click();
     await expect(rows).toHaveCount(cool);
     await page.getByRole('button', { name: 'Warm season' }).click();
-    await expect(rows).toHaveCount(data.recommendations.length - cool);
+    await expect(rows).toHaveCount(all.length - cool);
     await page.getByRole('button', { name: /^All \d+$/ }).click();
-    await expect(rows).toHaveCount(data.recommendations.length);
+    await expect(rows).toHaveCount(all.length);
   });
 
   test('Cairo: water pills on crops that need irrigation, filter hides them', async ({ page }, info) => {
     await openResults(page, 'cairo');
-    const data = fixture('cairo') as any;
-    const first = data.recommendations[0];
+    const all = usable('cairo');
+    const first = all[0];
 
     const row = page.getByTestId('crop-row').first();
     await expect(row).toContainText(first.crop_name);
@@ -72,7 +74,7 @@ test.describe('results', () => {
     await page.screenshot({ path: `e2e/.output/shots/${info.project.name}-results-cairo.png` });
 
     await page.getByRole('button', { name: 'No irrigation' }).click();
-    const dry = data.recommendations.filter((r: any) => r.suitability.metrics.irrigation_needed_mm === 0).length;
+    const dry = all.filter((r) => r.suitability.metrics.irrigation_needed_mm === 0).length;
     await expect(page.getByTestId('crop-row')).toHaveCount(dry);
     if (dry === 0) await expect(page.getByText('No crop here matches this filter.')).toBeVisible();
   });
@@ -89,7 +91,8 @@ test.describe('results', () => {
     await openResults(page, 'svalbard');
     await expect(page.getByTestId('nothing-grows')).toBeVisible();
     await expect(page.getByRole('heading', { name: 'Too cold for anything to grow outdoors' })).toBeVisible();
-    await expect(page.getByText('5.6°C')).toBeVisible();
+    const warmest = v2('svalbard', 'climate').climate.warmest_month.temp_avg;
+    await expect(page.getByText(`${warmest.toFixed(1)}°C`)).toBeVisible();
     await expect(page.getByText(/Greenhouses change the picture completely/)).toBeVisible();
     await page.screenshot({ path: `e2e/.output/shots/${info.project.name}-nothing-grows.png` });
 
@@ -97,21 +100,20 @@ test.describe('results', () => {
     await expect(page.getByRole('heading', { name: 'Where do you want to grow?' })).toBeVisible();
   });
 
-  test('LLM failure hides the summary instead of showing the fallback joke', async ({ page }) => {
-    const body = { ...(fixture('munich') as any), llm_summary: 'The LLM in charge ... was asleep.', llm_err: '401' };
-    await mockApi(page, 'munich', { body });
+  test('LLM failure hides the summary', async ({ page }) => {
+    await mockApi(page, 'munich', { summary: { body: { plot_id: 'x', summary: null, error: 'The summary is not available right now.' } } });
     await page.goto('app');
     await waitForMap(page);
     await drawPlot(page, PLOTS.munich);
     await page.getByRole('button', { name: /Analyse this plot/ }).click();
 
     await expect(page.getByTestId('crop-row').first()).toBeVisible();
-    await expect(page.getByText(/was asleep/)).toHaveCount(0);
+    await expect(page.getByTestId('summary-loading')).toHaveCount(0);
+    await expect(page.getByLabel('Summary by Mistral AI')).toHaveCount(0);
   });
 
   test('summary text is never rendered as HTML', async ({ page }) => {
-    const body = { ...(fixture('munich') as any), llm_summary: 'Try **kale** <img src=x onerror="window.__xss=1">' };
-    await mockApi(page, 'munich', { body });
+    await mockApi(page, 'munich', { summary: { body: { plot_id: 'x', summary: 'Try **kale** <img src=x onerror="window.__xss=1">' } } });
     await page.goto('app');
     await waitForMap(page);
     await drawPlot(page, PLOTS.munich);
