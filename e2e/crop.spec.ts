@@ -191,7 +191,7 @@ test.describe('new crops', () => {
     await page.evaluate(() => (window as any).__hg.router.navigate({ name: 'crop', id: 'cassava' }));
     const section = page.getByTestId('grow-calendar');
     await expect(section.getByText('Plant', { exact: true })).toBeVisible();
-    await expect(section.getByText(/Planted from stem cuttings/)).toBeVisible();
+    await expect(section.getByText(/Planted from cuttings or corms/)).toBeVisible();
     await section.scrollIntoViewIfNeeded();
     await page.screenshot({ path: `e2e/.output/shots/${info.project.name}-cassava.png` });
   });

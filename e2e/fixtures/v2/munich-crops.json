@@ -561,6 +561,83 @@
    }
   },
   {
+   "crop_id": "turnip",
+   "crop_name": "Turnip",
+   "season": "cool",
+   "frost_tolerance": "half_hardy",
+   "drought_resistance": "tolerant",
+   "usable": true,
+   "calendar": {
+    "mode": "sow",
+    "sow": [
+     4,
+     5,
+     6,
+     7,
+     8,
+     9
+    ],
+    "grow": [
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11
+    ],
+    "harvest": [
+     6,
+     7,
+     8,
+     9,
+     10,
+     11
+    ]
+   },
+   "suitability": {
+    "overall_score": 94.3,
+    "category": "Excellent",
+    "scores": {
+     "gdd": 100,
+     "sunlight": 92.0,
+     "temperature": 100.0,
+     "water": 75.3
+    },
+    "metrics": {
+     "total_gdd": 2541.5,
+     "required_gdd": 380,
+     "estimated_sun_hours": 10.51,
+     "adjusted_sun_hours": 7.36,
+     "sunshine_factor": 0.7,
+     "growing_days": 268,
+     "min_sun_hours": 6,
+     "optimal_sun_hours": 8,
+     "annual_precipitation_mm": 992.6,
+     "season_precipitation_mm": 844.8,
+     "season_mean_temp": 13.0,
+     "heat_capped": false,
+     "required_water_mm": 350,
+     "irrigation_needed_mm": 0,
+     "optimal_temp_min": 10,
+     "optimal_temp_max": 17,
+     "base_temp": 4
+    },
+    "yield_estimate": {
+     "yield_per_m2_kg": 5.34,
+     "total_yield_kg": 51219.06,
+     "total_yield_tons": 51.219,
+     "yield_category": "Upper (Optimal conditions)",
+     "yield_range": {
+      "lower_kg_m2": 1.781,
+      "average_kg_m2": 3.562,
+      "upper_kg_m2": 5.343
+     }
+    }
+   }
+  },
+  {
    "crop_id": "radishes",
    "crop_name": "Radishes",
    "season": "cool",
@@ -1896,6 +1973,77 @@
    }
   },
   {
+   "crop_id": "cowpea",
+   "crop_name": "Cowpea",
+   "season": "warm",
+   "frost_tolerance": "tender",
+   "drought_resistance": "moderate",
+   "usable": true,
+   "calendar": {
+    "mode": "plant_out",
+    "sow": [
+     4,
+     5,
+     6,
+     7
+    ],
+    "grow": [
+     4,
+     5,
+     6,
+     7,
+     8,
+     9
+    ],
+    "harvest": [
+     7,
+     8,
+     9,
+     10
+    ]
+   },
+   "suitability": {
+    "overall_score": 87.7,
+    "category": "Excellent",
+    "scores": {
+     "gdd": 100,
+     "sunlight": 100,
+     "temperature": 53.0,
+     "water": 96.1
+    },
+    "metrics": {
+     "total_gdd": 1247.0,
+     "required_gdd": 1050,
+     "estimated_sun_hours": 12.09,
+     "adjusted_sun_hours": 8.46,
+     "sunshine_factor": 0.7,
+     "growing_days": 173,
+     "min_sun_hours": 6,
+     "optimal_sun_hours": 8,
+     "annual_precipitation_mm": 992.6,
+     "season_precipitation_mm": 599.3,
+     "season_mean_temp": 16.1,
+     "heat_capped": false,
+     "required_water_mm": 400,
+     "irrigation_needed_mm": 0,
+     "optimal_temp_min": 20,
+     "optimal_temp_max": 35,
+     "base_temp": 10
+    },
+    "yield_estimate": {
+     "yield_per_m2_kg": 0.09,
+     "total_yield_kg": 848.67,
+     "total_yield_tons": 0.849,
+     "yield_category": "Average to Upper",
+     "yield_range": {
+      "lower_kg_m2": 0.032,
+      "average_kg_m2": 0.064,
+      "upper_kg_m2": 0.096
+     }
+    }
+   }
+  },
+  {
    "crop_id": "eggplant",
    "crop_name": "Eggplant",
    "season": "warm",
@@ -2258,6 +2406,148 @@
    }
   },
   {
+   "crop_id": "chickpea",
+   "crop_name": "Chickpea",
+   "season": "cool",
+   "frost_tolerance": "half_hardy",
+   "drought_resistance": "tolerant",
+   "usable": true,
+   "calendar": {
+    "mode": "sow",
+    "sow": [
+     4,
+     5,
+     6
+    ],
+    "grow": [
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11
+    ],
+    "harvest": [
+     8,
+     9,
+     10,
+     11
+    ]
+   },
+   "suitability": {
+    "overall_score": 85.4,
+    "category": "Excellent",
+    "scores": {
+     "gdd": 100,
+     "sunlight": 93.6,
+     "temperature": 60.0,
+     "water": 79.9
+    },
+    "metrics": {
+     "total_gdd": 2289.2,
+     "required_gdd": 1530,
+     "estimated_sun_hours": 10.7,
+     "adjusted_sun_hours": 7.49,
+     "sunshine_factor": 0.7,
+     "growing_days": 257,
+     "min_sun_hours": 6,
+     "optimal_sun_hours": 8,
+     "annual_precipitation_mm": 992.6,
+     "season_precipitation_mm": 826.3,
+     "season_mean_temp": 13.4,
+     "heat_capped": false,
+     "required_water_mm": 425,
+     "irrigation_needed_mm": 0,
+     "optimal_temp_min": 15,
+     "optimal_temp_max": 29,
+     "base_temp": 5
+    },
+    "yield_estimate": {
+     "yield_per_m2_kg": 0.15,
+     "total_yield_kg": 1460.75,
+     "total_yield_tons": 1.461,
+     "yield_category": "Average to Upper",
+     "yield_range": {
+      "lower_kg_m2": 0.06,
+      "average_kg_m2": 0.12,
+      "upper_kg_m2": 0.18
+     }
+    }
+   }
+  },
+  {
+   "crop_id": "fava_bean",
+   "crop_name": "Fava bean",
+   "season": "cool",
+   "frost_tolerance": "hardy",
+   "drought_resistance": "tolerant",
+   "usable": true,
+   "calendar": {
+    "mode": "sow",
+    "sow": [
+     4,
+     5
+    ],
+    "grow": [
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11
+    ],
+    "harvest": [
+     9,
+     10,
+     11
+    ]
+   },
+   "suitability": {
+    "overall_score": 85.4,
+    "category": "Excellent",
+    "scores": {
+     "gdd": 100,
+     "sunlight": 93.6,
+     "temperature": 60.0,
+     "water": 79.9
+    },
+    "metrics": {
+     "total_gdd": 2286.1,
+     "required_gdd": 1800,
+     "estimated_sun_hours": 10.7,
+     "adjusted_sun_hours": 7.49,
+     "sunshine_factor": 0.7,
+     "growing_days": 257,
+     "min_sun_hours": 6,
+     "optimal_sun_hours": 8,
+     "annual_precipitation_mm": 992.6,
+     "season_precipitation_mm": 826.3,
+     "season_mean_temp": 13.4,
+     "heat_capped": false,
+     "required_water_mm": 425,
+     "irrigation_needed_mm": 0,
+     "optimal_temp_min": 18,
+     "optimal_temp_max": 28,
+     "base_temp": 5
+    },
+    "yield_estimate": {
+     "yield_per_m2_kg": 0.8,
+     "total_yield_kg": 7644.61,
+     "total_yield_tons": 7.645,
+     "yield_category": "Average to Upper",
+     "yield_range": {
+      "lower_kg_m2": 0.314,
+      "average_kg_m2": 0.628,
+      "upper_kg_m2": 0.942
+     }
+    }
+   }
+  },
+  {
    "crop_id": "pearl_millet",
    "crop_name": "Pearl millet",
    "season": "warm",
@@ -2472,6 +2762,80 @@
    }
   },
   {
+   "crop_id": "lentil",
+   "crop_name": "Lentil",
+   "season": "cool",
+   "frost_tolerance": "half_hardy",
+   "drought_resistance": "tolerant",
+   "usable": true,
+   "calendar": {
+    "mode": "sow",
+    "sow": [
+     4,
+     5,
+     6,
+     7
+    ],
+    "grow": [
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11
+    ],
+    "harvest": [
+     7,
+     8,
+     9,
+     10,
+     11
+    ]
+   },
+   "suitability": {
+    "overall_score": 83.3,
+    "category": "Excellent",
+    "scores": {
+     "gdd": 100,
+     "sunlight": 87.4,
+     "temperature": 60.0,
+     "water": 76.4
+    },
+    "metrics": {
+     "total_gdd": 3084.8,
+     "required_gdd": 1400,
+     "estimated_sun_hours": 9.99,
+     "adjusted_sun_hours": 6.99,
+     "sunshine_factor": 0.7,
+     "growing_days": 295,
+     "min_sun_hours": 6,
+     "optimal_sun_hours": 8,
+     "annual_precipitation_mm": 992.6,
+     "season_precipitation_mm": 896.1,
+     "season_mean_temp": 12.1,
+     "heat_capped": false,
+     "required_water_mm": 425,
+     "irrigation_needed_mm": 0,
+     "optimal_temp_min": 15,
+     "optimal_temp_max": 29,
+     "base_temp": 2
+    },
+    "yield_estimate": {
+     "yield_per_m2_kg": 0.14,
+     "total_yield_kg": 1372.67,
+     "total_yield_tons": 1.373,
+     "yield_category": "Average to Upper",
+     "yield_range": {
+      "lower_kg_m2": 0.061,
+      "average_kg_m2": 0.123,
+      "upper_kg_m2": 0.184
+     }
+    }
+   }
+  },
+  {
    "crop_id": "watermelon",
    "crop_name": "Watermelon",
    "season": "warm",
@@ -2611,6 +2975,79 @@
       "lower_kg_m2": 0.16,
       "average_kg_m2": 0.32,
       "upper_kg_m2": 0.48
+     }
+    }
+   }
+  },
+  {
+   "crop_id": "oats",
+   "crop_name": "Oats",
+   "season": "cool",
+   "frost_tolerance": "half_hardy",
+   "drought_resistance": "tolerant",
+   "usable": true,
+   "calendar": {
+    "mode": "sow",
+    "sow": [
+     4,
+     5,
+     6,
+     7
+    ],
+    "grow": [
+     4,
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11
+    ],
+    "harvest": [
+     8,
+     9,
+     10,
+     11
+    ]
+   },
+   "suitability": {
+    "overall_score": 82.2,
+    "category": "Excellent",
+    "scores": {
+     "gdd": 100,
+     "sunlight": 81.5,
+     "temperature": 60.0,
+     "water": 78.9
+    },
+    "metrics": {
+     "total_gdd": 3683.2,
+     "required_gdd": 1850,
+     "estimated_sun_hours": 9.31,
+     "adjusted_sun_hours": 6.52,
+     "sunshine_factor": 0.7,
+     "growing_days": 331,
+     "min_sun_hours": 6,
+     "optimal_sun_hours": 8,
+     "annual_precipitation_mm": 992.6,
+     "season_precipitation_mm": 972.4,
+     "season_mean_temp": 10.9,
+     "heat_capped": false,
+     "required_water_mm": 550,
+     "irrigation_needed_mm": 0,
+     "optimal_temp_min": 16,
+     "optimal_temp_max": 20,
+     "base_temp": 0
+    },
+    "yield_estimate": {
+     "yield_per_m2_kg": 0.29,
+     "total_yield_kg": 2800.4,
+     "total_yield_tons": 2.8,
+     "yield_category": "Average to Upper",
+     "yield_range": {
+      "lower_kg_m2": 0.132,
+      "average_kg_m2": 0.263,
+      "upper_kg_m2": 0.395
      }
     }
    }
@@ -2909,7 +3346,62 @@
     "approx_warm_days": null,
     "beyond_a_year": true
    }
+  },
+  {
+   "crop_id": "taro",
+   "crop_name": "Taro",
+   "season": "warm",
+   "frost_tolerance": "tender",
+   "drought_resistance": "sensitive",
+   "usable": false,
+   "calendar": null,
+   "suitability": {
+    "overall_score": 47.8,
+    "category": "Poor",
+    "scores": {
+     "gdd": 47.8,
+     "sunlight": 100,
+     "temperature": 60.0,
+     "water": 18.0
+    },
+    "metrics": {
+     "total_gdd": 1247.0,
+     "required_gdd": 2610,
+     "estimated_sun_hours": 12.09,
+     "adjusted_sun_hours": 8.46,
+     "sunshine_factor": 0.7,
+     "growing_days": 173,
+     "min_sun_hours": 6,
+     "optimal_sun_hours": 8,
+     "annual_precipitation_mm": 992.6,
+     "season_precipitation_mm": 599.3,
+     "season_mean_temp": 16.1,
+     "heat_capped": true,
+     "required_water_mm": 1800,
+     "irrigation_needed_mm": 1200.7,
+     "optimal_temp_min": 21,
+     "optimal_temp_max": 28,
+     "base_temp": 10
+    },
+    "yield_estimate": {
+     "yield_per_m2_kg": 0.18,
+     "total_yield_kg": 1712.95,
+     "total_yield_tons": 1.713,
+     "yield_category": "Minimal (Poor conditions)",
+     "yield_range": {
+      "lower_kg_m2": 0.374,
+      "average_kg_m2": 0.748,
+      "upper_kg_m2": 1.122
+     }
+    }
+   },
+   "miss_reason": {
+    "kind": "heat",
+    "short_heat_units": 1363,
+    "approx_warm_days": null,
+    "beyond_a_year": true
+   }
   }
  ],
- "total_usable": 34
+ "total_usable": 40
 }
