@@ -58,6 +58,14 @@ test.describe('learn more', () => {
     await expect(section).toContainText('Where it started: NASA International Space Apps Challenge');
   });
 
+  test('get in touch: contact the team via LinkedIn, report a bug on GitHub', async ({ page }) => {
+    await mockApi(page);
+    await page.goto('learn/about');
+    await expect(page.getByRole('link', { name: /Contact the team/ })).toHaveAttribute('href', 'https://www.linkedin.com/in/vishnu-sunil/');
+    await expect(page.getByRole('link', { name: /Report a bug/ })).toHaveAttribute('href', /github\.com\/alinausova\/nasa-space-apps-2025-home-grown\/issues$/);
+    await expect(page.getByRole('link', { name: /Press release/ })).toHaveCount(0);
+  });
+
   test('team photos load and LinkedIn links open in a new tab', async ({ page }) => {
     await mockApi(page);
     await page.goto('learn/about');
@@ -67,7 +75,15 @@ test.describe('learn more', () => {
       await photo.scrollIntoViewIfNeeded();
       await expect.poll(() => photo.evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0)).toBe(true);
     }
-    const links = page.getByRole('link', { name: /LinkedIn/ });
+    await expect(page.locator('section li img[loading="lazy"] ~ span.font-medium')).toHaveText([
+      'Vishnu Sunil Kumar',
+      'Alina Usova',
+      'Franz Josef Birkeneder',
+      'Guillaume Leclerc',
+      'Angela Rubilla',
+      'Katy Larkin',
+    ]);
+    const links = page.getByRole('link', { name: /^LinkedIn/ });
     await expect(links).toHaveCount(6);
     await expect(links.first()).toHaveAttribute('target', '_blank');
   });
