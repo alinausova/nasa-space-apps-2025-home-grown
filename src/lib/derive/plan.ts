@@ -13,7 +13,12 @@ export interface Bed {
   yieldKg: number;
   /** Polygon of the bed in plan coordinates. */
   shape: Point[];
+  /** Centre of the bed's bounding box, where its label line starts. */
+  center: Point;
 }
+
+/** Beds are cut across the plot's longer side, so thin plots get strips instead of slivers. */
+export type CutAxis = 'horizontal' | 'vertical';
 
 export interface Plan {
   outline: Point[];
@@ -22,6 +27,7 @@ export interface Plan {
   totalYieldKg: number;
   width: number;
   height: number;
+  axis: CutAxis;
 }
 
 /** Shoelace area (absolute) of a polygon. */
@@ -95,6 +101,31 @@ export function equalAreaCuts(points: Point[], n: number): number[] {
   return cuts;
 }
 
+const transpose = (points: Point[]): Point[] => points.map((p) => ({ x: p.y, y: p.x }));
+
+function boxCenter(points: Point[]): Point {
+  const xs = points.map((p) => p.x);
+  const ys = points.map((p) => p.y);
+  return { x: (Math.min(...xs) + Math.max(...xs)) / 2, y: (Math.min(...ys) + Math.max(...ys)) / 2 };
+}
+
+/**
+ * Label positions near their ideal y, at least `gap` apart and within [min, max].
+ * Keeps the input order (beds are listed in ranking order).
+ */
+export function spreadLabels(ideal: number[], gap: number, min: number, max: number): number[] {
+  if (ideal.length === 0) return [];
+  const order = ideal.map((y, i) => ({ y, i })).sort((a, b) => a.y - b.y);
+  const placed = order.map((o) => Math.max(min, o.y));
+  for (let k = 1; k < placed.length; k++) placed[k] = Math.max(placed[k], placed[k - 1] + gap);
+  const overflow = placed.at(-1)! - max;
+  if (overflow > 0) for (let k = 0; k < placed.length; k++) placed[k] -= overflow;
+  for (let k = 0; k < placed.length; k++) placed[k] = Math.max(placed[k], min + k * gap);
+  const out = new Array<number>(ideal.length);
+  order.forEach((o, k) => (out[o.i] = placed[k]));
+  return out;
+}
+
 /**
  * Example planting plan: the top usable crops (up to four) in beds of equal area, 70% of the plot planted.
  * TODO(redesign v2): the back end returns the plan.
@@ -109,16 +140,27 @@ export function planFor(
   if (chosen.length === 0 || ring.length < 4) return null;
 
   const outline = projectRing(ring, width, height);
-  const cuts = equalAreaCuts(outline, chosen.length);
+  const xs = outline.map((p) => p.x);
+  const ys = outline.map((p) => p.y);
+  const axis: CutAxis = Math.max(...xs) - Math.min(...xs) > Math.max(...ys) - Math.min(...ys) ? 'vertical' : 'horizontal';
+
+  // Vertical strips are horizontal bands of the transposed shape.
+  const working = axis === 'vertical' ? transpose(outline) : outline;
+  const cuts = equalAreaCuts(working, chosen.length);
   const plantedM2 = areaM2 * PLANTED_SHARE;
   const bedM2 = plantedM2 / chosen.length;
 
-  const beds = chosen.map((crop, i) => ({
-    crop,
-    areaM2: bedM2,
-    yieldKg: crop.suitability.yield_estimate.yield_per_m2_kg * bedM2,
-    shape: sliceBetween(outline, cuts[i], cuts[i + 1]),
-  }));
+  const beds = chosen.map((crop, i) => {
+    const slice = sliceBetween(working, cuts[i], cuts[i + 1]);
+    const shape = axis === 'vertical' ? transpose(slice) : slice;
+    return {
+      crop,
+      areaM2: bedM2,
+      yieldKg: crop.suitability.yield_estimate.yield_per_m2_kg * bedM2,
+      shape,
+      center: boxCenter(shape),
+    };
+  });
 
   return {
     outline,
@@ -127,5 +169,6 @@ export function planFor(
     totalYieldKg: beds.reduce((s, b) => s + b.yieldKg, 0),
     width,
     height,
+    axis,
   };
 }

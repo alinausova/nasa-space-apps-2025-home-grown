@@ -52,10 +52,10 @@ export const QUESTIONS = [
 export const TEAM = [
   { name: 'Vishnu Sunil Kumar', role: 'Climate science', photo: `${BASE}team/vishnu.jpg`, linkedin: 'https://www.linkedin.com/in/vishnu-sunil/' },
   { name: 'Alina Usova', role: 'Full-stack engineering', photo: `${BASE}team/alina.JPG`, linkedin: 'https://www.linkedin.com/in/alina-usova-21868a165/' },
-  { name: 'Katy Larkin', role: 'Communications', photo: `${BASE}team/katy.jpg`, linkedin: 'https://www.linkedin.com/in/katylarkin/' },
-  { name: 'Guillaume Leclerc', role: 'Geospatial engineering', photo: `${BASE}team/guillaume.jpg`, linkedin: 'https://www.linkedin.com/in/guillaume-leclerc1/' },
   { name: 'Franz Josef Birkeneder', role: 'Back-end engineering', photo: `${BASE}team/franz.jpg`, linkedin: 'https://www.linkedin.com/in/franz-birkeneder-19520ba9/' },
+  { name: 'Guillaume Leclerc', role: 'Geospatial engineering', photo: `${BASE}team/guillaume.jpg`, linkedin: 'https://www.linkedin.com/in/guillaume-leclerc1/' },
   { name: 'Angela Rubilla', role: 'Research and analysis', photo: `${BASE}team/angela.jpg`, linkedin: 'https://www.linkedin.com/in/angelarubilla/' },
+  { name: 'Katy Larkin', role: 'Communications', photo: `${BASE}team/katy.jpg`, linkedin: 'https://www.linkedin.com/in/katylarkin/' },
 ];
 
 export const RECOGNITION_FEATURED = {
@@ -72,10 +72,9 @@ export const RECOGNITION = [
   { year: '2025', title: 'Where it started: NASA International Space Apps Challenge', body: 'Built in a weekend for the 2025 hackathon' },
 ];
 
-// TODO: add "Email the team" once there is a team address.
 export const CONTACT = [
-  { title: 'Report a bug', body: 'or suggest a feature on GitHub', href: 'https://github.com/alinausova/nasa-space-apps-2025-home-grown/issues' },
-  { title: 'Press release', body: 'PDF for journalists', href: `${BASE}pressrelease.pdf` },
+  { title: 'Contact the team', body: 'Vishnu Sunil Kumar on LinkedIn', href: 'https://www.linkedin.com/in/vishnu-sunil/' },
+  { title: 'Report an issue', body: 'Bugs and feature requests on GitHub', href: 'https://github.com/alinausova/nasa-space-apps-2025-home-grown/issues' },
 ];
 
 // Scoring ---------------------------------------------------------------------

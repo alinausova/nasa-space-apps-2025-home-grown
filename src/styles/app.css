@@ -46,6 +46,20 @@
   --radius-panel: var(--hg-radius-panel);
 }
 
+/* Text selection: ink and paper swap places, so it is as readable as the page itself.
+   The dark landing and dark cards (.on-ink) use bright green, which stays visible on dark. */
+::selection {
+  background-color: var(--hg-ink);
+  color: var(--hg-paper);
+}
+
+.theme-night ::selection,
+.theme-night::selection,
+.on-ink ::selection {
+  background-color: var(--hg-bright);
+  color: var(--hg-on-bright);
+}
+
 /* Themes: one per area of the app. Components only use the semantic tokens. */
 .theme-night {
   --hg-paper: var(--hg-night);

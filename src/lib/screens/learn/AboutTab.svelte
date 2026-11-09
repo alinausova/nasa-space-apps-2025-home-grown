@@ -40,7 +40,7 @@
 
 <LearnSection id="recognition" label="03" title="Recognition" body="Where Home Grown has been shown, and what it won.">
     {#snippet aside()}
-        <div class="flex gap-4 rounded-card bg-ink p-5 text-paper">
+        <div class="on-ink flex gap-4 rounded-card bg-ink p-5 text-paper">
             <span class="flex size-11 shrink-0 items-center justify-center rounded-full bg-white/10">
                 <img src={laurel} alt="" width="26" height="26" />
             </span>
@@ -63,7 +63,7 @@
     {/snippet}
 </LearnSection>
 
-<LearnSection label="04" title="Get in touch" body="Planning a garden project, writing about urban food, or want to try Home Grown in your city?">
+<LearnSection label="04" title="Get in touch" body="For questions about Home Grown, collaborations or using it in your city, contact the team.">
     {#snippet aside()}
         <div class="grid gap-2.5 sm:grid-cols-2">
             {#each CONTACT as item (item.title)}

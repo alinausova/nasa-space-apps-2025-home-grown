@@ -18,8 +18,8 @@
             <Logo size="sm" />
             <Button href={router.href({ name: "app" })} size="sm" class="font-semibold">Open the map</Button>
         </header>
-        <nav class="mx-auto max-w-[1156px] overflow-x-auto border-y border-line px-5 md:px-10" aria-label="Learn more">
-            <ul class="m-0 flex list-none gap-6 p-0 whitespace-nowrap">
+        <nav class="overflow-x-auto border-y border-line" aria-label="Learn more">
+            <ul class="m-0 mx-auto flex max-w-[1156px] list-none gap-6 px-5 py-0 whitespace-nowrap md:px-10">
                 {#each TAB_ORDER as key (key)}
                     <li>
                         <a
@@ -36,7 +36,7 @@
         </nav>
     </div>
 
-    <main class="mx-auto max-w-[1156px] border-x border-line">
+    <main>
         <div class="relative overflow-hidden">
             <!-- Map sketch behind the hero, as in the design. -->
             <svg class="pointer-events-none absolute inset-0 h-full w-full" viewBox="0 0 1156 280" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
@@ -51,7 +51,7 @@
                 </g>
                 <path d="M780 92 L870 82 L875 160 L830 200 L785 194 Z" class="hidden md:block" fill="none" stroke="#2F3336" stroke-opacity="0.45" stroke-width="1.5" stroke-dasharray="6 5" />
             </svg>
-            <div class="relative flex flex-col gap-3 px-5 py-12 md:px-10 md:py-16">
+            <div class="relative mx-auto flex max-w-[1156px] flex-col gap-3 px-5 py-12 md:px-10 md:py-16">
                 <span class="font-mono text-xs tracking-[0.12em] text-ink-muted uppercase">Learn more / {info.n}</span>
                 <h1 class="m-0 max-w-[900px] text-[38px] leading-[1.05] font-normal tracking-[-0.025em] md:text-[56px]">{info.title}</h1>
                 <p class="m-0 max-w-[520px] text-base leading-relaxed text-ink-muted md:text-[17px]">{info.intro}</p>
@@ -60,15 +60,17 @@
 
         {@render children()}
 
-        <div class="flex flex-wrap items-center justify-between gap-4 border-t border-line px-5 py-8 md:px-10">
-            {#if next}
-                <a href={router.href({ name: "learn", tab: next })} class="text-xl text-ink no-underline hover:underline md:text-[22px]">
-                    Next: {TAB_INFO[next].label} <span aria-hidden="true">→</span>
-                </a>
-            {:else}
-                <span></span>
-            {/if}
-            <Button href={router.href({ name: "app" })}>Draw your plot</Button>
+        <div class="border-t border-line">
+            <div class="mx-auto flex max-w-[1156px] flex-wrap items-center justify-between gap-4 px-5 py-8 md:px-10">
+                {#if next}
+                    <a href={router.href({ name: "learn", tab: next })} class="text-xl text-ink no-underline hover:underline md:text-[22px]">
+                        Next: {TAB_INFO[next].label} <span aria-hidden="true">→</span>
+                    </a>
+                {:else}
+                    <span></span>
+                {/if}
+                <Button href={router.href({ name: "app" })}>Draw your plot</Button>
+            </div>
         </div>
     </main>
 </div>
