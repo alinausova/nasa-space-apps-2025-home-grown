@@ -29,6 +29,10 @@ test.describe('crop detail', () => {
     await expect(page.getByText('Survives freezing')).toBeVisible();
     await expect(page.getByText(tonnes(TOP.suitability.yield_estimate.total_yield_kg))).toBeVisible();
     await expect(page.getByRole('img', { name: /out of 100$/ })).toHaveCount(4);
+    // The crop's own icon in the header, and one per "Also good here" chip.
+    await expect(page.getByTestId('crop-icon')).toHaveAttribute('src', /.+/);
+    await expect(page.getByTestId('crop-icon')).toHaveJSProperty('complete', true);
+    expect(await page.getByTestId('crop-icon').evaluate((img: HTMLImageElement) => img.naturalWidth)).toBeGreaterThan(0);
 
     // v2 responses carry growing-season figures, so the reasons talk about the growing season.
     const m = TOP.suitability.metrics;

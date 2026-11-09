@@ -1,5 +1,4 @@
 <script lang="ts">
-    import Icon from "../../ui/Icon.svelte";
     import CropNav from "./CropNav.svelte";
     import GrowCalendar from "./GrowCalendar.svelte";
     import CropTips from "./CropTips.svelte";
@@ -13,6 +12,7 @@
     import { filterCrops } from "../../derive/crops";
     import { alsoGood, factorReasons } from "../../derive/why";
     import { router } from "../../router/router.svelte";
+    import { cropIcon } from "../../derive/cropIcons";
 
     let {
         crop,
@@ -49,8 +49,8 @@
     <div class="md:hidden"><CropNav {crop} {results} {filter} /></div>
 
     <header class="flex items-center gap-5 md:gap-7">
-        <span class="flex size-[84px] shrink-0 items-center justify-center rounded-full bg-bright text-on-bright md:size-[116px]" aria-hidden="true">
-            <Icon name="sprout" size={40} />
+        <span class="flex size-[68px] shrink-0 items-center justify-center rounded-full border border-ink/25 bg-[#F2FEF0] md:size-24" aria-hidden="true">
+            <img src={cropIcon(crop.crop_name)} alt="" class="size-[52px] md:size-[72px]" data-testid="crop-icon" />
         </span>
         <span class="flex min-w-0 flex-col gap-1">
             <span class="font-mono text-[13px] text-ink-muted">Rank {pad(rank)} of {all.length}</span>
@@ -104,8 +104,9 @@
                 {#each suggestions as other (other.crop_id)}
                     <a
                         href={router.href({ name: "crop", id: other.crop_id })}
-                        class="inline-flex min-h-12 items-center rounded-full border border-ink px-5 text-[17px] text-ink no-underline hover:bg-selected"
+                        class="inline-flex min-h-12 items-center gap-2 rounded-full border border-ink pr-5 pl-3 text-[17px] text-ink no-underline hover:bg-selected"
                     >
+                        <img src={cropIcon(other.crop_name)} alt="" width="26" height="26" class="size-[26px]" />
                         {other.crop_name} {Math.round(other.suitability.overall_score)}
                     </a>
                 {/each}
