@@ -1,8 +1,9 @@
-// v1: the back end answers in one request, so the five steps advance on elapsed time.
-// The last step is never shown as done before the answer arrives, and no time-left is promised.
-// TODO(redesign v2): drive the steps from the three-call API instead.
+// Analysing progress, driven by the three-call API: the climate call covers step 2 (NASA POWER),
+// the crops call covers steps 3 and 4 (Landsat, then scoring, which takes milliseconds on the server).
+// Results appear when the crops call returns; the summary (step 5) arrives after them.
 
 export type StepState = 'done' | 'now' | 'todo';
+export type Phase = 'climate' | 'crops';
 
 export interface AnalysisStep {
   title: string;
@@ -14,44 +15,56 @@ export interface AnalysisStep {
 export const ANALYSIS_STEPS: readonly AnalysisStep[] = [
   { title: 'Measured your plot', detail: '', short: 'Measuring your plot' },
   { title: 'Fetched NASA POWER climate', detail: 'A year of daily heat, sun and rain', short: 'Fetching NASA POWER climate' },
-  // TODO(redesign v2): "Landsat 8/9 · 30 m detail" once the back end reads band lwir11 (it reads "lwir", which only Landsat 4-7 have).
-  { title: 'Reading Landsat surface heat', detail: 'Satellite surface temperature, where scenes exist', short: 'Reading Landsat surface heat' },
+  { title: 'Reading Landsat 8/9', detail: 'Surface heat across the plot, 30 m detail', short: 'Reading Landsat surface temperature' },
   { title: 'Scoring every crop', detail: 'Heat, sun, temperature and water for each', short: 'Scoring every crop' },
-  { title: 'Writing your summary', detail: 'Mistral AI, arrives with your results', short: 'Writing your summary' },
+  { title: 'Writing your summary', detail: 'Mistral AI, arrives after your results', short: 'Writing your summary' },
 ];
 
-/** Elapsed time (ms) at which each step becomes the current one. Tuned to typical response times. */
-export const STEP_STARTS_MS = [0, 300, 2_500, 6_000, 9_000] as const;
+/** Typical duration of each call in ms, before any have been measured (Render free tier). */
+export const DEFAULT_ESTIMATES: Record<Phase, number> = { climate: 2_000, crops: 5_000 };
 
-/** After this long, mention that a sleeping server can be slow to wake. */
+/** After this long on one step, mention that a sleeping server can be slow to wake. */
 export const SLOW_AFTER_MS = 12_000;
 
 export interface Timeline {
   current: number;
   states: StepState[];
-  /** 0–1, for the progress bar. Stays below 1 until the answer arrives. */
+  /** 0–1, for the progress bar. Stays below 1 until the crops arrive. */
   fraction: number;
+  /** Whole seconds left, or null before anything has been measured. */
+  secondsLeft: number | null;
 }
 
-export function timeline(elapsedMs: number, finished = false): Timeline {
-  const n = STEP_STARTS_MS.length;
-  if (finished) return { current: n - 1, states: Array(n).fill('done'), fraction: 1 };
+const PHASE_STEPS: Record<Phase, { current: number; first: number; span: number }> = {
+  climate: { current: 1, first: 1, span: 1 },
+  crops: { current: 2, first: 2, span: 2 },
+};
 
-  let current = 0;
-  for (let i = 0; i < n; i++) if (elapsedMs >= STEP_STARTS_MS[i]) current = i;
+export function phaseTimeline(phase: Phase, stepElapsedMs: number, estimates: Record<Phase, number> = DEFAULT_ESTIMATES): Timeline {
+  const { current, first, span } = PHASE_STEPS[phase];
+  const n = ANALYSIS_STEPS.length;
+  const within = Math.min(1, Math.max(0, stepElapsedMs / Math.max(1, estimates[phase])));
 
-  const start = STEP_STARTS_MS[current];
-  const end = current < n - 1 ? STEP_STARTS_MS[current + 1] : start + 15_000;
-  const within = Math.min(1, Math.max(0, (elapsedMs - start) / (end - start)));
+  const remainingMs =
+    phase === 'climate'
+      ? Math.max(0, estimates.climate - stepElapsedMs) + estimates.crops
+      : Math.max(0, estimates.crops - stepElapsedMs);
 
   return {
     current,
-    states: STEP_STARTS_MS.map((_, i) => (i < current ? 'done' : i === current ? 'now' : 'todo')),
-    fraction: Math.min(0.95, (current + within) / n),
+    states: ANALYSIS_STEPS.map((_, i) => (i < current ? 'done' : i === current ? 'now' : 'todo')),
+    fraction: Math.min(0.95, (first + within * span) / n),
+    // Only promise a time once the first call has come back.
+    secondsLeft: phase === 'crops' ? Math.max(1, Math.ceil(remainingMs / 1000)) : null,
   };
 }
 
-/** Step to mark as failed. Measuring happens in the browser, so the earliest failure is fetching climate data. */
-export function failedStep(current: number): number {
-  return Math.max(1, current);
+/** Step to mark as failed: the climate call fails at step 2, the crops call at step 3. */
+export function failedStep(phase: Phase): number {
+  return PHASE_STEPS[phase].current;
+}
+
+/** Running average of measured durations, weighted towards recent calls. */
+export function updateEstimate(previous: number, measuredMs: number): number {
+  return Math.round(previous * 0.7 + measuredMs * 0.3);
 }

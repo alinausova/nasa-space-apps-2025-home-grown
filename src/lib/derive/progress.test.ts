@@ -1,48 +1,48 @@
 import { describe, expect, it } from 'vitest';
-import { ANALYSIS_STEPS, STEP_STARTS_MS, failedStep, timeline } from './progress';
+import { ANALYSIS_STEPS, DEFAULT_ESTIMATES, failedStep, phaseTimeline, updateEstimate } from './progress';
 
-describe('timeline', () => {
-  it('has one start per step', () => {
-    expect(STEP_STARTS_MS).toHaveLength(ANALYSIS_STEPS.length);
+describe('phaseTimeline', () => {
+  it('climate call: measuring done, NASA in progress, no time promised yet', () => {
+    const t = phaseTimeline('climate', 500);
+    expect(t.states).toEqual(['done', 'now', 'todo', 'todo', 'todo']);
+    expect(t.secondsLeft).toBeNull();
   });
 
-  it('starts on the first step', () => {
-    const t = timeline(0);
-    expect(t.current).toBe(0);
-    expect(t.states).toEqual(['now', 'todo', 'todo', 'todo', 'todo']);
+  it('crops call: NASA done, Landsat in progress, time left from the estimate', () => {
+    const t = phaseTimeline('crops', 2_000, { climate: 1_000, crops: 5_000 });
+    expect(t.states).toEqual(['done', 'done', 'now', 'todo', 'todo']);
+    expect(t.secondsLeft).toBe(3);
   });
 
-  it('advances with time', () => {
-    expect(timeline(3_000).states).toEqual(['done', 'done', 'now', 'todo', 'todo']);
+  it('never claims zero seconds while still waiting', () => {
+    expect(phaseTimeline('crops', 60_000).secondsLeft).toBe(1);
   });
 
-  it('never finishes the last step on its own', () => {
-    const t = timeline(120_000);
-    expect(t.current).toBe(4);
-    expect(t.states.at(-1)).toBe('now');
-    expect(t.fraction).toBeLessThan(1);
-    expect(t.fraction).toBeCloseTo(0.95);
-  });
-
-  it('progress only grows', () => {
+  it('progress grows through the phases and stays below 1', () => {
     let last = -1;
-    for (let ms = 0; ms <= 30_000; ms += 250) {
-      const { fraction } = timeline(ms);
+    for (const [phase, ms] of [['climate', 0], ['climate', 1_000], ['climate', 5_000], ['crops', 0], ['crops', 3_000], ['crops', 60_000]] as const) {
+      const { fraction } = phaseTimeline(phase, ms, DEFAULT_ESTIMATES);
       expect(fraction).toBeGreaterThanOrEqual(last);
+      expect(fraction).toBeLessThan(1);
       last = fraction;
     }
   });
 
-  it('is complete when finished', () => {
-    const t = timeline(1_000, true);
-    expect(t.states.every((s) => s === 'done')).toBe(true);
-    expect(t.fraction).toBe(1);
+  it('has one state per step', () => {
+    expect(phaseTimeline('crops', 0).states).toHaveLength(ANALYSIS_STEPS.length);
   });
 });
 
 describe('failedStep', () => {
-  it('never blames the measuring step', () => {
-    expect(failedStep(0)).toBe(1);
-    expect(failedStep(3)).toBe(3);
+  it('maps each call to the step it covers', () => {
+    expect(failedStep('climate')).toBe(1);
+    expect(failedStep('crops')).toBe(2);
+  });
+});
+
+describe('updateEstimate', () => {
+  it('moves towards measured durations', () => {
+    expect(updateEstimate(5_000, 3_000)).toBe(4_400);
+    expect(updateEstimate(5_000, 5_000)).toBe(5_000);
   });
 });

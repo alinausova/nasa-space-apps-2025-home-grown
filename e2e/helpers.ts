@@ -3,10 +3,17 @@ import { fileURLToPath } from 'node:url';
 import type { Page } from '@playwright/test';
 
 export type Fixture = 'munich' | 'cairo' | 'svalbard';
+export type Part = 'climate' | 'crops' | 'summary';
 
-export function fixture(name: Fixture): unknown {
-  const path = fileURLToPath(new URL(`./fixtures/${name}.json`, import.meta.url));
+/** Real v2 API responses saved in e2e/fixtures/v2/. */
+export function v2(name: Fixture, part: Part): any {
+  const path = fileURLToPath(new URL(`./fixtures/v2/${name}-${part}.json`, import.meta.url));
   return JSON.parse(readFileSync(path, 'utf8'));
+}
+
+/** Usable crops in ranking order, as the results list shows them. */
+export function usable(name: Fixture): any[] {
+  return v2(name, 'crops').crops.filter((c: any) => c.usable);
 }
 
 /** Corners of the plots the fixtures were fetched for, as [lng, lat]. */
@@ -40,15 +47,23 @@ export const TOO_LARGE: [number, number][] = [
   [11.5, 48.1135],
 ];
 
-export interface MockOptions {
+export interface CallMock {
   status?: number;
   body?: unknown;
   delayMs?: number;
 }
 
-/** Mocks the back end. Returns a counter of recommendation requests. */
-export async function mockApi(page: Page, name: Fixture = 'munich', options: MockOptions = {}): Promise<{ calls: number }> {
-  const counter = { calls: 0 };
+export interface MockOptions {
+  /** Shorthand for slowing the crops call (the long one). */
+  delayMs?: number;
+  climate?: CallMock;
+  crops?: CallMock;
+  summary?: CallMock;
+}
+
+/** Mocks the back end's three analysis calls from the fixtures. Returns call counters. */
+export async function mockApi(page: Page, name: Fixture = 'munich', options: MockOptions = {}): Promise<Record<Part, number>> {
+  const counter: Record<Part, number> = { climate: 0, crops: 0, summary: 0 };
   await page.route('**/api/health', (route) => route.fulfill({ json: { status: 'ok' } }));
   await page.route('**/search/geocode/v6/reverse**', (route) =>
     route.fulfill({
@@ -57,11 +72,14 @@ export async function mockApi(page: Page, name: Fixture = 'munich', options: Moc
       },
     }),
   );
-  await page.route('**/recommendations/polygon**', async (route) => {
-    counter.calls += 1;
-    if (options.delayMs) await new Promise((r) => setTimeout(r, options.delayMs));
-    await route.fulfill({ status: options.status ?? 200, json: options.body ?? fixture(name) });
-  });
+  for (const part of ['climate', 'crops', 'summary'] as const) {
+    const mock: CallMock = { ...(part === 'crops' && options.delayMs ? { delayMs: options.delayMs } : {}), ...options[part] };
+    await page.route(`**/analysis/${part}`, async (route) => {
+      counter[part] += 1;
+      if (mock.delayMs) await new Promise((r) => setTimeout(r, mock.delayMs));
+      await route.fulfill({ status: mock.status ?? 200, json: mock.body ?? v2(name, part) });
+    });
+  }
   return counter;
 }
 

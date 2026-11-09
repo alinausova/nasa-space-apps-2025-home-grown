@@ -1,8 +1,9 @@
 import { expect, test, type Page } from '@playwright/test';
-import { PLOTS, drawPlot, fixture, mockApi, waitForMap } from './helpers';
+import { PLOTS, drawPlot, mockApi, usable, waitForMap } from './helpers';
 
-const DATA = fixture('munich') as any;
-const RECS = DATA.recommendations as any[];
+const RECS = usable('munich');
+const TOP = RECS[0];
+const tonnes = (kg: number) => `${(kg / 1000).toLocaleString('en-US', { maximumFractionDigits: 1 })} t`;
 
 async function openResults(page: Page): Promise<void> {
   await mockApi(page, 'munich');
@@ -20,18 +21,19 @@ test.describe('crop detail', () => {
     await openResults(page);
     await page.getByTestId('crop-row').first().click();
 
-    await expect(page).toHaveURL(/\/app\/crop\/lettuce$/);
-    await expect(cropHeading(page)).toHaveText('Lettuce');
+    await expect(page).toHaveURL(new RegExp(`/app/crop/${TOP.crop_id}$`));
+    await expect(cropHeading(page)).toHaveText(TOP.crop_name);
     await expect(page.getByText(`Rank 01 of ${RECS.length}`)).toBeVisible();
-    await expect(page.getByText('Score 83 · Excellent fit')).toBeVisible();
+    await expect(page.getByText(`Score ${Math.round(TOP.suitability.overall_score)} · Excellent fit`)).toBeVisible();
     await expect(page.getByText('Cool season', { exact: true }).filter({ visible: true })).toBeVisible();
     await expect(page.getByText('Survives freezing')).toBeVisible();
-    await expect(page.getByText('28.3 t')).toBeVisible();
+    await expect(page.getByText(tonnes(TOP.suitability.yield_estimate.total_yield_kg))).toBeVisible();
     await expect(page.getByRole('img', { name: /out of 100$/ })).toHaveCount(4);
 
-    // Fixture predates the v1 back end, so the temperature reason uses the fallback wording.
-    await expect(page.getByText(/More than the 600 heat units it needs/).filter({ visible: true })).toBeVisible();
-    await expect(page.getByText(/Year average \d+°C/).filter({ visible: true })).toBeVisible();
+    // v2 responses carry growing-season figures, so the reasons talk about the growing season.
+    const m = TOP.suitability.metrics;
+    await expect(page.getByText(`More than the ${m.required_gdd} heat units it needs`).filter({ visible: true })).toBeVisible();
+    await expect(page.getByText(`Growing-season average inside the ideal ${m.optimal_temp_min}–${m.optimal_temp_max}°C`).filter({ visible: true })).toBeVisible();
 
     if (isMobile) await expect(page.getByRole('link', { name: 'All crops', exact: true })).toBeVisible();
     else await expect(page.getByRole('link', { name: `All ${RECS.length} crops` })).toBeVisible();
