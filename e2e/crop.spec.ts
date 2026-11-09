@@ -1,5 +1,5 @@
 import { expect, test, type Page } from '@playwright/test';
-import { PLOTS, drawPlot, mockApi, usable, waitForMap } from './helpers';
+import { PLOTS, drawPlot, mockApi, usable, v2, waitForMap } from './helpers';
 
 const RECS = usable('munich');
 const TOP = RECS[0];
@@ -115,11 +115,17 @@ test.describe('grow calendar', () => {
     await expect(section.getByText(/Start seeds indoors about six weeks earlier/)).toBeVisible();
   });
 
-  test('says so when no sowing date works', async ({ page }) => {
-    expect(crop('rice').calendar).toBeNull();
+  test('crops with no sowing window are left out of the list', async ({ page }) => {
+    const all = v2('munich', 'crops').crops;
+    const rice = all.find((c: any) => c.crop_id === 'rice');
+    expect(rice.calendar).toBeNull();
+    expect(rice.usable).toBe(false);
+    expect(rice.miss_reason).toEqual({ kind: 'no_window' });
     await openResults(page);
+    await expect(page.getByTestId('crop-row').filter({ hasText: /^Rice/ })).toHaveCount(0);
+    // A deep link to it falls back to the list.
     await open(page, 'rice');
-    await expect(page.getByTestId('grow-calendar')).toContainText('We could not find a sowing date that lets rice ripen');
+    await expect(page).toHaveURL(/\/app$/);
   });
 });
 
@@ -170,3 +176,23 @@ async function openResultsWithMock(page: Page): Promise<void> {
   await expect(page.getByTestId('crop-row').first()).toBeVisible();
 }
 
+
+test.describe('new crops', () => {
+  test('Cairo lists the tropical crops; cassava is planted from cuttings', async ({ page }, info) => {
+    await mockApi(page, 'cairo');
+    await page.goto('app');
+    await waitForMap(page);
+    await drawPlot(page, PLOTS.cairo);
+    await page.getByRole('button', { name: /Analyse this plot/ }).click();
+    await expect(page.getByTestId('crop-row').first()).toBeVisible();
+    for (const name of ['Okra', 'Groundnut', 'Pearl millet', 'Cassava']) {
+      await expect(page.getByTestId('crop-row').filter({ hasText: name })).toHaveCount(1);
+    }
+    await page.evaluate(() => (window as any).__hg.router.navigate({ name: 'crop', id: 'cassava' }));
+    const section = page.getByTestId('grow-calendar');
+    await expect(section.getByText('Plant', { exact: true })).toBeVisible();
+    await expect(section.getByText(/Planted from stem cuttings/)).toBeVisible();
+    await section.scrollIntoViewIfNeeded();
+    await page.screenshot({ path: `e2e/.output/shots/${info.project.name}-cassava.png` });
+  });
+});

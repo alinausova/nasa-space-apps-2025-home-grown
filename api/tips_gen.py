@@ -16,7 +16,7 @@ and one care point (watering, shade, harvesting).
 
 Rules: plain text only. No markdown, no bullet points, no headings, no bold, no emojis.
 No greeting and no sign-off. Use month names. Only use numbers that appear in the data.
-If the calendar says plant_out, tell them to start seeds indoors first."""
+If the calendar says plant_out, tell them to start seeds indoors first; if it says plant, the crop is grown from cuttings."""
 
 
 def _months(numbers: Optional[List[int]]) -> List[str]:

@@ -110,7 +110,7 @@
                         <td class="py-1.5 pr-2 font-mono">{Math.round(crop.suitability.overall_score)}</td>
                         <td class="py-1.5 pr-2 font-mono whitespace-nowrap">{Math.round(s.gdd)} · {Math.round(s.sunlight)} · {Math.round(s.temperature)} · {Math.round(s.water)}</td>
                         <td class="py-1.5 pr-2 whitespace-nowrap">{water > 0 ? formatMm(water) : "Rain covers it"}</td>
-                        <td class="py-1.5 pr-2">{crop.calendar ? `${crop.calendar.mode === "plant_out" ? "Plant out " : ""}${monthRanges(crop.calendar.sow)}` : "–"}</td>
+                        <td class="py-1.5 pr-2">{crop.calendar ? `${crop.calendar.mode === "plant_out" ? "Plant out " : crop.calendar.mode === "plant" ? "Plant " : ""}${monthRanges(crop.calendar.sow)}` : "–"}</td>
                         <td class="py-1.5">{crop.calendar ? monthRanges(crop.calendar.harvest) : "–"}</td>
                     </tr>
                 {/each}

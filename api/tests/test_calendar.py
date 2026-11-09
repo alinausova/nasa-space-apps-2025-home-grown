@@ -95,3 +95,16 @@ def test_too_hot_uses_the_daily_mean():
     assert crop_calendar(basil, days) is not None
     hotter = synthetic_year([33] * 12, spread=8)
     assert crop_calendar(basil, _daily(hotter)) is None
+
+
+def test_cassava_is_planted_from_cuttings():
+    cassava = calendars(nasa("cairo"), CROP_DATABASE)["cassava"]
+    assert cassava is not None and cassava["mode"] == "plant"
+    assert calendars(nasa("munich"), CROP_DATABASE)["cassava"] is None
+
+
+def test_new_crops_carry_sources_for_every_number():
+    for cid in ["okra", "cassava", "sorghum", "pearl_millet", "groundnut", "barley", "beetroot"]:
+        sources = CROP_DATABASE[cid]["sources"]
+        for key in ["temperature_thresholds", "heat_units", "optimal_temperature", "sunlight", "frost", "water", "germination", "yield"]:
+            assert sources.get(key), (cid, key)

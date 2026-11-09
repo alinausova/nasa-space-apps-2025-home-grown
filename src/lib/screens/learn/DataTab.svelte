@@ -44,7 +44,7 @@
 <LearnSection
     label="02"
     title="Crop data"
-    body="Each of the 31 crops carries about 17 numbers. This is where they come from and what they drive. Most temperature limits and heat units now come from field studies. Ideal temperatures, frost classes and some heat units are still team estimates; we will cite each one as it is replaced."
+    body="Each of the 38 crops carries about 17 numbers. This is where they come from and what they drive. Most temperature limits and heat units now come from field studies. Ideal temperatures, frost classes and some heat units are still team estimates; we will cite each one as it is replaced."
 >
     {#snippet aside()}
         {@render table(CROP_DATA, "Where the crop numbers come from", "How we use it")}

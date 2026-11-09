@@ -2,6 +2,8 @@ import type { CropCalendar } from '../api/types';
 
 const MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
+const FIRST_ROW: Record<CropCalendar['mode'], string> = { sow: 'Sow', plant_out: 'Plant out', plant: 'Plant' };
+
 export interface CalendarRow {
   key: 'sow' | 'grow' | 'harvest';
   label: string;
@@ -11,7 +13,7 @@ export interface CalendarRow {
 export function calendarRows(calendar: CropCalendar): CalendarRow[] {
   const mark = (months: number[]) => Array.from({ length: 12 }, (_, i) => months.includes(i + 1));
   return [
-    { key: 'sow', label: calendar.mode === 'plant_out' ? 'Plant out' : 'Sow', months: mark(calendar.sow) },
+    { key: 'sow', label: FIRST_ROW[calendar.mode], months: mark(calendar.sow) },
     { key: 'grow', label: 'Grows', months: mark(calendar.grow) },
     { key: 'harvest', label: 'Harvest', months: mark(calendar.harvest) },
   ];
@@ -35,6 +37,6 @@ export function monthRanges(months: number[]): string {
 
 /** One sentence for screen readers, e.g. "Sow March to May. Grows March to October. Harvest June to November." */
 export function calendarSentence(calendar: CropCalendar): string {
-  const first = calendar.mode === 'plant_out' ? 'Plant out' : 'Sow';
+  const first = FIRST_ROW[calendar.mode];
   return `${first} ${monthRanges(calendar.sow)}. Grows ${monthRanges(calendar.grow)}. Harvest ${monthRanges(calendar.harvest)}.`;
 }

@@ -32,7 +32,9 @@
             {/each}
         </div>
         <p class="m-0 text-[13px] leading-relaxed text-ink-muted">
-            {#if calendar.mode === "plant_out"}
+            {#if calendar.mode === "plant"}
+                Planted from stem cuttings. Worked out from this plot's weather in {year}.
+            {:else if calendar.mode === "plant_out"}
                 Start seeds indoors about six weeks earlier. Worked out from this plot's weather in {year}.
             {:else}
                 Sowing outdoors, worked out from this plot's weather in {year}.
