@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { i18n } from "../../i18n/locale.svelte";
     import { monthInitial, monthShort } from "../../i18n/format";
     const MONTH_INDEXES = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
     import type { MonthlyClimate } from "../../api/analysis";
@@ -24,7 +25,7 @@
         describeClimate(
             sorted.map((m) => ({ month: m.month, month_name: "", avg_temp_max: m.temp_max, avg_temp_min: m.temp_min, avg_temp: m.temp_avg })),
             season,
-        ) + (wettest ? ` Rain peaks at ${Math.round(wettest.precip_mm)} millimetres in ${monthShort(wettest.month - 1)}.` : ""),
+        ) + (wettest ? i18n.m.results.chart.rainPeak(Math.round(wettest.precip_mm), monthShort(wettest.month - 1)) : ""),
     );
     let ticks = $derived.by(() => {
         const out: number[] = [];
@@ -38,7 +39,7 @@
 
     // Bracket and label go over the longest run of the season.
     let labelRun = $derived(season ? [...season.runs].sort((a, b) => b[1] - b[0] - (a[1] - a[0]))[0] : null);
-    let labelText = $derived(season ? `Growing season · ${season.label}` : "");
+    let labelText = $derived(season ? i18n.m.results.chart.bandLabel(season.label) : "");
     let labelWidth = $derived(labelText.length * 5.6 + 20);
     let labelX = $derived.by(() => {
         if (!labelRun) return 0;
@@ -93,8 +94,8 @@
 </svg>
 
 <div class="flex flex-wrap gap-x-4 gap-y-1.5 text-[13px] text-ink-muted" aria-hidden="true">
-    <span class="flex items-center gap-1.5"><span class="block h-[3px] w-4 rounded-full bg-daily-high"></span>Daily high</span>
-    <span class="flex items-center gap-1.5"><span class="block h-[3px] w-4 rounded-full bg-daily-low"></span>Daily low</span>
-    <span class="flex items-center gap-1.5"><span class="block size-2.5 rounded-[3px] bg-rain"></span>Rainfall</span>
-    {#if season}<span class="flex items-center gap-1.5"><span class="block size-2.5 rounded-[3px] bg-season-band"></span>Growing season</span>{/if}
+    <span class="flex items-center gap-1.5"><span class="block h-[3px] w-4 rounded-full bg-daily-high"></span>{i18n.m.results.chart.high}</span>
+    <span class="flex items-center gap-1.5"><span class="block h-[3px] w-4 rounded-full bg-daily-low"></span>{i18n.m.results.chart.low}</span>
+    <span class="flex items-center gap-1.5"><span class="block size-2.5 rounded-[3px] bg-rain"></span>{i18n.m.results.chart.rain}</span>
+    {#if season}<span class="flex items-center gap-1.5"><span class="block size-2.5 rounded-[3px] bg-season-band"></span>{i18n.m.results.chart.season}</span>{/if}
 </div>

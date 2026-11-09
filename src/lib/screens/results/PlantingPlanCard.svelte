@@ -1,4 +1,6 @@
 <script lang="ts">
+    import { i18n } from "../../i18n/locale.svelte";
+    import { cropName } from "../../i18n/crops";
     import { spreadLabels, type Plan } from "../../derive/plan";
     import { bedCount, formatKg, listJoin } from "../../derive/format";
     import { formatNumber, lower } from "../../i18n/format";
@@ -21,9 +23,9 @@
     let numbered = $derived(plan.axis === "vertical");
     let elbowX = $derived(Math.max(...plan.outline.map((p) => p.x)) + OFFSET.x + 14);
 
-    let names = $derived(plan.beds.map((b) => b.crop.crop_name));
+    let names = $derived(plan.beds.map((b) => cropName(b.crop)));
     let ariaLabel = $derived(
-        `Example planting plan for your plot: ${lower(bedCount(plan.beds.length))} of ${listJoin(names.map((n) => lower(n)))}, with paths between them.`,
+        i18n.m.results.plan.aria(lower(bedCount(plan.beds.length)), listJoin(names.map((n) => lower(n)))),
     );
 </script>
 
@@ -67,14 +69,14 @@
                     />
                 {/if}
                 <text x={LABEL_X} y={ly - 3} font-size="15">
-                    {bed.crop.crop_name}
+                    {cropName(bed.crop)}
                     <tspan font-family="var(--hg-font-mono)" font-size="12">{Math.round(bed.crop.suitability.overall_score)}</tspan>
                 </text>
                 <text x={LABEL_X} y={ly + 14} font-family="var(--hg-font-mono)" font-size="11" fill="#256F2D">
                     {formatNumber(Math.round(bed.areaM2))} m² · {formatKg(bed.yieldKg, { approx: true })}
                 </text>
             {/each}
-            <text x={OFFSET.x + 18} y="296" font-size="11" fill="#256F2D">Example plan · 70% planted, the rest left for paths</text>
+            <text x={OFFSET.x + 18} y="296" font-size="11" fill="#256F2D">{i18n.m.results.plan.caption}</text>
         </g>
     </svg>
 </div>
@@ -93,8 +95,8 @@
     <p class="m-0 flex flex-col gap-1 text-[15px] leading-snug">
         <span class="font-semibold">{listJoin(names.map((n, i) => (i === 0 ? n : lower(n))))}</span>
         <span>
-            {bedCount(plan.beds.length)} fill your plot, about {formatKg(plan.totalYieldKg)} a season.
-            {totalUsable} {totalUsable === 1 ? "crop fits" : "crops fit"} in total.
+            {i18n.m.results.plan.fill(bedCount(plan.beds.length), formatKg(plan.totalYieldKg))}
+            {i18n.m.results.plan.total(totalUsable)}
         </span>
     </p>
 </div>

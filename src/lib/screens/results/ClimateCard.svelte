@@ -1,4 +1,6 @@
 <script lang="ts">
+    import { i18n } from "../../i18n/locale.svelte";
+    import { formatNumber } from "../../i18n/format";
     import Collapsible from "../../ui/Collapsible.svelte";
     import ClimateChart from "./ClimateChart.svelte";
     import type { ClimateResponse, LandsatBlock } from "../../api/analysis";
@@ -8,24 +10,26 @@
     let { climate, landsat }: { climate: ClimateResponse; landsat: LandsatBlock } = $props();
 
     let open = $state(true);
+    let t = $derived(i18n.m.results.climate);
+    const one = (n: number) => formatNumber(n, { minimumFractionDigits: 1, maximumFractionDigits: 1 });
 
     let c = $derived(climate.climate);
     let season = $derived(seasonFromServer(c.growing_season));
     let heat = $derived(landsat.status === "ok" ? landsat.surface_heat : null);
     let sources = $derived(["NASA POWER", heat ? "Landsat 8/9" : null, String(climate.year)].filter(Boolean).join(" · "));
     let collapsedSummary = $derived(
-        `${c.sun_hours_daily.toFixed(1)} h sun a day · ${formatMm(c.annual_precipitation_mm)} rain · ${season ? `grows ${season.label}` : "no growing season"}`,
+        t.collapsed(one(c.sun_hours_daily), formatMm(c.annual_precipitation_mm), season ? season.label : null),
     );
     let figures = $derived([
-        { label: "Sun in growing season", value: `${c.sun_hours_daily.toFixed(1)} h/day` },
-        { label: "Sunshine factor", value: `${Math.round(c.sunshine_factor * 100)}%` },
-        { label: "Rainfall", value: `${formatMm(c.annual_precipitation_mm)}/yr` },
-        { label: "Growing season", value: season ? `${season.label} · ${season.days} d` : "None" },
+        { label: t.sunInSeason, value: t.perDay(one(c.sun_hours_daily)) },
+        { label: t.sunshineFactor, value: `${Math.round(c.sunshine_factor * 100)}%` },
+        { label: t.rainfall, value: t.perYear(formatMm(c.annual_precipitation_mm)) },
+        { label: t.growingSeason, value: season ? t.seasonValue(season.label, season.days) : i18n.m.season.none },
     ]);
-    let offset = $derived(heat ? `${heat.offset_c >= 0 ? "+" : "−"}${Math.abs(heat.offset_c).toFixed(1)} °C` : "");
+    let offset = $derived(heat ? `${heat.offset_c >= 0 ? "+" : "−"}${one(Math.abs(heat.offset_c))} °C` : "");
 </script>
 
-<Collapsible title="Climate at this plot" subtitle={open ? sources : collapsedSummary} bind:open>
+<Collapsible title={t.title} subtitle={open ? sources : collapsedSummary} bind:open>
     <div class="flex flex-col gap-3.5">
         <dl class="m-0 grid grid-cols-2 overflow-hidden rounded-[14px] border border-line-strong">
             {#each figures as figure, i (figure.label)}
@@ -36,10 +40,10 @@
             {/each}
             {#if heat}
                 <div class="col-span-2 flex flex-col gap-1 px-3.5 py-3" data-testid="surface-heat">
-                    <dt class="text-xs text-ink-muted">Surface heat (Landsat, {heat.scenes} {heat.scenes === 1 ? "scene" : "scenes"})</dt>
+                    <dt class="text-xs text-ink-muted">{t.surfaceHeat(heat.scenes)}</dt>
                     <dd class="m-0 flex flex-wrap items-baseline gap-x-2">
                         <span class="font-mono text-[17px] tabular md:text-[19px]">{offset}</span>
-                        <span class="text-[13px] text-ink-muted">surface vs air on the same days ({heat.mean_surface_temp_c.toFixed(1)} vs {heat.mean_air_temp_max_c.toFixed(1)} °C)</span>
+                        <span class="text-[13px] text-ink-muted">{t.surfaceVsAir(one(heat.mean_surface_temp_c), one(heat.mean_air_temp_max_c))}</span>
                     </dd>
                 </div>
             {/if}

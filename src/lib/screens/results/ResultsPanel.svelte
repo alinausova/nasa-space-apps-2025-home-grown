@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { i18n } from "../../i18n/locale.svelte";
     import AiSummary from "./AiSummary.svelte";
     import ClimateCard from "./ClimateCard.svelte";
     import CropList from "./CropList.svelte";
@@ -35,7 +36,7 @@
 
     let usableCrops = $derived(results.recommendations);
     let plan = $derived(planFor(plot.ring, plot.areaM2, usableCrops));
-    let title = $derived(plot.placeName ?? "Your plot");
+    let title = $derived(plot.placeName ?? i18n.m.results.yourPlot);
     let meta = $derived(
         `${formatArea(plot.areaM2)} · ${formatLatLng(results.location.center_latitude, results.location.center_longitude)}`,
     );
@@ -45,7 +46,7 @@
     <NothingGrows {climate} {crops} placeLabel={`${title} · ${formatArea(plot.areaM2)}`} {onNewPlot} {onCompare} />
 {:else}
     <div class="flex flex-col gap-6">
-        <StepLabel step={3} label="What grows here">
+        <StepLabel step={3} label={i18n.m.results.step}>
             <h1 class="m-0 text-[30px] leading-[1.1] font-normal tracking-[-0.02em] md:text-[36px]">{title}</h1>
             <span class="font-mono text-xs text-ink-muted">{meta}</span>
         </StepLabel>
@@ -57,7 +58,7 @@
         {#if summaryStatus === "loading"}
             <section class="flex flex-col gap-2" role="status" aria-live="polite" data-testid="summary-loading">
                 <LeafLabel />
-                <p class="m-0 text-[15px] text-ink-muted">Writing your summary…</p>
+                <p class="m-0 text-[15px] text-ink-muted">{i18n.m.results.writingSummary}</p>
                 <span class="block h-3 w-11/12 animate-pulse rounded bg-ink/8 motion-reduce:animate-none" aria-hidden="true"></span>
                 <span class="block h-3 w-3/4 animate-pulse rounded bg-ink/8 motion-reduce:animate-none" aria-hidden="true"></span>
             </section>

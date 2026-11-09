@@ -1,4 +1,6 @@
 <script lang="ts">
+    import { i18n } from "../../i18n/locale.svelte";
+    import { cropName } from "../../i18n/crops";
     import FactorBar from "../../ui/FactorBar.svelte";
     import ScoreDot from "../../ui/ScoreDot.svelte";
     import ScorePill from "../../ui/ScorePill.svelte";
@@ -20,7 +22,7 @@
     data-testid="crop-row"
 >
     <span class="row-span-2 flex"><ScoreDot {score} /></span>
-    <span class="col-start-2 row-start-1 text-[17px] leading-tight font-semibold tracking-[-0.01em] md:text-[19px]">{crop.crop_name}</span>
+    <span class="col-start-2 row-start-1 text-[17px] leading-tight font-semibold tracking-[-0.01em] md:text-[19px]">{cropName(crop)}</span>
     <span class="col-start-3 row-span-2 row-start-1"><FactorBar scores={crop.suitability.scores} /></span>
     <span class="col-start-4 row-span-2 row-start-1 grid"><ScorePill {score} /></span>
     <span class="col-start-2 row-start-2 flex items-center gap-1.5 whitespace-nowrap">

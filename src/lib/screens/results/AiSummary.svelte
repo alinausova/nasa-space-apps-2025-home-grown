@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { i18n } from "../../i18n/locale.svelte";
     import LeafLabel from "../../ui/LeafLabel.svelte";
     import { paragraphs } from "../../derive/text";
 
@@ -8,7 +9,7 @@
 </script>
 
 {#if blocks.length > 0}
-    <section class="flex flex-col gap-2" aria-label="Summary by Mistral AI">
+    <section class="flex flex-col gap-2" aria-label={i18n.m.results.summaryLabel}>
         <LeafLabel />
         {#each blocks as block, i (i)}
             <p class="m-0 text-base leading-relaxed">
