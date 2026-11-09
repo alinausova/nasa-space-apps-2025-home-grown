@@ -1,5 +1,6 @@
 <script lang="ts">
     import StepLabel from "../../ui/StepLabel.svelte";
+    import Button from "../../ui/Button.svelte";
     import Notice from "../../ui/Notice.svelte";
     import GrowingRowLoader from "./GrowingRowLoader.svelte";
     import StepList from "./StepList.svelte";
@@ -17,6 +18,8 @@
         failedAt,
         elapsedMs,
         climate,
+        onRetry,
+        onContinue,
     }: {
         plot: Plot | null;
         request: RequestState;
@@ -24,7 +27,11 @@
         failedAt: number | null;
         elapsedMs: number;
         climate: ClimateResponse | null;
+        onRetry?: () => void;
+        onContinue?: () => void;
     } = $props();
+
+    let landsatFailed = $derived(request.status === "landsat-failed");
 
     let failed = $derived(request.status === "error");
     let errorText = $derived(
@@ -34,6 +41,7 @@
     let shown = $derived(failedAt ?? progress.current);
     let steps = $derived(
         ANALYSIS_STEPS.map((step, i) => {
+            if (i === 2 && landsatFailed) return { ...step, detail: "No answer in time" };
             if (i !== 0 || !plot) return step;
             const [lng, lat] = ringCenter(plot.ring);
             return { ...step, detail: `${formatArea(plot.areaM2)}, centred on ${formatLatLng(lat, lng)}` };
@@ -44,6 +52,30 @@
     );
 </script>
 
+{#if landsatFailed}
+    <div class="flex flex-col gap-5" data-testid="landsat-error">
+        <StepLabel step={3} label="Reading your plot · paused">
+            <h1 class="m-0 text-[30px] leading-[1.1] font-normal tracking-[-0.02em] md:text-[34px]">Landsat did not answer in time</h1>
+            <p class="m-0 text-[15px] leading-relaxed text-ink-muted">
+                Nothing is lost. Your plot, the NASA climate and the crop scores are saved, so trying again only asks Landsat again.
+            </p>
+        </StepLabel>
+        <Button size="lg" block onclick={onRetry}>Try again</Button>
+        <button
+            type="button"
+            onclick={onContinue}
+            class="flex flex-col gap-1 rounded-card border border-ink bg-surface px-5 py-4 text-left hover:bg-selected
+                focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink"
+        >
+            <span class="text-base font-semibold">Continue without Landsat</span>
+            <span class="text-sm leading-relaxed text-ink-muted">Your crop scores come from NASA POWER either way. You only miss the surface heat reading.</span>
+        </button>
+        <p class="m-0 text-[13px] text-ink-muted" role="status">This usually clears up within a minute or two.</p>
+        <div class="hidden md:block">
+            <StepList steps={steps} states={progress.states} failedAt={2} />
+        </div>
+    </div>
+{:else}
 <div class="flex flex-col gap-5">
     <StepLabel step={3} label="Reading your plot">
         <h1 class="m-0 text-[30px] leading-[1.1] font-normal tracking-[-0.02em] md:text-[34px]">Checking a year of sun, heat and rain</h1>
@@ -93,3 +125,4 @@
         <StepList steps={steps} states={progress.states} failedAt={failed ? shown : null} />
     </div>
 </div>
+{/if}

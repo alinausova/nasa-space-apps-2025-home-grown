@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import { ApiError, apiFetch } from './client';
-import { getRecommendations, toApiCoordinates, type LngLat } from './recommendations';
+import { toApiCoordinates, type LngLat } from './recommendations';
 
 function failure(promise: Promise<unknown>): Promise<ApiError> {
   return promise.then(
@@ -81,24 +81,5 @@ describe('toApiCoordinates', () => {
 
   it('keeps open rings as they are', () => {
     expect(toApiCoordinates(closed.slice(0, 3))).toHaveLength(3);
-  });
-});
-
-describe('getRecommendations', () => {
-  it('posts the polygon with a high limit', async () => {
-    const fetchImpl = vi.fn().mockResolvedValue(jsonResponse(200, { recommendations: [] }));
-    await getRecommendations(
-      [
-        [1, 2],
-        [3, 4],
-        [5, 6],
-      ],
-      { fetchImpl },
-    );
-
-    const [url, init] = fetchImpl.mock.calls[0];
-    expect(url).toMatch(/\/recommendations\/polygon\?limit=50$/);
-    expect(init.method).toBe('POST');
-    expect(JSON.parse(init.body)).toEqual({ coordinates: [[2, 1], [4, 3], [6, 5]] });
   });
 });

@@ -1,4 +1,4 @@
-// Response of POST /recommendations/polygon (api/main.py).
+// Result shape the screens read; built from the v2 analysis responses by toResults() in analysis.ts.
 
 export type Season = 'warm' | 'cool' | string;
 export type FrostTolerance = 'tender' | 'half_hardy' | 'hardy' | 'very_hardy' | string;

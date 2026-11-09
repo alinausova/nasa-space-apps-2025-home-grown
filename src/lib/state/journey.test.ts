@@ -190,6 +190,43 @@ describe('Journey', () => {
     expect(journey.request.status).toBe('idle');
   });
 
+  it('Landsat timeout: stays on analysing with the crops ready; continue shows them without Landsat', async () => {
+    const timedOut = { ...CROPS, landsat: { status: 'timeout', scenes: [], surface_heat: null } } as CropsResponse;
+    const { impl, calls } = api({ crops: vi.fn(async () => (calls.push('crops'), timedOut)) });
+    const journey = new Journey(impl);
+    journey.setPlot(SMALL);
+    await journey.analyse();
+
+    expect(journey.step).toBe('analysing');
+    expect(journey.request).toEqual({ status: 'landsat-failed' });
+    expect(journey.crops).not.toBeNull();
+
+    journey.continueWithoutLandsat();
+    expect(journey.step).toBe('results');
+    expect(journey.crops!.landsat.status).toBe('disabled');
+    expect(calls.filter((c) => c === 'crops')).toHaveLength(1);
+  });
+
+  it('Landsat timeout: try again reruns only the crops call', async () => {
+    let first = true;
+    const { impl, calls } = api({
+      crops: vi.fn(async () => {
+        calls.push('crops');
+        const status = first ? 'timeout' : 'ok';
+        first = false;
+        return { ...CROPS, landsat: { status, scenes: [], surface_heat: null } } as CropsResponse;
+      }),
+    });
+    const journey = new Journey(impl);
+    journey.setPlot(SMALL);
+    await journey.analyse();
+    await journey.analyse({ retry: true });
+
+    expect(journey.step).toBe('results');
+    expect(calls.filter((c) => c === 'climate')).toHaveLength(1);
+    expect(calls.filter((c) => c === 'crops')).toHaveLength(2);
+  });
+
   it('new plot clears plot and results but stays in the app', async () => {
     const journey = new Journey(api().impl);
     journey.setPlot(SMALL);

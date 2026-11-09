@@ -134,4 +134,47 @@ test.describe('analysing', () => {
     await expect(page.getByRole('button', { name: /Analyse this plot/ })).toBeEnabled();
     await expect(page.getByText(/5 corners/).filter({ visible: true })).toBeVisible();
   });
+
+  test('Landsat timeout: continue without Landsat shows the results at once', async ({ page }, info) => {
+    const crops = v2('munich', 'crops');
+    let cropsCalls = 0;
+    await mockApi(page);
+    await page.route('**/analysis/crops', (route) => {
+      cropsCalls += 1;
+      return route.fulfill({ json: { ...crops, landsat: { status: 'timeout', scenes: [], surface_heat: null } } });
+    });
+    await page.goto('app');
+    await waitForMap(page);
+    await drawPlot(page, PLOTS.munich);
+    await page.getByRole('button', { name: /Analyse this plot/ }).click();
+
+    await expect(page.getByTestId('landsat-error')).toBeVisible();
+    await expect(page.getByRole('heading', { name: 'Landsat did not answer in time' })).toBeVisible();
+    await page.screenshot({ path: `e2e/.output/shots/${info.project.name}-landsat-error.png` });
+
+    await page.getByRole('button', { name: /Continue without Landsat/ }).click();
+    await expect(page.getByTestId('crop-row').first()).toBeVisible();
+    await expect(page.getByTestId('surface-heat')).toHaveCount(0);
+    expect(cropsCalls).toBe(1);
+  });
+
+  test('Landsat timeout: try again asks Landsat again and shows surface heat', async ({ page }) => {
+    const crops = v2('munich', 'crops');
+    let cropsCalls = 0;
+    await mockApi(page);
+    await page.route('**/analysis/crops', (route) => {
+      cropsCalls += 1;
+      const body = cropsCalls === 1 ? { ...crops, landsat: { status: 'timeout', scenes: [], surface_heat: null } } : crops;
+      return route.fulfill({ json: body });
+    });
+    await page.goto('app');
+    await waitForMap(page);
+    await drawPlot(page, PLOTS.munich);
+    await page.getByRole('button', { name: /Analyse this plot/ }).click();
+    await page.getByRole('button', { name: 'Try again' }).click();
+
+    await expect(page.getByTestId('crop-row').first()).toBeVisible();
+    await expect(page.getByTestId('surface-heat')).toBeVisible();
+    expect(cropsCalls).toBe(2);
+  });
 });

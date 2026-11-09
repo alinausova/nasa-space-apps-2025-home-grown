@@ -69,3 +69,26 @@ export function describeClimate(monthly: MonthlyTemperature[], season: GrowingSe
   const seasonText = season ? `Growing season ${season.label === 'All year' ? 'all year' : season.label.replace('–', ' to ')}.` : 'No month is warm enough to grow outdoors.';
   return `${parts.join(', ')} ${seasonText}`;
 }
+
+type ServerSeason = { start_month: number; end_month: number; days: number; all_year: boolean } | null;
+
+/** The back end's growing season (v2 /analysis/climate) in the shape the chart and cards use. */
+export function seasonFromServer(season: ServerSeason): GrowingSeason | null {
+  if (!season) return null;
+  if (season.all_year) return { months: [...Array(12).keys()], runs: [[0, 11]], label: 'All year', days: season.days };
+  const first = season.start_month - 1;
+  const last = season.end_month - 1;
+  const months: number[] = [];
+  for (let m = first; ; m = (m + 1) % 12) {
+    months.push(m);
+    if (m === last) break;
+  }
+  const runs: [number, number][] = first <= last ? [[first, last]] : [[first, 11], [0, last]];
+  const label = first === last ? MONTH_SHORT[first] : `${MONTH_SHORT[first]}–${MONTH_SHORT[last]}`;
+  return { months, runs, label, days: season.days };
+}
+
+/** Rainiest month, for the chart's text alternative. */
+export function rainiestMonth(monthly: { month: number; precip_mm: number }[]): { month: number; precip_mm: number } | null {
+  return monthly.reduce<{ month: number; precip_mm: number } | null>((best, m) => (!best || m.precip_mm > best.precip_mm ? m : best), null);
+}
