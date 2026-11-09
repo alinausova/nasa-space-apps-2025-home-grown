@@ -24,6 +24,10 @@ export class MapController {
   ready = $state(false);
   isDrawing = $state(false);
   error = $state<string | null>(null);
+  /** Live map centre and zoom, for the coordinates readout. */
+  view = $state({ lng: 0, lat: 0, zoom: 0 });
+  /** True while the plot is shown read-only (analysing, results). */
+  isStatic = $state(false);
 
   map: mapboxgl.Map | null = null;
   #draw: MapboxDraw | null = null;
@@ -45,6 +49,7 @@ export class MapController {
       zoom,
       projection: 'globe',
       attributionControl: false,
+      logoPosition: 'bottom-right',
       // Keep the canvas readable for screenshots and PDF export.
       preserveDrawingBuffer: true,
     });
@@ -62,6 +67,17 @@ export class MapController {
     map.addControl(draw as unknown as mapboxgl.IControl);
 
     map.on('style.load', () => applyLeafStyle(map));
+
+    let frame = 0;
+    const updateView = () => {
+      frame = 0;
+      const c = map.getCenter();
+      this.view = { lng: c.lng, lat: c.lat, zoom: map.getZoom() };
+    };
+    updateView();
+    map.on('move', () => {
+      if (!frame) frame = requestAnimationFrame(updateView);
+    });
     map.on('load', () => {
       this.ready = true;
       this.setTone(this.#tone);
@@ -91,6 +107,10 @@ export class MapController {
     this.#draw = null;
     this.ready = false;
     this.isDrawing = false;
+  }
+
+  zoomBy(delta: number): void {
+    this.map?.easeTo({ zoom: this.map.getZoom() + delta, duration: 250 });
   }
 
   flyTo(center: LngLat, zoom = 16): void {
@@ -160,10 +180,12 @@ export class MapController {
     const map = this.map;
     if (!map || !this.ready) {
       this.#pendingStatic = ring;
+      this.isStatic = ring !== null;
       return;
     }
     this.#pendingStatic = undefined;
 
+    this.isStatic = ring !== null;
     if (ring === null) {
       if (map.getLayer(STATIC_STROKE)) map.removeLayer(STATIC_STROKE);
       if (map.getLayer(STATIC_FILL)) map.removeLayer(STATIC_FILL);

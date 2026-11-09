@@ -37,7 +37,12 @@ export class Journey {
   request = $state<RequestState>({ status: 'idle' });
   results = $state<RecommendationsResponse | null>(null);
   filter = $state<CropFilter>('all');
+  /** Sample city last jumped to (highlighted in the picker). */
+  city = $state<string | null>(null);
+  /** Previous plots for undo, oldest first. `null` = no plot. */
+  history = $state<(LngLat[] | null)[]>([]);
 
+  canUndo = $derived(this.history.length > 0);
   isTooLarge = $derived(this.plot !== null && this.plot.areaM2 > MAX_AREA_M2);
   canAnalyse = $derived(this.plot !== null && this.plot.corners >= 3 && !this.isTooLarge);
 
@@ -58,9 +63,23 @@ export class Journey {
   }
 
   setPlot(ring: LngLat[] | null): void {
+    if (this.plot || ring) this.history = [...this.history, this.plot?.ring ?? null].slice(-50);
+    this.#applyRing(ring);
+    if (this.step === 'place' && ring) this.step = 'draw';
+  }
+
+  /** Restores the previous plot; returns it so the map editor can show it. */
+  undo(): LngLat[] | null {
+    if (this.history.length === 0) return this.plot?.ring ?? null;
+    const previous = this.history.at(-1) ?? null;
+    this.history = this.history.slice(0, -1);
+    this.#applyRing(previous);
+    return previous;
+  }
+
+  #applyRing(ring: LngLat[] | null): void {
     const placeName = this.plot?.placeName ?? null;
     this.plot = ring ? { ...plotFromRing(ring), placeName } : null;
-    if (this.step === 'place' && ring) this.step = 'draw';
   }
 
   setPlaceName(name: string | null): void {
@@ -70,6 +89,7 @@ export class Journey {
   clearPlot(): void {
     this.plot = null;
     this.results = null;
+    this.history = [];
   }
 
   async analyse(): Promise<void> {

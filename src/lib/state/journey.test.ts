@@ -65,6 +65,21 @@ describe('Journey', () => {
     expect(journey.plot!.placeName).toBe('Maxvorstadt, Munich');
   });
 
+  it('undo walks back through edits, including a delete', () => {
+    const journey = new Journey(vi.fn());
+    const smaller = SMALL.slice(0, 3).concat([SMALL[0]]);
+    journey.setPlot(SMALL);
+    journey.setPlot(smaller);
+    journey.setPlot(null);
+
+    expect(journey.undo()).toEqual(smaller);
+    expect(journey.plot!.corners).toBe(3);
+    expect(journey.undo()).toEqual(SMALL);
+    expect(journey.undo()).toBeNull();
+    expect(journey.plot).toBeNull();
+    expect(journey.canUndo).toBe(false);
+  });
+
   it('analyses and shows results', async () => {
     const fetcher = vi.fn().mockResolvedValue(RESULTS);
     const journey = new Journey(fetcher);

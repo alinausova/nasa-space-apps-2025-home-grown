@@ -44,7 +44,7 @@
             sizes[size],
             disabled ? "bg-ink/10 text-ink-muted cursor-not-allowed" : variants[variant],
             disabled && variant !== "primary" ? "border-0" : "",
-            block ? "flex-1 w-full" : "",
+            block ? "w-full" : "",
             className,
         ].join(" "),
     );
