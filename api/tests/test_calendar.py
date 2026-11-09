@@ -79,3 +79,19 @@ def test_tender_crops_fall_back_to_planting_out_seedlings():
     assert min(peppers["sow"]) >= 5  # after the last spring frost
     # Crops that can be sown outdoors stay direct sown.
     assert cal["lettuce"]["mode"] == "sow"
+
+
+def test_planting_out_wins_when_it_gives_a_longer_harvest():
+    tomatoes = calendars(nasa("munich"), CROP_DATABASE)["tomatoes"]
+    assert tomatoes["mode"] == "plant_out"
+    assert min(tomatoes["harvest"]) <= 8  # picking starts in summer, not in November
+
+
+def test_too_hot_uses_the_daily_mean():
+    # Days of 22–38 °C (mean 30): above basil's 30 °C upper limit only at midday, so still growable.
+    year = synthetic_year([30] * 12, spread=8)
+    days = _daily(year)
+    basil = {**CROP_DATABASE["basil"], "upper_temp": 30}
+    assert crop_calendar(basil, days) is not None
+    hotter = synthetic_year([33] * 12, spread=8)
+    assert crop_calendar(basil, _daily(hotter)) is None
