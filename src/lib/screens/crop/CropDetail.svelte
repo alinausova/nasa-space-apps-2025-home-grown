@@ -1,6 +1,7 @@
 <script lang="ts">
     import Icon from "../../ui/Icon.svelte";
     import CropNav from "./CropNav.svelte";
+    import GrowCalendar from "./GrowCalendar.svelte";
     import ScoreRing from "../../ui/ScoreRing.svelte";
     import Tag from "../../ui/Tag.svelte";
     import type { CropRecommendation, RecommendationsResponse } from "../../api/types";
@@ -12,7 +13,7 @@
     import { alsoGood, factorReasons } from "../../derive/why";
     import { router } from "../../router/router.svelte";
 
-    // TODO(redesign v3): sow / grow / harvest calendar and "Any tips for this crop here?".
+    // TODO(redesign v3): "Any tips for this crop here?".
     let { crop, results, plot, filter }: { crop: CropRecommendation; results: RecommendationsResponse; plot: Plot; filter: CropFilter } =
         $props();
 
@@ -78,6 +79,8 @@
             {/each}
         </ul>
     </section>
+
+    {#if crop.calendar !== undefined}<GrowCalendar calendar={crop.calendar} cropName={crop.crop_name} year={results.year} />{/if}
 
     {#if suggestions.length > 0}
         <section class="flex flex-col gap-3 border-t border-line pt-6" aria-labelledby="also-good">
