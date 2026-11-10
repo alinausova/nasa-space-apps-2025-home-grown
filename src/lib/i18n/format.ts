@@ -40,3 +40,6 @@ export function joinList(items: string[]): string {
 
 /** Lower-case with the language's rules (Turkish: I → ı, İ → i). */
 export const lower = (text: string): string => text.toLocaleLowerCase(i18n.intl('text'));
+
+/** A noun (crop name, bed count) placed inside a sentence: lower-cased unless the language capitalises nouns. */
+export const inSentence = (text: string): string => (i18n.m.lowerNouns ? lower(text) : text);

@@ -15,7 +15,7 @@ export async function lookupPlaceName(
     longitude: lng.toFixed(6),
     latitude: lat.toFixed(6),
     types: 'neighborhood,locality,place,region',
-    language: i18n.locale,
+    language: i18n.language,
     limit: '1',
     access_token: token,
   });

@@ -5,6 +5,7 @@
     import orbitMobile from "../../../assets/landing-orbit-mobile.svg?raw";
     import AwardBadge from "./AwardBadge.svelte";
     import Button from "../../ui/Button.svelte";
+    import LanguageSwitcher from "../../i18n/LanguageSwitcher.svelte";
     import { router } from "../../router/router.svelte";
 
     // Night sky, line globe and orbiting satellite from the design (SMIL inside the SVG).
@@ -57,6 +58,7 @@
             <a href={router.href({ name: "learn", tab: "scoring" })} class="text-ink no-underline hover:text-bright">{t.howItWorks}</a>
             <a href={router.href({ name: "learn", tab: "data" })} class="hidden text-ink no-underline hover:text-bright lg:inline">{t.data}</a>
             <a href={router.href({ name: "learn", tab: "about" })} class="hidden text-ink no-underline hover:text-bright lg:inline">{t.team}</a>
+            <LanguageSwitcher compact class="lg:text-[15px]" />
         </nav>
     </header>
 

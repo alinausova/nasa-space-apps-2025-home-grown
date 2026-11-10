@@ -1,6 +1,7 @@
 <script lang="ts">
     import { i18n } from "../../i18n/locale.svelte";
     import Chip from "../../ui/Chip.svelte";
+    import { cityName } from "../../i18n/crops";
     import { SAMPLE_CITIES, type SampleCity } from "../../data/cities";
 
     let {
@@ -21,7 +22,7 @@
                     hover:bg-selected/60 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ink
                     {selected === city.id ? 'border-ink bg-selected' : ''}"
             >
-                <span class="text-[15px] font-semibold">{city.name}</span>
+                <span class="text-[15px] font-semibold">{cityName(city)}</span>
                 <span class="text-xs text-ink-muted">{i18n.m.place.climates[city.id] ?? city.climate}</span>
             </button>
         {/each}
@@ -29,7 +30,7 @@
 {:else}
     <div class="flex flex-wrap gap-1.5">
         {#each SAMPLE_CITIES as city (city.id)}
-            <Chip selected={selected === city.id} onclick={() => onpick(city)}>{city.name}</Chip>
+            <Chip selected={selected === city.id} onclick={() => onpick(city)}>{cityName(city)}</Chip>
         {/each}
     </div>
 {/if}

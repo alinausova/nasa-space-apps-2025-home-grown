@@ -1,6 +1,6 @@
 <script lang="ts">
     import { i18n } from "../../i18n/locale.svelte";
-    import { lower } from "../../i18n/format";
+    import { inSentence } from "../../i18n/format";
     import type { CropCalendar } from "../../api/types";
     import { calendarRows, calendarSentence } from "../../derive/calendar";
 
@@ -44,7 +44,7 @@
         </p>
     {:else}
         <p class="m-0 text-[15px] leading-relaxed text-ink-muted">
-            {i18n.m.crop.calendarNone(lower(cropName), year)}
+            {i18n.m.crop.calendarNone(inSentence(cropName), year)}
         </p>
     {/if}
 </section>

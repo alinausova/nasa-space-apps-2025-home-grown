@@ -67,7 +67,7 @@ test.describe('address search', () => {
 
     const box = page.getByRole('combobox', { name: 'Search for an address or place' });
     await box.fill('Maxvorst');
-    const options = page.getByRole('option');
+    const options = page.getByRole('listbox', { name: 'Places' }).getByRole('option');
     await expect(options).toHaveCount(3);
     await expect(options.nth(0)).toContainText('Maxvorstadt');
     await expect(options.nth(0)).toContainText('Munich, Bavaria, Germany · district');

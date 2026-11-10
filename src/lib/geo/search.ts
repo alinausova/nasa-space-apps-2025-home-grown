@@ -16,7 +16,7 @@ export async function searchPlaces(
     q: query,
     autocomplete: 'true',
     limit: '5',
-    language: i18n.locale,
+    language: i18n.language,
     types: SEARCH_TYPES,
     access_token: token,
   });

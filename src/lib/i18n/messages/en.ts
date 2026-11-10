@@ -6,6 +6,8 @@ const COUNT_WORDS = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seve
 const BED_WORDS = ['No', 'One', 'Two', 'Three', 'Four'];
 
 export const en = {
+  /** Crop names and counts are lower-cased inside sentences ("Any tips for kale here?"). German keeps noun capitals. */
+  lowerNouns: true,
   score: {
     factor: {
       gdd: { label: 'Heat', short: 'Heat' },
@@ -86,6 +88,7 @@ export const en = {
     collapsePanel: 'Collapse panel',
     expandPanel: 'Expand panel',
     score: 'Score ',
+    language: 'Language',
   },
   landing: {
     eyebrow: 'Seen from space, grown at home',
@@ -130,6 +133,17 @@ export const en = {
       unavailableTitle: 'We could not find your location',
       unavailableBody: 'Your browser did not give us a position in time. Type an address above instead.',
     },
+    /** Sample city names; English keeps the names in src/lib/data/cities.ts. */
+    cities: {
+      munich: 'Munich',
+      cairo: 'Cairo',
+      belem: 'Belém',
+      reykjavik: 'Reykjavík',
+      antalya: 'Antalya',
+      omsk: 'Omsk',
+      nairobi: 'Nairobi',
+      'cape-town': 'Cape Town',
+    } as Record<string, string>,
     climates: {
       munich: 'Temperate',
       cairo: 'Hot and arid',
@@ -244,7 +258,7 @@ export const en = {
     plan: {
       aria: (beds: string, crops: string) => `Example planting plan for your plot: ${beds} of ${crops}, with paths between them.`,
       caption: 'Example plan · 70% planted, the rest left for paths',
-      fill: (beds: string, kg: string) => `${beds} fill your plot, about ${kg} a season.`,
+      fill: (beds: string, kg: string, _count: number) => `${beds} fill your plot, about ${kg} a season.`,
       total: (n: number) => `${n} ${plural(n, 'crop fits', 'crops fit')} in total.`,
     },
     climate: {

@@ -190,7 +190,7 @@ export class Journey {
     this.tips = { ...this.tips, [cropId]: { status: 'loading' } };
     let next: TipsState;
     try {
-      const response = await this.#api.tips(plotId, cropId, { lang: i18n.locale });
+      const response = await this.#api.tips(plotId, cropId, { lang: i18n.language });
       next = response.tips ? { status: 'done', text: response.tips } : { status: 'failed' };
     } catch {
       next = { status: 'failed' };
@@ -205,7 +205,7 @@ export class Journey {
     this.#summaryController = controller;
     this.summary = { status: 'loading' };
     try {
-      const response = await this.#api.summary(plotId, { signal: controller.signal, lang: i18n.locale });
+      const response = await this.#api.summary(plotId, { signal: controller.signal, lang: i18n.language });
       if (controller.signal.aborted) return;
       this.summary = response.summary ? { status: 'done', text: response.summary } : { status: 'failed' };
     } catch (error) {
