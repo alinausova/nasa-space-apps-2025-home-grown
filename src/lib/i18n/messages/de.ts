@@ -8,6 +8,7 @@ const BED_WORDS = ['Keine', 'Ein', 'Zwei', 'Drei', 'Vier'];
 
 export const de: Messages = {
   lowerNouns: false,
+  units: { kg: 'kg', t: 't', mm: 'mm', m2: 'm²', km2: 'km²' },
   score: {
     factor: {
       gdd: { label: 'Wärme', short: 'Wärme' },

@@ -1,8 +1,8 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import { i18n } from './locale.svelte';
 import { inSentence } from './format';
-import { areaComparison } from '../derive/area';
-import { bedCount } from '../derive/format';
+import { areaComparison, formatArea } from '../derive/area';
+import { bedCount, formatKg, formatMm } from '../derive/format';
 import { monthRanges } from '../derive/calendar';
 import { cropName } from './crops';
 
@@ -117,5 +117,44 @@ describe('Turkish in context', () => {
     i18n.locale = 'tr';
     expect(i18n.m.results.plan.fill(bedCount(1), '4 kg', 1)).toBe('Bir tarh arazini dolduruyor, sezon başına yaklaşık 4 kg.');
     expect(i18n.m.results.plan.fill(bedCount(4), '12 kg', 4)).toBe('Dört tarh arazini dolduruyor, sezon başına yaklaşık 12 kg.');
+  });
+});
+
+describe('Russian in context', () => {
+  it('uses one, few and many forms with the matching case', () => {
+    i18n.locale = 'ru';
+    expect(areaComparison(12)).toBe('Примерно одно парковочное место');
+    expect(areaComparison(40)).toBe('Примерно три парковочных места');
+    expect(areaComparison(3_400)).toBe('Примерно 13 теннисных кортов');
+    expect(['1', '2', '5', '11', '21', '22'].map((n) => i18n.m.nothing.days(Number(n)))).toEqual([
+      '1 день', '2 дня', '5 дней', '11 дней', '21 день', '22 дня',
+    ]);
+  });
+
+  it('lower-cases crop names and bed counts inside sentences', () => {
+    i18n.locale = 'ru';
+    expect(inSentence(cropName({ crop_id: 'beetroot', crop_name: 'Beetroot' }))).toBe('свёкла');
+    expect(inSentence(bedCount(2))).toBe('две грядки');
+  });
+
+  it('names month ranges in Russian', () => {
+    i18n.locale = 'ru';
+    expect(monthRanges([3, 4, 5])).toBe('март–май');
+  });
+
+  it('agrees the plan sentence with the number of beds', () => {
+    i18n.locale = 'ru';
+    expect(i18n.m.results.plan.fill(bedCount(1), '4 кг', 1)).toBe('Одна грядка заполняет ваш участок, примерно 4 кг за сезон.');
+    expect(i18n.m.results.plan.fill(bedCount(4), '12 кг', 4)).toBe('Четыре грядки заполняют ваш участок, примерно 12 кг за сезон.');
+  });
+
+  it('writes units in Cyrillic, while other languages keep theirs', () => {
+    i18n.locale = 'ru';
+    expect(formatKg(6_740)).toBe('6 740 кг');
+    expect(formatMm(620)).toBe('620 мм');
+    expect(formatArea(1_420_000)).toBe('1,42 км²');
+    i18n.locale = 'en';
+    expect(formatKg(6_740)).toBe('6,740 kg');
+    expect(formatArea(1_420_000)).toBe('1.42 km²');
   });
 });

@@ -73,7 +73,7 @@
                     <tspan font-family="var(--hg-font-mono)" font-size="12">{Math.round(bed.crop.suitability.overall_score)}</tspan>
                 </text>
                 <text x={LABEL_X} y={ly + 14} font-family="var(--hg-font-mono)" font-size="11" fill="#256F2D">
-                    {formatNumber(Math.round(bed.areaM2))} m² · {formatKg(bed.yieldKg, { approx: true })}
+                    {formatNumber(Math.round(bed.areaM2))} {i18n.m.units.m2} · {formatKg(bed.yieldKg, { approx: true })}
                 </text>
             {/each}
             <text x={OFFSET.x + 18} y="296" font-size="11" fill="#256F2D">{i18n.m.results.plan.caption}</text>
