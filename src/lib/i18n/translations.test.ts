@@ -93,3 +93,29 @@ describe('Brazilian Portuguese in context', () => {
     expect(i18n.m.results.plan.fill(bedCount(4), '12 kg', 4)).toBe('Quatro canteiros preenchem seu terreno, cerca de 12 kg por estação.');
   });
 });
+
+describe('Turkish in context', () => {
+  it('uses no plural after numbers', () => {
+    i18n.locale = 'tr';
+    expect(areaComparison(12)).toBe('Yaklaşık bir park yeri');
+    expect(areaComparison(40)).toBe('Yaklaşık üç park yeri');
+    expect(i18n.m.nothing.days(5)).toBe('5 gün');
+  });
+
+  it('lower-cases with Turkish rules (I to ı)', () => {
+    i18n.locale = 'tr';
+    expect(inSentence(cropName({ crop_id: 'spinach', crop_name: 'Spinach' }))).toBe('ıspanak');
+    expect(inSentence(bedCount(2))).toBe('iki tarh');
+  });
+
+  it('names month ranges in Turkish', () => {
+    i18n.locale = 'tr';
+    expect(monthRanges([3, 4, 5])).toBe('Mart ile Mayıs arası');
+  });
+
+  it('builds the plan sentence for one and four beds', () => {
+    i18n.locale = 'tr';
+    expect(i18n.m.results.plan.fill(bedCount(1), '4 kg', 1)).toBe('Bir tarh arazini dolduruyor, sezon başına yaklaşık 4 kg.');
+    expect(i18n.m.results.plan.fill(bedCount(4), '12 kg', 4)).toBe('Dört tarh arazini dolduruyor, sezon başına yaklaşık 12 kg.');
+  });
+});

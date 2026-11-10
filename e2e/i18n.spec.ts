@@ -6,6 +6,7 @@ const SMOKE = [
   { lang: 'es', label: 'Idioma', landing: '¿Qué podría cultivar tu ciudad?', analyse: 'Analizar esta parcela', learn: 'Cómo obtiene un cultivo su puntuación', formula: 'Fórmula: Factor más débil' },
   { lang: 'fr', label: 'Langue', landing: 'Que pourrait cultiver votre ville\u202f?', analyse: 'Analyser cette parcelle', learn: 'Comment une culture obtient son score', formula: 'Formule\u00a0: Facteur le plus faible' },
   { lang: 'pt', label: 'Idioma', landing: 'O que sua cidade poderia cultivar?', analyse: 'Analisar este terreno', learn: 'Como um cultivo recebe sua pontuação', formula: 'Fórmula: Fator mais fraco' },
+  { lang: 'tr', label: 'Dil', landing: 'Şehrin neler yetiştirebilir?', analyse: 'Bu araziyi analiz et', learn: 'Bir bitki puanını nasıl alır', formula: 'Formül: En zayıf etken' },
 ];
 
 const GERMAN_CROPS: Record<string, string> = { kale: 'Grünkohl', cabbage: 'Weißkohl', lettuce: 'Salat', spinach: 'Spinat', beetroot: 'Rote Bete' };
