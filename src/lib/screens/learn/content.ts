@@ -3,6 +3,7 @@ import * as de from './content/de';
 import * as es from './content/es';
 import * as fr from './content/fr';
 import * as pt from './content/pt';
+import * as tr from './content/tr';
 import { pseudo } from '../../i18n/pseudo';
 import { i18n, type Locale } from '../../i18n/locale.svelte';
 
@@ -10,7 +11,7 @@ import { i18n, type Locale } from '../../i18n/locale.svelte';
 export type LearnContent = typeof en;
 
 /** Untranslated locales point at English; AVAILABLE in the locale store keeps them from being selected. */
-const CONTENT: Record<Locale, LearnContent> = { en, de, es, fr, pt, tr: en, ru: en, pseudo: import.meta.env.DEV ? pseudo({ ...en }) : en };
+const CONTENT: Record<Locale, LearnContent> = { en, de, es, fr, pt, tr, ru: en, pseudo: import.meta.env.DEV ? pseudo({ ...en }) : en };
 
 /** Learn content in the active language. Call inside $derived (or a template) so it follows language changes. */
 export function learn(): LearnContent {
