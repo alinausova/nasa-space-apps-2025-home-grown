@@ -1,8 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import { en } from './messages/en';
 import { de } from './messages/de';
+import { es } from './messages/es';
 import * as learnEn from '../screens/learn/content/en';
 import * as learnDe from '../screens/learn/content/de';
+import * as learnEs from '../screens/learn/content/es';
 import { pseudo, pseudoText } from './pseudo';
 import { i18n, LOCALES } from './locale.svelte';
 import { learn } from '../screens/learn/content';
@@ -37,7 +39,7 @@ describe('catalogs', () => {
   });
 
   // Translations, checked the same way for each language.
-  const TRANSLATED = { de: { m: de, learn: learnDe } };
+  const TRANSLATED = { de: { m: de, learn: learnDe }, es: { m: es, learn: learnEs } };
 
   for (const [lang, { m, learn: content }] of Object.entries(TRANSLATED)) {
     describe(lang, () => {

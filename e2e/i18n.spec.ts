@@ -1,6 +1,11 @@
 import { expect, test } from '@playwright/test';
 import { PLOTS, drawPlot, mockApi, usable, waitForMap } from './helpers';
 
+// One smoke check per translated language: landing, the place step and a Learn page.
+const SMOKE = [
+  { lang: 'es', label: 'Idioma', landing: '¿Qué podría cultivar tu ciudad?', analyse: 'Analizar esta parcela', learn: 'Cómo obtiene un cultivo su puntuación', formula: 'Fórmula: Factor más débil' },
+];
+
 const GERMAN_CROPS: Record<string, string> = { kale: 'Grünkohl', cabbage: 'Weißkohl', lettuce: 'Salat', spinach: 'Spinat', beetroot: 'Rote Bete' };
 
 test.describe('languages', () => {
@@ -43,4 +48,23 @@ test.describe('languages', () => {
     await expect(page.getByRole('heading', { level: 1, name: 'Wie eine Pflanze ihre Bewertung bekommt' })).toBeVisible();
     await expect(page.getByLabel('Formel: Schwächster Faktor')).toBeAttached();
   });
+
+  for (const t of SMOKE) {
+    test(`${t.lang}: landing, place step and Learn are translated`, async ({ page }) => {
+      await page.goto(`?lang=${t.lang}`);
+      await expect(page.getByRole('heading', { level: 1, name: t.landing }).first()).toBeAttached();
+      await expect(page.locator('html')).toHaveAttribute('lang', t.lang);
+      await expect(page.getByRole('combobox', { name: t.label })).toHaveValue(t.lang);
+
+      await mockApi(page, 'munich');
+      await page.goto('app');
+      await waitForMap(page);
+      await drawPlot(page, PLOTS.munich);
+      await expect(page.getByRole('button', { name: t.analyse })).toBeVisible();
+
+      await page.goto('learn/scoring');
+      await expect(page.getByRole('heading', { level: 1, name: t.learn })).toBeVisible();
+      await expect(page.getByLabel(t.formula)).toBeAttached();
+    });
+  }
 });
