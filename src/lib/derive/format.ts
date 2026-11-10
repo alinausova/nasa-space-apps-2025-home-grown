@@ -4,13 +4,13 @@ import { formatNumber, joinList } from '../i18n/format';
 /** "6,740 kg", or "28.3 t" from 10 t up. `approx` adds "~". */
 export function formatKg(kg: number, { approx = false } = {}): string {
   const prefix = approx ? '~' : '';
-  if (kg >= 10_000) return `${prefix}${formatNumber(kg / 1000, { maximumFractionDigits: 1 })} t`;
-  if (kg >= 100) return `${prefix}${formatNumber(Math.round(kg / 10) * 10)} kg`;
-  return `${prefix}${formatNumber(Math.round(kg))} kg`;
+  if (kg >= 10_000) return `${prefix}${formatNumber(kg / 1000, { maximumFractionDigits: 1 })} ${i18n.m.units.t}`;
+  if (kg >= 100) return `${prefix}${formatNumber(Math.round(kg / 10) * 10)} ${i18n.m.units.kg}`;
+  return `${prefix}${formatNumber(Math.round(kg))} ${i18n.m.units.kg}`;
 }
 
 export function formatMm(mm: number): string {
-  return `${formatNumber(Math.round(mm))} mm`;
+  return `${formatNumber(Math.round(mm))} ${i18n.m.units.mm}`;
 }
 
 export function formatHours(hours: number): string {

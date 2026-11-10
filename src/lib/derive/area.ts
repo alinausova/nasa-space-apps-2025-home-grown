@@ -28,8 +28,8 @@ export function areaComparison(areaM2: number): string {
 
 /** "2,140 m²" below 0.1 km², "1.42 km²" above. */
 export function formatArea(areaM2: number): string {
-  if (areaM2 >= 100_000) return `${(areaM2 / 1_000_000).toFixed(2)} km²`;
-  return `${formatNumber(Math.round(areaM2))} m²`;
+  if (areaM2 >= 100_000) return `${formatNumber(areaM2 / 1_000_000, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ${i18n.m.units.km2}`;
+  return `${formatNumber(Math.round(areaM2))} ${i18n.m.units.m2}`;
 }
 
 /** Share of the 1 km² limit used, 0–1. */

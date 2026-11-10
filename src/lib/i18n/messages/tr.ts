@@ -8,6 +8,7 @@ const BED_WORDS = ['Hiç', 'Bir', 'İki', 'Üç', 'Dört'];
 
 export const tr: Messages = {
   lowerNouns: true,
+  units: { kg: 'kg', t: 't', mm: 'mm', m2: 'm²', km2: 'km²' },
   score: {
     factor: {
       gdd: { label: 'Isı', short: 'Isı' },

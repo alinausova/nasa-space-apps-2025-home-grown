@@ -5,12 +5,14 @@ import { es } from './messages/es';
 import { fr } from './messages/fr';
 import { pt } from './messages/pt';
 import { tr } from './messages/tr';
+import { ru } from './messages/ru';
 import * as learnEn from '../screens/learn/content/en';
 import * as learnDe from '../screens/learn/content/de';
 import * as learnEs from '../screens/learn/content/es';
 import * as learnFr from '../screens/learn/content/fr';
 import * as learnPt from '../screens/learn/content/pt';
 import * as learnTr from '../screens/learn/content/tr';
+import * as learnRu from '../screens/learn/content/ru';
 import { pseudo, pseudoText } from './pseudo';
 import { i18n, LOCALES } from './locale.svelte';
 import { learn } from '../screens/learn/content';
@@ -45,7 +47,7 @@ describe('catalogs', () => {
   });
 
   // Translations, checked the same way for each language.
-  const TRANSLATED = { de: { m: de, learn: learnDe }, es: { m: es, learn: learnEs }, fr: { m: fr, learn: learnFr }, pt: { m: pt, learn: learnPt }, tr: { m: tr, learn: learnTr } };
+  const TRANSLATED = { de: { m: de, learn: learnDe }, es: { m: es, learn: learnEs }, fr: { m: fr, learn: learnFr }, pt: { m: pt, learn: learnPt }, tr: { m: tr, learn: learnTr }, ru: { m: ru, learn: learnRu } };
 
   for (const [lang, { m, learn: content }] of Object.entries(TRANSLATED)) {
     describe(lang, () => {

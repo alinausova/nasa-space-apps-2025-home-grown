@@ -44,7 +44,7 @@
             <span class="hidden text-[13px] text-ink-muted md:block">{t.withinLimit(areaComparison(plot.areaM2))}</span>
         {/if}
     {:else}
-        <span class="font-mono text-[40px] leading-none tracking-[-0.02em] text-ink/30 md:text-[34px]">0 m²</span>
+        <span class="font-mono text-[40px] leading-none tracking-[-0.02em] text-ink/30 md:text-[34px]">0 {i18n.m.units.m2}</span>
         <span class="text-[13px] text-ink-muted">
             <span class="hidden md:inline">{t.hintDesktop}</span>
             <span class="md:hidden">{t.hintMobile}</span>

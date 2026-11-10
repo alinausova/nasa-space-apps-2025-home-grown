@@ -8,6 +8,8 @@ const BED_WORDS = ['No', 'One', 'Two', 'Three', 'Four'];
 export const en = {
   /** Crop names and counts are lower-cased inside sentences ("Any tips for kale here?"). German keeps noun capitals. */
   lowerNouns: true,
+  /** Unit symbols the shared formatters put after numbers. */
+  units: { kg: 'kg', t: 't', mm: 'mm', m2: 'm²', km2: 'km²' },
   score: {
     factor: {
       gdd: { label: 'Heat', short: 'Heat' },
