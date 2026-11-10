@@ -1,10 +1,10 @@
 """Languages the AI text (summary, tips) can be written in. Codes match the front end's locales."""
 
-LANGUAGES = {"en": "English", "de": "German", "es": "Spanish", "fr": "French", "tr": "Turkish", "ru": "Russian"}
+LANGUAGES = {"en": "English", "de": "German", "es": "Spanish", "fr": "French", "pt": "Brazilian Portuguese", "tr": "Turkish", "ru": "Russian"}
 LANG_PATTERN = "^(" + "|".join(LANGUAGES) + ")$"
 
 # Other languages need more tokens for the same sentences (Cyrillic and Turkish most of all).
-TOKEN_FACTOR = {"en": 1.0, "de": 1.4, "es": 1.3, "fr": 1.4, "tr": 1.8, "ru": 2.0}
+TOKEN_FACTOR = {"en": 1.0, "de": 1.4, "es": 1.3, "fr": 1.4, "pt": 1.3, "tr": 1.8, "ru": 2.0}
 
 
 def language_rule(lang: str) -> str:
