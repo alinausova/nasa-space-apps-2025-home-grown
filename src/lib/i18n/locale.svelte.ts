@@ -1,16 +1,30 @@
 import { en, type Messages } from './messages/en';
+import { de } from './messages/de';
+import { pseudo } from './pseudo';
 
 /** Languages Home Grown is being translated into. English is the source. */
-export const LOCALES = ['en', 'de', 'es', 'fr', 'tr', 'ru'] as const;
+export const LOCALES = ['en', 'de', 'es', 'fr', 'tr', 'ru', 'pseudo'] as const;
 export type Locale = (typeof LOCALES)[number];
 
-/** Languages with a finished catalog. Detection and `?lang=` only pick from these; grows as translations land. */
-export const AVAILABLE: readonly Locale[] = ['en'];
+/** Languages with a finished catalog. Detection and `?lang=` only pick from these; grows as translations land.
+ *  `pseudo` is a dev-only test language (accented, stretched English) and never ships to production. */
+export const AVAILABLE: readonly Locale[] = import.meta.env.DEV ? ['en', 'de', 'pseudo'] : ['en', 'de'];
+
+/** Each language's name in its own language, for the switcher. */
+export const ENDONYMS: Record<Locale, string> = {
+  en: 'English',
+  de: 'Deutsch',
+  es: 'Español',
+  fr: 'Français',
+  tr: 'Türkçe',
+  ru: 'Русский',
+  pseudo: 'Pseudo',
+};
 
 const STORAGE_KEY = 'hg-locale';
 
 /** Catalogs per locale. Untranslated locales point at English; AVAILABLE keeps them from being selected. */
-const CATALOGS: Record<Locale, Messages> = { en, de: en, es: en, fr: en, tr: en, ru: en };
+const CATALOGS: Record<Locale, Messages> = { en, de, es: en, fr: en, tr: en, ru: en, pseudo: import.meta.env.DEV ? pseudo(en) : en };
 
 /**
  * Intl tags per locale and purpose. English mixes two on purpose, to keep today's copy exactly:
@@ -23,6 +37,7 @@ const INTL: Record<Locale, { number: string; month: string; list: string; text: 
   fr: { number: 'fr-FR', month: 'fr-FR', list: 'fr-FR', text: 'fr' },
   tr: { number: 'tr-TR', month: 'tr-TR', list: 'tr-TR', text: 'tr' },
   ru: { number: 'ru-RU', month: 'ru-RU', list: 'ru-RU', text: 'ru' },
+  pseudo: { number: 'en-US', month: 'en-US', list: 'en-GB', text: 'en' },
 };
 
 const isAvailable = (value: string | null | undefined, available: readonly Locale[]): value is Locale =>
@@ -59,6 +74,11 @@ class I18n {
     return CATALOGS[this.locale];
   }
 
+  /** Language code for the outside world (API, Mapbox, `<html lang>`). The test language reads as English. */
+  get language(): Exclude<Locale, 'pseudo'> {
+    return this.locale === 'pseudo' ? 'en' : this.locale;
+  }
+
   /** The Intl tag for a purpose, for the active locale. */
   intl(purpose: keyof (typeof INTL)['en']): string {
     return INTL[this.locale][purpose];
@@ -66,7 +86,7 @@ class I18n {
 
   set(locale: Locale): void {
     this.locale = locale;
-    if (typeof document !== 'undefined') document.documentElement.lang = locale;
+    if (typeof document !== 'undefined') document.documentElement.lang = this.language;
     try {
       localStorage.setItem(STORAGE_KEY, locale);
     } catch {
@@ -78,7 +98,7 @@ class I18n {
   init(): void {
     const locale = detectLocale({ search: location.search, stored: readStored(), languages: navigator.languages ?? [navigator.language] });
     this.locale = locale;
-    document.documentElement.lang = locale;
+    document.documentElement.lang = this.language;
     if (new URLSearchParams(location.search).get('lang') === locale) this.set(locale);
   }
 }

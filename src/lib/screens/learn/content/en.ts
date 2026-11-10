@@ -205,7 +205,7 @@ export const STACK = [
   { title: 'Hosting', body: 'GitHub Pages and Render' },
 ];
 
-export const ASSUMPTIONS =
+export const ASSUMPTIONS: string =
   'Climate comes from one year of daily data. Soil is ignored, because city gardens usually bring their own. Watering counts for little, because small plots are easy to water. Without shade data, 30% of sunlight is assumed lost to buildings.';
 
 // Impact ----------------------------------------------------------------------

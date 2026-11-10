@@ -2,6 +2,7 @@
     import type { Snippet } from "svelte";
     import Button from "../../ui/Button.svelte";
     import Logo from "../../layout/Logo.svelte";
+    import LanguageSwitcher from "../../i18n/LanguageSwitcher.svelte";
     import { learn, TAB_ORDER } from "./content";
     import { router } from "../../router/router.svelte";
     import type { LearnTab } from "../../router/paths";
@@ -18,7 +19,10 @@
     <div class="sticky top-0 z-20 bg-paper/95 backdrop-blur-sm">
         <header class="mx-auto flex max-w-[1156px] items-center justify-between px-5 py-3 md:px-10">
             <Logo size="sm" />
-            <Button href={router.href({ name: "app" })} size="sm" class="font-semibold">{c.UI.layout.openMap}</Button>
+            <div class="flex items-center gap-4">
+                <LanguageSwitcher compact />
+                <Button href={router.href({ name: "app" })} size="sm" class="font-semibold">{c.UI.layout.openMap}</Button>
+            </div>
         </header>
         <nav class="overflow-x-auto border-y border-line" aria-label={c.UI.layout.nav}>
             <ul class="m-0 mx-auto flex max-w-[1156px] list-none gap-6 px-5 py-0 whitespace-nowrap md:px-10">

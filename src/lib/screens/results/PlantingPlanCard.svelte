@@ -3,7 +3,7 @@
     import { cropName } from "../../i18n/crops";
     import { spreadLabels, type Plan } from "../../derive/plan";
     import { bedCount, formatKg, listJoin } from "../../derive/format";
-    import { formatNumber, lower } from "../../i18n/format";
+    import { formatNumber, inSentence } from "../../i18n/format";
 
     let { plan, totalUsable }: { plan: Plan; totalUsable: number } = $props();
 
@@ -25,7 +25,7 @@
 
     let names = $derived(plan.beds.map((b) => cropName(b.crop)));
     let ariaLabel = $derived(
-        i18n.m.results.plan.aria(lower(bedCount(plan.beds.length)), listJoin(names.map((n) => lower(n)))),
+        i18n.m.results.plan.aria(inSentence(bedCount(plan.beds.length)), listJoin(names.map((n) => inSentence(n)))),
     );
 </script>
 
@@ -93,9 +93,9 @@
         <polygon points={plan.outline.map((p) => `${p.x},${p.y}`).join(" ")} fill="none" stroke="#1B6A24" stroke-width="5" />
     </svg>
     <p class="m-0 flex flex-col gap-1 text-[15px] leading-snug">
-        <span class="font-semibold">{listJoin(names.map((n, i) => (i === 0 ? n : lower(n))))}</span>
+        <span class="font-semibold">{listJoin(names.map((n, i) => (i === 0 ? n : inSentence(n))))}</span>
         <span>
-            {i18n.m.results.plan.fill(bedCount(plan.beds.length), formatKg(plan.totalYieldKg))}
+            {i18n.m.results.plan.fill(bedCount(plan.beds.length), formatKg(plan.totalYieldKg), plan.beds.length)}
             {i18n.m.results.plan.total(totalUsable)}
         </span>
     </p>

@@ -18,7 +18,8 @@
     import { formatKg } from "../derive/format";
     import { formatNumber } from "../i18n/format";
     import { i18n } from "../i18n/locale.svelte";
-    import { cropName } from "../i18n/crops";
+    import LanguageSwitcher from "../i18n/LanguageSwitcher.svelte";
+    import { cityName, cropName } from "../i18n/crops";
     import { ANALYSIS_STEPS, failedStep, phaseTimeline } from "../derive/progress";
     import EarlyClimateCard from "./analysing/EarlyClimateCard.svelte";
     import { formatArea } from "../derive/area";
@@ -85,7 +86,7 @@
 
     function pickCity(city: SampleCity): void {
         journey.city = city.id;
-        journey.placeLabel = city.name;
+        journey.placeLabel = cityName(city);
         pin = null;
         mapController.flyTo(city.center, 15);
     }
@@ -232,7 +233,10 @@
         {#if journey.step === "results"}
             <Button variant="outline" size="sm" onclick={startNewPlot}>{t.newPlot}</Button>
         {:else}
-            <a href={router.href({ name: "learn", tab: "scoring" })} class="text-sm text-ink no-underline hover:underline">{t.howItWorks}</a>
+            <div class="flex items-center gap-4">
+                <LanguageSwitcher />
+                <a href={router.href({ name: "learn", tab: "scoring" })} class="text-sm text-ink no-underline hover:underline">{t.howItWorks}</a>
+            </div>
         {/if}
     {/snippet}
 
