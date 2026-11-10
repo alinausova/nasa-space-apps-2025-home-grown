@@ -1,6 +1,7 @@
 import { en, type Messages } from './messages/en';
 import { de } from './messages/de';
 import { es } from './messages/es';
+import { fr } from './messages/fr';
 import { pseudo } from './pseudo';
 
 /** Languages Home Grown is being translated into. English is the source. */
@@ -9,7 +10,7 @@ export type Locale = (typeof LOCALES)[number];
 
 /** Languages with a finished catalog. Detection and `?lang=` only pick from these; grows as translations land.
  *  `pseudo` is a dev-only test language (accented, stretched English) and never ships to production. */
-export const AVAILABLE: readonly Locale[] = import.meta.env.DEV ? ['en', 'de', 'es', 'pseudo'] : ['en', 'de', 'es'];
+export const AVAILABLE: readonly Locale[] = import.meta.env.DEV ? ['en', 'de', 'es', 'fr', 'pseudo'] : ['en', 'de', 'es', 'fr'];
 
 /** Each language's name in its own language, for the switcher. */
 export const ENDONYMS: Record<Locale, string> = {
@@ -25,7 +26,7 @@ export const ENDONYMS: Record<Locale, string> = {
 const STORAGE_KEY = 'hg-locale';
 
 /** Catalogs per locale. Untranslated locales point at English; AVAILABLE keeps them from being selected. */
-const CATALOGS: Record<Locale, Messages> = { en, de, es, fr: en, tr: en, ru: en, pseudo: import.meta.env.DEV ? pseudo(en) : en };
+const CATALOGS: Record<Locale, Messages> = { en, de, es, fr, tr: en, ru: en, pseudo: import.meta.env.DEV ? pseudo(en) : en };
 
 /**
  * Intl tags per locale and purpose. English mixes two on purpose, to keep today's copy exactly:
