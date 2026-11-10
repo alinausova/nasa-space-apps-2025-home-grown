@@ -174,5 +174,6 @@ def test_language_rule_and_token_budget():
 
     assert language_rule("en") == ""
     assert "Russian" in language_rule("ru")
+    assert "Brazilian Portuguese" in language_rule("pt")
     assert max_tokens(200, "ru") > max_tokens(200, "de") > max_tokens(200, "en") == 200
 

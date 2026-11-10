@@ -67,3 +67,29 @@ describe('French in context', () => {
     expect(i18n.m.results.plan.fill(bedCount(4), '12 kg', 4)).toBe('Quatre planches remplissent votre parcelle, environ 12 kg par saison.');
   });
 });
+
+describe('Brazilian Portuguese in context', () => {
+  it('compares areas with the right gender and plural', () => {
+    i18n.locale = 'pt';
+    expect(areaComparison(12)).toBe('Cerca de uma vaga de estacionamento');
+    expect(areaComparison(40)).toBe('Cerca de três vagas de estacionamento');
+    expect(areaComparison(990_000)).toBe('Cerca de 139 campos de futebol');
+  });
+
+  it('lower-cases crop names and bed counts inside sentences', () => {
+    i18n.locale = 'pt';
+    expect(inSentence(cropName({ crop_id: 'beans', crop_name: 'Beans' }))).toBe('feijão');
+    expect(inSentence(bedCount(2))).toBe('dois canteiros');
+  });
+
+  it('names month ranges in Portuguese', () => {
+    i18n.locale = 'pt';
+    expect(monthRanges([3, 4, 5])).toBe('março a maio');
+  });
+
+  it('agrees the plan sentence with the number of beds', () => {
+    i18n.locale = 'pt';
+    expect(i18n.m.results.plan.fill(bedCount(1), '4 kg', 1)).toBe('Um canteiro preenche seu terreno, cerca de 4 kg por estação.');
+    expect(i18n.m.results.plan.fill(bedCount(4), '12 kg', 4)).toBe('Quatro canteiros preenchem seu terreno, cerca de 12 kg por estação.');
+  });
+});
