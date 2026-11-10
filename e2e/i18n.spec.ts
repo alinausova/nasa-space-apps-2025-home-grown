@@ -4,6 +4,7 @@ import { PLOTS, drawPlot, mockApi, usable, waitForMap } from './helpers';
 // One smoke check per translated language: landing, the place step and a Learn page.
 const SMOKE = [
   { lang: 'es', label: 'Idioma', landing: '¿Qué podría cultivar tu ciudad?', analyse: 'Analizar esta parcela', learn: 'Cómo obtiene un cultivo su puntuación', formula: 'Fórmula: Factor más débil' },
+  { lang: 'fr', label: 'Langue', landing: 'Que pourrait cultiver votre ville\u202f?', analyse: 'Analyser cette parcelle', learn: 'Comment une culture obtient son score', formula: 'Formule\u00a0: Facteur le plus faible' },
 ];
 
 const GERMAN_CROPS: Record<string, string> = { kale: 'Grünkohl', cabbage: 'Weißkohl', lettuce: 'Salat', spinach: 'Spinat', beetroot: 'Rote Bete' };
