@@ -7,7 +7,7 @@ export const TAB_INFO: Record<LearnTab, { n: string; label: string; title: strin
     n: '01',
     label: 'About',
     title: 'Who we are and why we built it',
-    intro: 'A NASA Space Apps 2025 project by six people across climate science, engineering and communication.',
+    intro: 'A project by six people across climate science, engineering and communication.',
   },
   scoring: {
     n: '02',
@@ -56,19 +56,6 @@ export const TEAM = [
   { name: 'Guillaume Leclerc', role: 'Geospatial engineering', photo: `${BASE}team/guillaume.jpg`, linkedin: 'https://www.linkedin.com/in/guillaume-leclerc1/' },
   { name: 'Angela Rubilla', role: 'Research and analysis', photo: `${BASE}team/angela.jpg`, linkedin: 'https://www.linkedin.com/in/angelarubilla/' },
   { name: 'Katy Larkin', role: 'Communications', photo: `${BASE}team/katy.jpg`, linkedin: 'https://www.linkedin.com/in/katylarkin/' },
-];
-
-export const RECOGNITION_FEATURED = {
-  eyebrow: 'Winner · 19 Nov 2025',
-  title: 'Pitch Perfect, Capacity-building Hub at COP30',
-  where: 'UN Climate Change Conference · Belém, Brazil · run by UN University (UNU-VIE) and Youth4Capacity',
-  body: 'Vishnu Sunil Kumar pitched Home Grown as “Food Secure Cities of Tomorrow” and won the audience and mentor vote.',
-};
-
-export const RECOGNITION = [
-  { year: '2026', title: 'Climate Pitch, Munich Climate Week', body: 'Pitched Home Grown in Munich' },
-  { year: '2026', title: 'Climate Café, Global Shapers Munich and TUM Think Tank', body: 'Presented Home Grown in Munich' },
-  { year: '2025', title: 'Where it started: NASA International Space Apps Challenge', body: 'The first version of Home Grown was built here, in a weekend' },
 ];
 
 export const CONTACT = [
@@ -234,8 +221,6 @@ export const UI = {
       'Cities keep growing and the climate keeps shifting. Growing food locally makes a city more resilient. Home Grown shows what a patch of city could grow, from a backyard to an empty car park, anywhere in the world.',
     questionsLabel: 'Questions it answers for your plot',
     team: 'The team',
-    recognition: 'Recognition',
-    recognitionBody: 'Where Home Grown has been shown, and what it won.',
     contact: 'Get in touch',
     contactBody: 'For questions about Home Grown, collaborations or using it in your city, contact the team.',
     linkedin: 'LinkedIn',

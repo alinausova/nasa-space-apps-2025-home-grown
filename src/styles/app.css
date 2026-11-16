@@ -61,15 +61,14 @@
 }
 
 /* Text selection: ink and paper swap places, so it is as readable as the page itself.
-   The dark landing and dark cards (.on-ink) use bright green, which stays visible on dark. */
+   The dark landing uses bright green, which stays visible on dark. */
 ::selection {
   background-color: var(--hg-ink);
   color: var(--hg-paper);
 }
 
 .theme-night ::selection,
-.theme-night::selection,
-.on-ink ::selection {
+.theme-night::selection {
   background-color: var(--hg-bright);
   color: var(--hg-on-bright);
 }

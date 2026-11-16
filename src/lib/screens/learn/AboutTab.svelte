@@ -1,5 +1,4 @@
 <script lang="ts">
-    import laurel from "../../../assets/laurel.svg";
     import LearnSection from "./LearnSection.svelte";
     import { learn } from "./content";
 
@@ -40,32 +39,7 @@
     </ul>
 </LearnSection>
 
-<LearnSection id="recognition" label="03" title={c.UI.about.recognition} body={c.UI.about.recognitionBody}>
-    {#snippet aside()}
-        <div class="on-ink flex gap-4 rounded-card bg-ink p-5 text-paper">
-            <span class="flex size-11 shrink-0 items-center justify-center rounded-full bg-white/10">
-                <img src={laurel} alt="" width="26" height="26" />
-            </span>
-            <span class="flex flex-col gap-1.5">
-                <span class="font-mono text-xs tracking-[0.1em] text-bright uppercase">{c.RECOGNITION_FEATURED.eyebrow}</span>
-                <span class="text-xl leading-snug">{c.RECOGNITION_FEATURED.title}</span>
-                <span class="text-[13px] text-paper/75">{c.RECOGNITION_FEATURED.where}</span>
-                <span class="mt-1 text-[13px] leading-relaxed text-paper/90">{c.RECOGNITION_FEATURED.body}</span>
-            </span>
-        </div>
-        {#each c.RECOGNITION as item (item.title)}
-            <div class="flex items-center gap-4 rounded-card border border-line-strong bg-surface px-5 py-4">
-                <span class="flex size-11 shrink-0 items-center justify-center rounded-full border border-line-strong font-mono text-[11px]">{item.year}</span>
-                <span class="flex flex-col gap-0.5">
-                    <span class="text-[17px]">{item.title}</span>
-                    <span class="text-[13px] text-ink-muted">{item.body}</span>
-                </span>
-            </div>
-        {/each}
-    {/snippet}
-</LearnSection>
-
-<LearnSection label="04" title={c.UI.about.contact} body={c.UI.about.contactBody}>
+<LearnSection label="03" title={c.UI.about.contact} body={c.UI.about.contactBody}>
     {#snippet aside()}
         <div class="grid gap-2.5 sm:grid-cols-2">
             {#each c.CONTACT as item (item.title)}

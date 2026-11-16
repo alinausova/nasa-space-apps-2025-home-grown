@@ -17,7 +17,7 @@ export const TAB_INFO: Record<LearnTab, { n: string; label: string; title: strin
     n: '01',
     label: 'О проекте',
     title: 'Кто мы и зачем это сделали',
-    intro: 'Проект NASA Space Apps 2025 от шести человек из климатологии, разработки и коммуникаций.',
+    intro: 'Проект шести человек из климатологии, разработки и коммуникаций.',
   },
   scoring: {
     n: '02',
@@ -58,19 +58,6 @@ export const QUESTIONS = [
 ];
 
 export const TEAM = TEAM_EN.map((person, i) => ({ ...person, role: ROLES[i] }));
-
-export const RECOGNITION_FEATURED = {
-  eyebrow: 'Победитель · 19 нояб. 2025',
-  title: 'Pitch Perfect, Capacity-building Hub на COP30',
-  where: 'Конференция ООН по изменению климата · Белен, Бразилия · организаторы: Университет ООН (UNU-VIE) и Youth4Capacity',
-  body: 'Vishnu Sunil Kumar представил Home Grown под названием «Food Secure Cities of Tomorrow» и победил в голосовании зрителей и менторов.',
-};
-
-export const RECOGNITION = [
-  { year: '2026', title: 'Climate Pitch, Munich Climate Week', body: 'Представили Home Grown в Мюнхене' },
-  { year: '2026', title: 'Climate Café, Global Shapers Munich и TUM Think Tank', body: 'Рассказали о Home Grown в Мюнхене' },
-  { year: '2025', title: 'С чего всё началось: NASA International Space Apps Challenge', body: 'Здесь за одни выходные появилась первая версия Home Grown' },
-];
 
 export const CONTACT = [
   { title: 'Связаться с командой', body: 'Vishnu Sunil Kumar в LinkedIn', href: 'https://www.linkedin.com/in/vishnu-sunil/' },
@@ -199,8 +186,6 @@ export const UI = {
       'Города растут, а климат меняется. Выращивание еды на месте делает город устойчивее. Home Grown показывает, что может вырасти на клочке города, от заднего двора до пустой парковки, в любой точке мира.',
     questionsLabel: 'На какие вопросы он отвечает для вашего участка',
     team: 'Команда',
-    recognition: 'Признание',
-    recognitionBody: 'Где показывали Home Grown и что он выиграл.',
     contact: 'Связаться с нами',
     contactBody: 'С вопросами о Home Grown, сотрудничестве или использовании в вашем городе обращайтесь к команде.',
     linkedin: 'LinkedIn',

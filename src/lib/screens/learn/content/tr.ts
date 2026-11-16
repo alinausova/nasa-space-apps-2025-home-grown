@@ -11,7 +11,7 @@ export const TAB_INFO: Record<LearnTab, { n: string; label: string; title: strin
     n: '01',
     label: 'Hakkımızda',
     title: 'Biz kimiz ve bunu neden yaptık',
-    intro: 'İklim bilimi, mühendislik ve iletişim alanlarından altı kişinin hazırladığı bir NASA Space Apps 2025 projesi.',
+    intro: 'İklim bilimi, mühendislik ve iletişim alanlarından altı kişinin hazırladığı bir proje.',
   },
   scoring: {
     n: '02',
@@ -52,19 +52,6 @@ export const QUESTIONS = [
 ];
 
 export const TEAM = TEAM_EN.map((person, i) => ({ ...person, role: ROLES[i] }));
-
-export const RECOGNITION_FEATURED = {
-  eyebrow: 'Kazanan · 19 Kasım 2025',
-  title: 'Pitch Perfect, COP30 Capacity-building Hub',
-  where: 'BM İklim Değişikliği Konferansı · Belém, Brezilya · düzenleyenler: BM Üniversitesi (UNU-VIE) ve Youth4Capacity',
-  body: 'Vishnu Sunil Kumar, Home Grown’u “Food Secure Cities of Tomorrow” adıyla sundu ve izleyici ile mentor oylamasını kazandı.',
-};
-
-export const RECOGNITION = [
-  { year: '2026', title: 'Climate Pitch, Munich Climate Week', body: 'Home Grown Münih’te sunuldu' },
-  { year: '2026', title: 'Climate Café, Global Shapers Munich ve TUM Think Tank', body: 'Home Grown Münih’te tanıtıldı' },
-  { year: '2025', title: 'Her şeyin başladığı yer: NASA International Space Apps Challenge', body: 'Home Grown’un ilk sürümü burada, bir hafta sonunda yapıldı' },
-];
 
 export const CONTACT = [
   { title: 'Ekiple iletişime geç', body: 'LinkedIn’de Vishnu Sunil Kumar', href: 'https://www.linkedin.com/in/vishnu-sunil/' },
@@ -193,8 +180,6 @@ export const UI = {
       'Şehirler büyümeye, iklim değişmeye devam ediyor. Gıdayı yerelde yetiştirmek bir şehri daha dayanıklı kılar. Home Grown, arka bahçeden boş bir otoparka kadar, dünyanın her yerinde bir şehir parçasının neler yetiştirebileceğini gösterir.',
     questionsLabel: 'Arazin için yanıtladığı sorular',
     team: 'Ekip',
-    recognition: 'Ödüller ve sunumlar',
-    recognitionBody: 'Home Grown’un nerede sunulduğu ve neler kazandığı.',
     contact: 'İletişim',
     contactBody: 'Home Grown hakkında sorular, iş birlikleri ya da kendi şehrinde kullanmak için ekiple iletişime geç.',
     linkedin: 'LinkedIn',

@@ -59,7 +59,7 @@ async def fetch_nasa_power_data(latitude: float, longitude: float, year: int = 2
     url = "https://power.larc.nasa.gov/api/temporal/daily/point"
 
     headers = {
-        "User-Agent": "SpaceAppsChallenge/1.0 (urban-agriculture-recommender)"
+        "User-Agent": "HomeGrown/1.0 (urban-agriculture-recommender)"
     }
 
     async with httpx.AsyncClient(timeout=60.0, headers=headers) as client:

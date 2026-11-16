@@ -30,13 +30,3 @@ test.describe('text selection colour', () => {
     expect(await selectionOf(page)).toEqual({ bg: 'rgb(47, 51, 54)', ink: 'rgb(232, 230, 224)' });
   });
 });
-
-test('dark cards on light pages keep a visible highlight', async ({ page }) => {
-  await mockApi(page);
-  await page.goto('learn/about#recognition');
-  const style = await page.locator('.on-ink').evaluate((card) => {
-    const s = getComputedStyle(card.querySelector('span span')!, '::selection');
-    return { bg: s.backgroundColor, ink: s.color };
-  });
-  expect(style).toEqual({ bg: 'rgb(34, 197, 94)', ink: 'rgb(11, 61, 24)' });
-});
