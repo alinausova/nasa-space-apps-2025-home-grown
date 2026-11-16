@@ -11,7 +11,7 @@ export const TAB_INFO: Record<LearnTab, { n: string; label: string; title: strin
     n: '01',
     label: 'Sobre',
     title: 'Quem somos e por que criamos isto',
-    intro: 'Um projeto do NASA Space Apps 2025 feito por seis pessoas das áreas de ciência do clima, engenharia e comunicação.',
+    intro: 'Um projeto feito por seis pessoas das áreas de ciência do clima, engenharia e comunicação.',
   },
   scoring: {
     n: '02',
@@ -52,19 +52,6 @@ export const QUESTIONS = [
 ];
 
 export const TEAM = TEAM_EN.map((person, i) => ({ ...person, role: ROLES[i] }));
-
-export const RECOGNITION_FEATURED = {
-  eyebrow: 'Vencedor · 19 nov. 2025',
-  title: 'Pitch Perfect, Capacity-building Hub na COP30',
-  where: 'Conferência da ONU sobre Mudanças Climáticas · Belém, Brasil · organizado pela UN University (UNU-VIE) e Youth4Capacity',
-  body: 'Vishnu Sunil Kumar apresentou o Home Grown como “Food Secure Cities of Tomorrow” e venceu a votação do público e dos mentores.',
-};
-
-export const RECOGNITION = [
-  { year: '2026', title: 'Climate Pitch, Munich Climate Week', body: 'Pitch do Home Grown em Munique' },
-  { year: '2026', title: 'Climate Café, Global Shapers Munich e TUM Think Tank', body: 'Apresentação do Home Grown em Munique' },
-  { year: '2025', title: 'Onde tudo começou: NASA International Space Apps Challenge', body: 'A primeira versão do Home Grown foi criada aqui, em um fim de semana' },
-];
 
 export const CONTACT = [
   { title: 'Fale com a equipe', body: 'Vishnu Sunil Kumar no LinkedIn', href: 'https://www.linkedin.com/in/vishnu-sunil/' },
@@ -193,8 +180,6 @@ export const UI = {
       'As cidades continuam crescendo e o clima continua mudando. Cultivar alimentos localmente torna uma cidade mais resiliente. O Home Grown mostra o que um pedaço da cidade poderia cultivar, de um quintal a um estacionamento vazio, em qualquer lugar do mundo.',
     questionsLabel: 'Perguntas que ele responde para o seu terreno',
     team: 'A equipe',
-    recognition: 'Reconhecimento',
-    recognitionBody: 'Onde o Home Grown foi apresentado e o que ele ganhou.',
     contact: 'Fale conosco',
     contactBody: 'Para dúvidas sobre o Home Grown, colaborações ou uso na sua cidade, entre em contato com a equipe.',
     linkedin: 'LinkedIn',

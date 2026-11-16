@@ -11,7 +11,7 @@ export const TAB_INFO: Record<LearnTab, { n: string; label: string; title: strin
     n: '01',
     label: 'Über uns',
     title: 'Wer wir sind und warum wir es gebaut haben',
-    intro: 'Ein Projekt der NASA Space Apps 2025 von sechs Menschen aus Klimawissenschaft, Entwicklung und Kommunikation.',
+    intro: 'Ein Projekt von sechs Menschen aus Klimawissenschaft, Entwicklung und Kommunikation.',
   },
   scoring: {
     n: '02',
@@ -52,19 +52,6 @@ export const QUESTIONS = [
 ];
 
 export const TEAM = TEAM_EN.map((person, i) => ({ ...person, role: ROLES[i] }));
-
-export const RECOGNITION_FEATURED = {
-  eyebrow: 'Gewinner · 19. Nov. 2025',
-  title: 'Pitch Perfect, Capacity-building Hub auf der COP30',
-  where: 'UN-Klimakonferenz · Belém, Brasilien · veranstaltet von der UN University (UNU-VIE) und Youth4Capacity',
-  body: 'Vishnu Sunil Kumar hat Home Grown als „Food Secure Cities of Tomorrow“ gepitcht und die Abstimmung von Publikum und Mentoren gewonnen.',
-};
-
-export const RECOGNITION = [
-  { year: '2026', title: 'Climate Pitch, Munich Climate Week', body: 'Home Grown in München gepitcht' },
-  { year: '2026', title: 'Climate Café, Global Shapers Munich und TUM Think Tank', body: 'Home Grown in München vorgestellt' },
-  { year: '2025', title: 'Hier fing es an: NASA International Space Apps Challenge', body: 'Die erste Version von Home Grown entstand hier, an einem Wochenende' },
-];
 
 export const CONTACT = [
   { title: 'Das Team kontaktieren', body: 'Vishnu Sunil Kumar auf LinkedIn', href: 'https://www.linkedin.com/in/vishnu-sunil/' },
@@ -193,8 +180,6 @@ export const UI = {
       'Städte wachsen weiter, und das Klima verschiebt sich. Lebensmittel vor Ort anzubauen macht eine Stadt widerstandsfähiger. Home Grown zeigt, was ein Stück Stadt anbauen könnte, vom Hinterhof bis zum leeren Parkplatz, überall auf der Welt.',
     questionsLabel: 'Fragen, die es für deine Fläche beantwortet',
     team: 'Das Team',
-    recognition: 'Auszeichnungen',
-    recognitionBody: 'Wo Home Grown gezeigt wurde und was es gewonnen hat.',
     contact: 'Kontakt',
     contactBody: 'Für Fragen zu Home Grown, Zusammenarbeit oder den Einsatz in deiner Stadt wende dich an das Team.',
     linkedin: 'LinkedIn',

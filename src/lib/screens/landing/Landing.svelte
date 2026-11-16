@@ -3,7 +3,6 @@
     import { onMount } from "svelte";
     import orbitDesktop from "../../../assets/landing-orbit.svg?raw";
     import orbitMobile from "../../../assets/landing-orbit-mobile.svg?raw";
-    import AwardBadge from "./AwardBadge.svelte";
     import Button from "../../ui/Button.svelte";
     import LanguageSwitcher from "../../i18n/LanguageSwitcher.svelte";
     import { router } from "../../router/router.svelte";
@@ -73,7 +72,6 @@
             <Button href={router.href({ name: "app" })} size="lg" class="h-[52px]!">{t.start} <span aria-hidden="true">→</span></Button>
             <Button href={router.href({ name: "learn", tab: "scoring" })} variant="outline" size="lg" class="h-[52px]! border-line-strong font-normal!">{t.howItWorks}</Button>
         </div>
-        <AwardBadge />
         <ol class="m-0 grid list-none grid-cols-[repeat(3,minmax(0,200px))] gap-7 p-0 pt-6">
             {#each steps as step (step.n)}
                 <li class="flex flex-col gap-1.5 border-t border-line-strong pt-3">
@@ -103,10 +101,7 @@
                 {/each}
             </ol>
         </div>
-        <div class="flex flex-col gap-3">
-            <AwardBadge compact />
-            <Button href={router.href({ name: "app" })} size="lg" block class="h-[52px]!">{t.start} <span aria-hidden="true">→</span></Button>
-        </div>
+        <Button href={router.href({ name: "app" })} size="lg" block class="h-[52px]!">{t.start} <span aria-hidden="true">→</span></Button>
     </main>
 
     <button

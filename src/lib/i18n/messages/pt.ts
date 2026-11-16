@@ -112,9 +112,6 @@ export const pt: Messages = {
     ],
     pause: 'Pausar animação',
     play: 'Reproduzir animação',
-    winner: 'Vencedor',
-    awardShort: '· Pitch Perfect na conferência do clima da ONU COP30',
-    awardLong: '· Pitch Perfect na COP30, a Conferência das Nações Unidas sobre Mudanças Climáticas, Belém 2025',
   },
   place: {
     step: 'Escolha um lugar',

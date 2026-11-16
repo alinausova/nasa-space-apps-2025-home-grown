@@ -1,8 +1,6 @@
 # Home Grown 🌱
 
-**NASA Space Apps Challenge 2025** · Draw a plot anywhere on Earth and get a ranked list of crops that will grow there, from a year of NASA climate data.
-
-🏆 Winner · Pitch Perfect at COP30, the UN Climate Change Conference, Belém 2025
+Draw a plot anywhere on Earth and get a ranked list of crops that will grow there, from a year of NASA climate data.
 
 🌐 **Live:** https://home-grown.app/
 📖 **How it works:** https://home-grown.app/learn/scoring
@@ -51,7 +49,7 @@ CI runs `check`, `test` and `build` on every pull request (`.github/workflows/ci
 src/
   App.svelte              routes: landing, app (lazy, loads Mapbox), learn, dev gallery (dev only)
   styles/                 design tokens (tokens.css) mapped to Tailwind 4 in app.css
-  assets/                 SVGs from the design handoff (landing sky, loader, textures, laurel)
+  assets/                 SVGs from the design handoff (landing sky, loader, textures)
   lib/
     router/               path router with GitHub Pages 404 support
     api/                  typed API client
@@ -70,7 +68,3 @@ e2e/                      Playwright tests and fixtures
 - **Front end:** Svelte 5, TypeScript, Vite, Tailwind CSS 4, Mapbox GL JS, Mapbox Draw, Turf.js
 - **Back end:** FastAPI, uv, NASA POWER, Microsoft Planetary Computer (Landsat), Mistral AI
 - **Hosting:** GitHub Pages (front end), Render (back end)
-
----
-
-**NASA Space Apps Challenge 2025**

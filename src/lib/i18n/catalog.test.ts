@@ -71,7 +71,7 @@ describe('catalogs', () => {
       });
 
       it('keeps the Learn tables the same length as English', () => {
-        for (const key of ['QUESTIONS', 'TEAM', 'RECOGNITION', 'SCORE_PARTS', 'FORMULAS', 'DATA_USED', 'CROP_DATA', 'DATA_RESEARCHED', 'PIPELINE', 'STACK', 'SDGS'] as const) {
+        for (const key of ['QUESTIONS', 'TEAM', 'SCORE_PARTS', 'FORMULAS', 'DATA_USED', 'CROP_DATA', 'DATA_RESEARCHED', 'PIPELINE', 'STACK', 'SDGS'] as const) {
           expect(content[key].length, key).toBe(learnEn[key].length);
         }
       });

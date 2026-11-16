@@ -12,7 +12,7 @@
 
     $effect(() => {
         void tab;
-        // Deep links like /learn/about#recognition: scroll to the section once it is rendered.
+        // Deep links like /learn/about#section-id: scroll to the section once it is rendered.
         tick().then(() => {
             const id = window.location.hash.slice(1);
             const target = id ? document.getElementById(id) : null;

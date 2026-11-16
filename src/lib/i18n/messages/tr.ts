@@ -107,9 +107,6 @@ export const tr: Messages = {
     ],
     pause: 'Animasyonu duraklat',
     play: 'Animasyonu oynat',
-    winner: 'Kazanan',
-    awardShort: '· Pitch Perfect, BM iklim konferansı COP30',
-    awardLong: '· Pitch Perfect, COP30 (BM İklim Değişikliği Konferansı), Belém 2025',
   },
   place: {
     step: 'Yer seç',

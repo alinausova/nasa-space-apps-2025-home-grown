@@ -126,9 +126,6 @@ export const ru: Messages = {
     ],
     pause: 'Остановить анимацию',
     play: 'Запустить анимацию',
-    winner: 'Победитель',
-    awardShort: '· Pitch Perfect на климатической конференции ООН COP30',
-    awardLong: '· Pitch Perfect на COP30, Конференции ООН по изменению климата, Белен 2025',
   },
   place: {
     step: 'Выберите место',

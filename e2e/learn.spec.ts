@@ -43,22 +43,6 @@ test.describe('learn more', () => {
     await expect(page).toHaveURL(/\/learn\/about$/);
   });
 
-  test('recognition: confirmed copy and deep link from the landing badge', async ({ page }) => {
-    await mockApi(page);
-    await page.goto('learn/about#recognition');
-
-    const section = page.locator('#recognition');
-    await expect(section).toBeInViewport();
-    await expect(section).toContainText('Winner · 19 Nov 2025');
-    await expect(section).toContainText('Pitch Perfect, Capacity-building Hub at COP30');
-    await expect(section).toContainText('UN Climate Change Conference · Belém, Brazil · run by UN University (UNU-VIE) and Youth4Capacity');
-    await expect(section).toContainText('Vishnu Sunil Kumar pitched Home Grown as “Food Secure Cities of Tomorrow” and won the audience and mentor vote.');
-    await expect(section).toContainText('Climate Pitch, Munich Climate Week');
-    await expect(section).toContainText('Climate Café, Global Shapers Munich and TUM Think Tank');
-    await expect(section).toContainText('Where it started: NASA International Space Apps Challenge');
-    await expect(section).toContainText('The first version of Home Grown was built here, in a weekend');
-  });
-
   test('get in touch: contact the team via LinkedIn, report an issue on GitHub', async ({ page }) => {
     await mockApi(page);
     await page.goto('learn/about');

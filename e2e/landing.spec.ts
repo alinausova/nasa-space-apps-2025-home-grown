@@ -4,7 +4,7 @@ import { mockApi, waitForMap } from './helpers';
 const svgPaused = () => (document.querySelector('[data-testid="landing"] svg') as SVGSVGElement).animationsPaused();
 
 test.describe('landing', () => {
-  test('headline, steps, award and the main call to action', async ({ page }, info) => {
+  test('headline, steps and the main call to action', async ({ page }, info) => {
     await mockApi(page);
     await page.goto('');
 
@@ -12,8 +12,6 @@ test.describe('landing', () => {
     for (const step of ['Draw your plot', 'We read satellite data', 'Get your crops']) {
       await expect(page.getByText(step, { exact: true }).filter({ visible: true })).toBeVisible();
     }
-    const award = page.getByRole('link', { name: /Winner · Pitch Perfect/ }).filter({ visible: true });
-    await expect(award).toHaveAttribute('href', /\/learn\/about#recognition$/);
 
     await page.waitForTimeout(600);
     await page.screenshot({ path: `e2e/.output/shots/${info.project.name}-landing.png` });

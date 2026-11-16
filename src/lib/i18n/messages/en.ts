@@ -108,9 +108,6 @@ export const en = {
     ],
     pause: 'Pause animation',
     play: 'Play animation',
-    winner: 'Winner',
-    awardShort: '· Pitch Perfect at UN climate conference COP30',
-    awardLong: '· Pitch Perfect at COP30, the UN Climate Change Conference, Belém 2025',
   },
   place: {
     step: 'Pick a place',
