@@ -26,7 +26,7 @@ def generate_crop_summary(api_response: dict, api_key: str = None, lang: str = "
 
     # Initialize Mistral client
     client = Mistral(api_key=api_key)
-    model = "mistral-large-2512"
+    model = "mistral-large-latest"
 
     # System prompt - defines the assistant's role and constraints
     system_prompt = """You are an urban agriculture advisor. You explain crop recommendations to people

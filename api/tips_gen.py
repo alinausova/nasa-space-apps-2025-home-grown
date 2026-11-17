@@ -69,7 +69,7 @@ def generate_crop_tips(facts: Dict, api_key: Optional[str] = None, lang: str = "
         raise ValueError("MISTRAL_API_KEY not found in environment variables")
     client = Mistral(api_key=api_key)
     response = client.chat.complete(
-        model="mistral-large-2512",
+        model="mistral-large-latest",
         messages=[
             {"role": "system", "content": SYSTEM_PROMPT + language_rule(lang)},
             {"role": "user", "content": f"Data for this crop and plot:\n\n{json.dumps(facts, indent=1)}\n\nWrite the tips now."},
